@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RIP · Pitch Deck · Cornerstone Digital Technologies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #16171f;
+      --navy-2: #1e1f2a;
+      --ink: #1c1d24;
+      --magenta: #e21880;
+      --blue: #2b5fe0;
+      --taupe: #9a8b7c;
+      --taupe-2: #b7aa9c;
+      --stone: #e8e2d9;
+      --paper: #f6f3ee;
+      --cream: #fffcf8;
+      --line: #d4cdc3;
+      --success: #1f8a5b;
+    }
+    @page { size: 13.333in 7.5in; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: var(--ink);
+      font-family: Manrope, system-ui, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1, h2, h3, .display { font-family: "Exo 2", system-ui, sans-serif; letter-spacing: 0.04em; margin: 0; }
+    .slide {
+      width: 13.333in;
+      height: 7.5in;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+      position: relative;
+      background: var(--paper);
+    }
+    .slide:last-child { page-break-after: auto; break-after: auto; }
+    .bar { position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: var(--magenta); }
+    .foot {
+      position: absolute;
+      left: 0.7in;
+      right: 0.55in;
+      bottom: 0.28in;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      font-family: "Exo 2", sans-serif;
+    }
+    .kicker {
+      font-family: "Exo 2", sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      color: var(--magenta);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .title { font-size: 36px; font-weight: 700; line-height: 1.15; }
+    .lede { font-size: 16px; line-height: 1.5; color: #4a4c55; max-width: 10.5in; margin-top: 12px; }
+    .pad { padding: 0.55in 0.7in 0.55in 0.78in; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+    .card {
+      background: var(--cream);
+      border: 1px solid var(--line);
+      padding: 18px 20px;
+    }
+    .card h3 { font-size: 15px; margin-bottom: 8px; }
+    .card p, .card li { font-size: 13px; line-height: 1.45; color: #3a3c44; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    li { position: relative; padding-left: 14px; margin: 7px 0; }
+    li:before {
+      content: "";
+      position: absolute;
+      left: 0; top: 8px;
+      width: 6px; height: 6px;
+      background: var(--magenta);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    th {
+      font-family: "Exo 2", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      text-align: left;
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    td { padding: 7px 10px; border-bottom: 1px solid var(--stone); }
+    td.num { font-weight: 700; }
+    td.blue { color: var(--blue); font-weight: 700; }
+    .kpi {
+      background: var(--cream);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--magenta);
+      padding: 14px 16px;
+    }
+    .kpi .lbl { font-family: "Exo 2", sans-serif; font-size: 9px; letter-spacing: 0.2em; color: var(--taupe); }
+    .kpi .val { font-family: "Exo 2", sans-serif; font-size: 26px; font-weight: 700; margin-top: 4px; }
+    .kpi .hint { font-size: 11px; color: var(--taupe); margin-top: 2px; }
+    .dark { background: var(--navy); color: var(--cream); }
+    .dark .kicker { color: #f48cc4; }
+    .dark .lede { color: var(--taupe-2); }
+    .dark .foot { color: var(--taupe); }
+    .dark .card { background: var(--navy-2); border-color: #2c2e3a; color: var(--cream); }
+    .dark .card p, .dark .card li { color: var(--taupe-2); }
+    .logo { height: 72px; width: auto; }
+    .word .n { color: var(--magenta); }
+    .word .e { color: var(--blue); }
+    .word .s { color: var(--taupe); }
+  </style>
+</head>
+<body>
+
+  <!-- 1 COVER -->
+  <section class="slide dark">
+    <div class="bar"></div>
+    <div class="pad" style="display:flex;flex-direction:column;height:6.7in;justify-content:space-between;">
+      <img class="logo" src="../logo.png" alt="Cornerstone Digital Technologies" />
+      <div>
+        <p class="kicker">Confidential · August 2026</p>
+        <h1 class="title" style="font-size:64px;letter-spacing:0.12em;">RIP</h1>
+        <p class="display" style="font-size:22px;margin-top:8px;letter-spacing:0.18em;color:var(--taupe-2);">
+          REAL ESTATE INTELLIGENCE PLATFORM
+        </p>
+        <p class="lede" style="max-width:8.5in;margin-top:18px;">
+          The underwriting terminal for cash-flow investors — areas, properties, land, and
+          multifamily, with reports that already look like the deal email you send on Friday.
+        </p>
+      </div>
+      <p class="display" style="font-size:12px;letter-spacing:0.22em;color:var(--taupe);">
+        CORNERSTO<span class="word"><span class="n">N</span><span class="e">E</span></span>
+        <span class="s"> DIGITAL TECHNOLOGIES</span>
+      </p>
+    </div>
+    <div class="foot"><span>Cornerstone Digital Technologies</span><span>01 / 12</span></div>
+  </section>
+
+  <!-- 2 PROBLEM -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">The problem</p>
+      <h2 class="title">Good deals die in the inbox.</h2>
+      <p class="lede">
+        Independent investors and small shops still underwrite from Zillow tabs, broker blasts,
+        and a spreadsheet that only one person understands.
+      </p>
+      <div class="grid-2" style="margin-top:28px;">
+        <div class="card">
+          <h3>Hours per name, not minutes</h3>
+          <ul>
+            <li>A junior analyst spends half a day pulling rent, tax, HOA, insurance, and a mortgage quote.</li>
+            <li>No shared stack — every partner models 20% down, 5% vacancy, and a different insurance line.</li>
+            <li>The weekly “best of” email is handmade. It does not survive vacation.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Four asset types, four toolchains</h3>
+          <ul>
+            <li>Townhomes live in Zillow. Land lives in the county GIS. Multifamily lives in an OM PDF.</li>
+            <li>Area thesis is tribal knowledge (“Wesley Chapel HOAs kill cash flow”) with no score.</li>
+            <li>Automation exists (n8n, Apify) but it is not wired to an investor-grade report.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>02 / 12</span></div>
+  </section>
+
+  <!-- 3 SOLUTION -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">The solution</p>
+      <h2 class="title">One book. One stack. Live workflows.</h2>
+      <p class="lede">
+        RIP is the intelligence layer for the shop that already buys Tampa Bay cash-flow product —
+        and already runs n8n.
+      </p>
+      <div class="grid-3" style="margin-top:28px;">
+        <div class="card">
+          <h3>Underwrite like the digest</h3>
+          <p>Ask, offer, rent, tax, HOA, insurance, NOI, and a 7% / 30-year / 50% down mortgage — the same stack as Sam’s High ROI Picks.</p>
+        </div>
+        <div class="card">
+          <h3>Four asset classes</h3>
+          <p>Areas, single-family / townhomes, land pads, and small multifamily. Investor score, map, and a pursue / watch / pass call.</p>
+        </div>
+        <div class="card">
+          <h3>n8n as the muscle</h3>
+          <p>RIP keeps the math. n8n scrapes, enriches, and emails. If a webhook is down, the local engine still prints a report.</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>03 / 12</span></div>
+  </section>
+
+  <!-- 4 PRODUCT -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">Product</p>
+      <h2 class="title">Built for how investors actually buy.</h2>
+      <div class="grid-4" style="margin-top:28px;">
+        <div class="card">
+          <p class="kicker" style="margin-bottom:8px;">01</p>
+          <h3>Areas</h3>
+          <p>Submarket scores: median ask, rent, cash flow, jobs, flood, schools, commute. Catalysts and risks on one page.</p>
+        </div>
+        <div class="card">
+          <p class="kicker" style="margin-bottom:8px;">02</p>
+          <h3>Properties</h3>
+          <p>Ranked SFR / townhome book. Click through for the full stack, map, Zillow link, and a one-click n8n re-run.</p>
+        </div>
+        <div class="card">
+          <p class="kicker" style="margin-bottom:8px;">03</p>
+          <h3>Land</h3>
+          <p>Zoning, utilities, flood, comps, and three exits — hold, townhome pad, garden multifamily.</p>
+        </div>
+        <div class="card">
+          <p class="kicker" style="margin-bottom:8px;">04</p>
+          <h3>Multifamily</h3>
+          <p>Cap rate, GRM, debt yield, unit mix, occupancy. IC questions before you pay for a T12.</p>
+        </div>
+      </div>
+      <p class="lede" style="margin-top:22px;font-size:14px;">
+        Analyze any address. RIP posts the job to n8n when a webhook is configured, stores the run,
+        and renders the same report the digest already taught the operator to trust.
+      </p>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>04 / 12</span></div>
+  </section>
+
+  <!-- 5 METHODOLOGY -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">Methodology</p>
+      <h2 class="title">The report is the product.</h2>
+      <p class="lede">We did not invent a new underwriting religion. We productized the email the shop already sends.</p>
+      <div class="grid-2" style="margin-top:22px;">
+        <div class="card">
+          <h3>Cash flow (NOI)</h3>
+          <p style="margin:10px 0 0;">Rent − tax − HOA − insurance. Mortgage is shown separately so the number matches the Friday digest. After-debt is one line below for partners who want it.</p>
+          <p style="margin-top:12px;font-size:12px;color:var(--taupe);">Mortgage: 7% fixed · 30-year · 50% down. Offer ≈ 1.8% under ask (deeper on full rehabs).</p>
+        </div>
+        <div>
+          <table>
+            <thead>
+              <tr><th>Line</th><th>Role</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ask / Offer</td><td>What the seller wants vs. what we bid</td></tr>
+              <tr><td>Rent (est.)</td><td>Market rent, flagged when imputed</td></tr>
+              <tr><td>Tax / HOA / Insurance</td><td>The three leaks that kill Tampa Bay deals</td></tr>
+              <tr><td class="blue">Cash flow</td><td>NOI before debt — the rank key</td></tr>
+              <tr><td>Mortgage*</td><td>Shown, not subtracted from the digest CF</td></tr>
+              <tr><td>Pursue / Watch / Pass</td><td>Investor score on the same page</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>05 / 12</span></div>
+  </section>
+
+  <!-- 6 LIVE BOOK -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">Live book · Friday, August 21, 2026</p>
+      <h2 class="title" style="font-size:30px;">Sam’s High ROI Picks — Tampa Bay</h2>
+      <p class="lede" style="margin-bottom:14px;font-size:14px;">Top 10 ranked by cash flow. Figures are estimates. This is the report RIP was built to generate every week.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Address</th><th>Ask</th><th>Offer</th><th>Rent</th><th>CF / mo</th><th>Mortgage*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>403 Thicket Crest Rd, Seffner</td><td>$199,400</td><td>$193,894</td><td>$2,247</td><td class="blue">$1,756</td><td>$645</td></tr>
+          <tr><td>2</td><td>1715 Hammocks Ave, Lutz</td><td>$235,000</td><td>$230,870</td><td>$2,066</td><td class="blue">$1,499</td><td>$768</td></tr>
+          <tr><td>3</td><td>4617 Ashburn Square Dr, Tampa</td><td>$249,900</td><td>$245,100</td><td>$2,064</td><td class="blue">$1,400</td><td>$815</td></tr>
+          <tr><td>4</td><td>1033 Blackwater Dr, Wesley Chapel</td><td>$250,000</td><td>$246,450</td><td>$2,097</td><td class="blue">$1,385</td><td>$820</td></tr>
+          <tr><td>5</td><td>31150 Gossamer Way, Zephyrhills</td><td>$235,000</td><td>$229,600</td><td>$2,062</td><td class="blue">$1,195</td><td>$764</td></tr>
+          <tr><td>6</td><td>4535 Winding River Way, Land O Lakes</td><td>$250,000</td><td>$247,300</td><td>$1,836</td><td class="blue">$1,183</td><td>$823</td></tr>
+          <tr><td>7</td><td>30148 Goodwick Way, Zephyrhills</td><td>$230,000</td><td>$226,400</td><td>$1,995</td><td class="blue">$1,172</td><td>$753</td></tr>
+          <tr><td>8</td><td>16342 Rollingbrook Dr, Odessa</td><td>$235,000</td><td>$230,870</td><td>$1,797</td><td class="blue">$1,152</td><td>$768</td></tr>
+          <tr><td>9</td><td>37557 Daliha Ter, Zephyrhills</td><td>$182,000</td><td>$175,822</td><td>$1,813</td><td class="blue">$1,144</td><td>$585</td></tr>
+          <tr><td>10</td><td>36427 Garden Wall Way, Zephyrhills</td><td>$245,000</td><td>$242,200</td><td>$1,893</td><td class="blue">$983</td><td>$806</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="foot"><span>* 7% · 30yr · 50% down · RIP · Pitch deck</span><span>06 / 12</span></div>
+  </section>
+
+  <!-- 7 HOW IT WORKS -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">Architecture</p>
+      <h2 class="title">n8n does the fetching. RIP does the thinking.</h2>
+      <div class="grid-3" style="margin-top:24px;">
+        <div class="card">
+          <h3>1 · Trigger</h3>
+          <p>Operator hits Analyze, or Friday 8am fires the digest. RIP creates a run ID and POSTs to the matching webhook with <em>x-webhook-secret</em>.</p>
+        </div>
+        <div class="card">
+          <h3>2 · Enrich</h3>
+          <p>n8n pulls Zillow / Apify, county GIS, FEMA, rent comps — or runs the bundled Code node. Same payload shape either way.</p>
+        </div>
+        <div class="card">
+          <h3>3 · Report</h3>
+          <p>Callback to <em>/api/webhooks/n8n</em>. RIP stores the run and renders the IC page. If n8n is down, the local engine still underwrites.</p>
+        </div>
+      </div>
+      <div class="grid-4" style="margin-top:16px;">
+        <div class="kpi"><div class="lbl">Workflows</div><div class="val">5</div><div class="hint">Property, area, land, MF, digest</div></div>
+        <div class="kpi" style="border-left-color:var(--blue);"><div class="lbl">Fallback</div><div class="val" style="font-size:20px;padding-top:6px;">Local</div><div class="hint">Always produces a report</div></div>
+        <div class="kpi"><div class="lbl">Callback</div><div class="val" style="font-size:18px;padding-top:8px;">POST</div><div class="hint">/api/webhooks/n8n</div></div>
+        <div class="kpi" style="border-left-color:var(--taupe);"><div class="lbl">Import</div><div class="val" style="font-size:18px;padding-top:8px;">JSON</div><div class="hint">n8n/workflows/</div></div>
+      </div>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>07 / 12</span></div>
+  </section>
+
+  <!-- 8 MARKET -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">Market</p>
+      <h2 class="title">Start where the digest already lands.</h2>
+      <p class="lede">Beachhead is Tampa Bay cash-flow investors. Expand along the same product: 3/2 townhomes under $250k, land pads, garden multifamily.</p>
+      <div class="grid-2" style="margin-top:22px;">
+        <div>
+          <div class="grid-2">
+            <div class="kpi"><div class="lbl">TAMPA BAY WEDGE</div><div class="val">7</div><div class="hint">scored submarkets in-product</div></div>
+            <div class="kpi" style="border-left-color:var(--blue);"><div class="lbl">AVG DIGEST CF</div><div class="val">$1,287</div><div class="hint">NOI / mo on the Aug 21 book</div></div>
+            <div class="kpi"><div class="lbl">SCREENED</div><div class="val">142</div><div class="hint">names this week before rank</div></div>
+            <div class="kpi" style="border-left-color:var(--taupe);"><div class="lbl">AVG OFFER</div><div class="val">$227k</div><div class="hint">50% down underwriting</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Why this market first</h3>
+          <ul>
+            <li>In-migration + I-75 / Wiregrass jobs keep 3/2 townhome rents honest.</li>
+            <li>The operator already publishes a weekly ranked list — RIP is the system of record behind it.</li>
+            <li>Florida insurance and HOA are the swing factors. A generic national tool will not model them the way this shop does.</li>
+            <li>Southeast expansion (Orlando, Jacksonville, Atlanta BTR-adjacent) uses the same stack.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>08 / 12</span></div>
+  </section>
+
+  <!-- 9 COMPETITION -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">Competition</p>
+      <h2 class="title">Not another listing portal.</h2>
+      <table style="margin-top:18px;">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Spreadsheet + Zillow</th>
+            <th>EVA / MSA IQ</th>
+            <th>Buildora / Giraffe</th>
+            <th>RIP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cash-flow digest format</td>
+            <td>Manual</td>
+            <td>Generic IC memo</td>
+            <td>Development-first</td>
+            <td class="blue">Native (High ROI Picks)</td>
+          </tr>
+          <tr>
+            <td>Area + land + MF in one book</td>
+            <td>No</td>
+            <td>Property-centric</td>
+            <td>Site / feasibility</td>
+            <td class="blue">Yes</td>
+          </tr>
+          <tr>
+            <td>n8n / shop automation</td>
+            <td>None</td>
+            <td>Closed</td>
+            <td>Closed</td>
+            <td class="blue">First-class</td>
+          </tr>
+          <tr>
+            <td>Local underwriting if APIs fail</td>
+            <td>The sheet</td>
+            <td>No</td>
+            <td>No</td>
+            <td class="blue">Yes</td>
+          </tr>
+          <tr>
+            <td>Florida HOA / insurance as first-class lines</td>
+            <td>Ad hoc</td>
+            <td>Buried</td>
+            <td>N/A</td>
+            <td class="blue">On the report</td>
+          </tr>
+          <tr>
+            <td>White-label weekly email</td>
+            <td>Mail merge</td>
+            <td>PDF export</td>
+            <td>No</td>
+            <td class="blue">Digest workflow</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>09 / 12</span></div>
+  </section>
+
+  <!-- 10 MODEL + GTM -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">Model &amp; go-to-market</p>
+      <h2 class="title">Sell the book, not the scrape.</h2>
+      <div class="grid-2" style="margin-top:22px;">
+        <div class="card">
+          <h3>Revenue</h3>
+          <ul>
+            <li><strong>Operator</strong> — $149 / mo. Personal book, Analyze, digest export.</li>
+            <li><strong>Shop</strong> — $599 / mo. Seats, n8n webhooks, white-label Friday email.</li>
+            <li><strong>Club / brokerage</strong> — $1,200 / mo. Co-branded High ROI list for members.</li>
+            <li><strong>Services wrap</strong> — Cornerstone implements n8n + data connectors.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>How we sell it</h3>
+          <ul>
+            <li>The digest is already in-market. RIP is the upgrade path.</li>
+            <li>Tampa investor rooms (TREI and peers) — design partners, not ads.</li>
+            <li>n8n template drop: five workflows as the Trojan horse.</li>
+            <li>Then: Orlando / Jacksonville shops that copy the Tampa playbook.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>10 / 12</span></div>
+  </section>
+
+  <!-- 11 ASK -->
+  <section class="slide">
+    <div class="bar"></div>
+    <div class="pad">
+      <p class="kicker">The ask</p>
+      <h2 class="title">Seed the data layer. Keep the stack.</h2>
+      <p class="lede">Product is live. Seeking seed capital and two design-partner shops to take RIP from Tampa Bay operator tool to Southeast underwriting terminal.</p>
+      <div class="grid-3" style="margin-top:24px;">
+        <div class="kpi"><div class="lbl">RAISE</div><div class="val">$750k</div><div class="hint">Seed · 18-month runway</div></div>
+        <div class="kpi" style="border-left-color:var(--blue);"><div class="lbl">USE</div><div class="val" style="font-size:18px;padding-top:8px;">Data + GTM</div><div class="hint">Live comps, flood, insurance</div></div>
+        <div class="kpi" style="border-left-color:var(--taupe);"><div class="lbl">MILESTONE</div><div class="val" style="font-size:18px;padding-top:8px;">3 MSAs</div><div class="hint">Tampa · Orlando · Jacksonville</div></div>
+      </div>
+      <div class="grid-3" style="margin-top:16px;">
+        <div class="card">
+          <h3>Product (40%)</h3>
+          <p>Live rent / tax / flood / insurance connectors. Rent-roll ingest for multifamily. Print / PDF IC pack.</p>
+        </div>
+        <div class="card">
+          <h3>Market (35%)</h3>
+          <p>Two shop design partners, club white-label, Southeast coverage beyond Pasco / Hillsborough.</p>
+        </div>
+        <div class="card">
+          <h3>Ops (25%)</h3>
+          <p>Founder-led implementation, n8n hosting playbook, and the Friday digest as a paid product.</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>RIP · Pitch deck</span><span>11 / 12</span></div>
+  </section>
+
+  <!-- 12 CLOSE -->
+  <section class="slide dark">
+    <div class="bar"></div>
+    <div class="pad" style="display:flex;flex-direction:column;height:6.7in;justify-content:space-between;">
+      <img class="logo" src="../logo.png" alt="Cornerstone Digital Technologies" />
+      <div>
+        <p class="kicker">Let’s underwrite the next offer</p>
+        <h2 class="title" style="font-size:48px;">RIP is the book.<br />n8n is the wire.</h2>
+        <p class="lede" style="max-width:9in;">
+          Cornerstone Digital Technologies · Real Estate Intelligence Platform<br />
+          Design partners and seed conversations: start with a Friday digest and an address.
+        </p>
+      </div>
+      <div class="display" style="font-size:13px;letter-spacing:0.18em;color:var(--taupe-2);">
+        RIP.CORNERSTONE · AREAS · PROPERTIES · LAND · MULTIFAMILY
+      </div>
+    </div>
+    <div class="foot"><span>Confidential · Not an offer to sell securities</span><span>12 / 12</span></div>
+  </section>
+
+</body>
+</html>

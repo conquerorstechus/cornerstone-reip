@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #16171f;
+  --navy-2: #1e1f2a;
+  --ink: #1c1d24;
+  --magenta: #e21880;
+  --magenta-dark: #c0106c;
+  --blue: #2b5fe0;
+  --blue-bright: #3d73f0;
+  --taupe: #9a8b7c;
+  --taupe-2: #b7aa9c;
+  --stone: #e8e2d9;
+  --paper: #f6f3ee;
+  --cream: #fffcf8;
+  --line: #d4cdc3;
+  --success: #1f8a5b;
+  --warn: #b56a12;
+  --danger: #b3332c;
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-ink: var(--ink);
+  --color-magenta: var(--magenta);
+  --color-magenta-dark: var(--magenta-dark);
+  --color-blue: var(--blue);
+  --color-blue-bright: var(--blue-bright);
+  --color-taupe: var(--taupe);
+  --color-taupe-2: var(--taupe-2);
+  --color-stone: var(--stone);
+  --color-paper: var(--paper);
+  --color-cream: var(--cream);
+  --color-line: var(--line);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-display: var(--font-exo);
+  --font-sans: var(--font-manrope);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.display {
+  font-family: var(--font-exo), system-ui, sans-serif;
+  letter-spacing: 0.04em;
+}
+
+::selection {
+  background: var(--magenta);
+  color: white;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+.wordmark-n {
+  color: var(--magenta);
+}
+.wordmark-e {
+  color: var(--blue);
+}
+.wordmark-stone {
+  color: var(--taupe);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}
