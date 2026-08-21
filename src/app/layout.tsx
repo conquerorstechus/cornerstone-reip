@@ -19,8 +19,27 @@ const SITE_TITLE = "REIP · Real Estate Intelligence Platform";
 const SITE_DESCRIPTION =
   "Cornerstone Digital Technologies — Real Estate Intelligence Platform for investors. Analyze areas, homes, land, and apartments.";
 
+const PRODUCTION_APP_URL = "https://reip.csdigitaltech.com";
+
+function metadataBaseUrl(): URL {
+  const configured = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (configured) {
+    try {
+      return new URL(configured);
+    } catch {
+      // Empty or invalid env values (common on Vercel) should not fail the build.
+    }
+  }
+
+  if (process.env.NODE_ENV === "development") {
+    return new URL("http://localhost:3000");
+  }
+
+  return new URL(PRODUCTION_APP_URL);
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  metadataBase: metadataBaseUrl(),
   title: {
     default: SITE_TITLE,
     template: "%s · REIP",
