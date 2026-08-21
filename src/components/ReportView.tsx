@@ -30,10 +30,10 @@ export function ReportView({ result }: { result: AnalysisResult }) {
       </dl>
       {result.cashFlow ? (
         <div className="border-t border-line px-6 py-5">
-          <p className="display text-[10px] tracking-[0.22em] text-taupe">CASH FLOW STACK</p>
+          <p className="display text-[10px] tracking-[0.22em] text-taupe">MONTHLY CASH FLOW</p>
           <p className="mt-1 text-xs text-taupe">
-            Same stack as Sam&apos;s High ROI Picks — cash flow is NOI (rent − tax − HOA − insurance).
-            Mortgage shown separately at 7% / 30yr / 50% down.
+            Cash flow is rent minus tax, HOA, and insurance. Mortgage is shown separately (7% /
+            30-year / 50% down).
           </p>
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
             <Row k="Ask" v={usd(result.cashFlow.ask)} />
@@ -42,9 +42,9 @@ export function ReportView({ result }: { result: AnalysisResult }) {
             <Row k="Tax" v={`− ${monthly(result.cashFlow.tax)}`} />
             <Row k="HOA" v={`− ${monthly(result.cashFlow.hoa)}`} />
             <Row k="Insurance" v={`− ${monthly(result.cashFlow.insurance)}`} />
-            <Row k="Cash flow (NOI)" v={monthly(result.cashFlow.noi)} strong />
+            <Row k="Cash flow" v={monthly(result.cashFlow.noi)} strong />
             <Row k="Mortgage" v={`− ${monthly(result.cashFlow.mortgage)}`} />
-            <Row k="After debt service" v={monthly(result.cashFlow.afterDebt)} strong />
+            <Row k="After the mortgage" v={monthly(result.cashFlow.afterDebt)} strong />
           </div>
         </div>
       ) : null}

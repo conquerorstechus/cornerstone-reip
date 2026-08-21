@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AnalyzeForm } from "../../../components/AnalyzeForm";
 import { OsmMap } from "../../../components/OsmMap";
 import { ScoreBar, SectionTitle } from "../../../components/Ui";
 import { areaBySlug, mfById } from "../../../lib/data";
@@ -47,10 +46,10 @@ export default async function MultifamilyDetailPage({
           ["Units", String(m.units)],
           ["Occupancy", pct(m.occupancy, 0)],
           ["Year built", String(m.yearBuilt)],
-          ["GPR", usd(m.gpr)],
-          ["EGI", usd(m.egi)],
+          ["Gross rent", usd(m.gpr)],
+          ["Collected rent", usd(m.egi)],
           ["Expenses", usd(m.expenses)],
-          ["NOI", usd(m.noi)],
+          ["Net income", usd(m.noi)],
           ["Cap rate", pct(m.capRate)],
           ["GRM", m.grm.toFixed(2)],
           ["$/door", usd(m.pricePerUnit)],
@@ -101,7 +100,12 @@ export default async function MultifamilyDetailPage({
       </div>
 
       <OsmMap lat={m.lat} lng={m.lng} label={m.name} />
-      <AnalyzeForm defaultType="multifamily" defaultQuery={`${m.name}, ${m.city}`} />
+      <Link
+        href={`/analyze?type=multifamily&q=${encodeURIComponent(`${m.name}, ${m.city}`)}`}
+        className="inline-block bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+      >
+        Analyze this building
+      </Link>
     </div>
   );
 }

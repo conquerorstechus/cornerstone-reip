@@ -10,10 +10,10 @@ export default function AreasPage() {
     <div className="space-y-6">
       <div>
         <p className="display text-[11px] tracking-[0.28em] text-magenta">SUBMARKETS</p>
-        <h2 className="display mt-1 text-3xl font-semibold">Area intelligence</h2>
+        <h2 className="display mt-1 text-3xl font-semibold">Areas</h2>
         <p className="mt-2 max-w-2xl text-sm text-taupe">
-          Tampa Bay zips that show up on the High ROI digest. Score blends cash flow, jobs, flood,
-          and renter demand — then n8n can refresh Census / BLS / FEMA overlays.
+          Tampa Bay markets on this week’s High ROI list — cash flow, jobs, flood risk, and renter
+          demand in one score.
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">

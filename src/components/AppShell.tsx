@@ -8,8 +8,6 @@ import {
   Layers,
   LayoutDashboard,
   MapPinned,
-  Presentation,
-  Radio,
   ScanSearch,
   Trees,
   FileBarChart,
@@ -17,14 +15,12 @@ import {
 
 const NAV = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/pitch", label: "Pitch deck", icon: Presentation },
   { href: "/reports", label: "High ROI Picks", icon: FileBarChart },
   { href: "/properties", label: "Properties", icon: Building2 },
   { href: "/areas", label: "Areas", icon: MapPinned },
   { href: "/land", label: "Land", icon: Trees },
   { href: "/multifamily", label: "Multifamily", icon: Layers },
   { href: "/analyze", label: "Analyze", icon: ScanSearch },
-  { href: "/workflows", label: "n8n Workflows", icon: Radio },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -71,7 +67,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="border-t border-white/10 px-5 py-4 text-[11px] leading-relaxed text-taupe">
-          <p className="display tracking-[0.18em] text-taupe-2">RIP</p>
+          <p className="display tracking-[0.18em] text-taupe-2">REIP</p>
           <p className="mt-1">Cornerstone Digital Technologies</p>
         </div>
       </aside>
@@ -84,7 +80,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <span className="wordmark-stone"> DIGITAL</span>
             </p>
             <h1 className="display mt-0.5 text-lg font-semibold tracking-[0.12em]">
-              RIP
+              REIP
               <span className="ml-3 text-sm font-medium tracking-normal text-taupe">
                 Real Estate Intelligence Platform
               </span>

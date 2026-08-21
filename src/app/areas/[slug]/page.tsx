@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { DealCard } from "../../../components/DealCard";
 import { OsmMap } from "../../../components/OsmMap";
 import { ScoreBar, SectionTitle } from "../../../components/Ui";
-import { AnalyzeForm } from "../../../components/AnalyzeForm";
 import { areaBySlug, LAND, MULTIFAMILY, PROPERTIES } from "../../../lib/data";
 import { monthly, pct, usd } from "../../../lib/format";
 
@@ -117,7 +116,12 @@ export default async function AreaDetailPage({
         </section>
       ) : null}
 
-      <AnalyzeForm defaultType="area" defaultQuery={`${a.name}, FL`} />
+      <Link
+        href={`/analyze?type=area&q=${encodeURIComponent(`${a.name}, FL`)}`}
+        className="inline-block bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+      >
+        Analyze this area
+      </Link>
     </div>
   );
 }

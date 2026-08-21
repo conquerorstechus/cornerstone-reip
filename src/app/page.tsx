@@ -14,17 +14,16 @@ export default function DashboardPage() {
           Intelligence for the next offer.
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-taupe">
-          RIP screens areas, properties, land, and multifamily the same way the High ROI Picks
-          digest does — then hands enrichment to n8n when you want live Zillow, county, and
-          rent-comp workflows.
+          REIP screens areas, homes, land, and apartments the same way High ROI Picks does — ask,
+          offer, rent, taxes, HOA, insurance, and cash flow on one page.
         </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="Deals screened" value={String(KPIS.dealsScreened)} hint="This week" accent="magenta" />
-        <Kpi label="Digest cash-flow avg" value={monthly(KPIS.avgCashFlow)} hint="NOI before debt" accent="blue" />
-        <Kpi label="Avg suggested offer" value={usd(KPIS.avgOffer)} hint="50% down underwriting" />
-        <Kpi label="n8n workflows" value={String(KPIS.n8nWorkflows)} hint="Import from /n8n/workflows" accent="taupe" />
+        <Kpi label="Avg cash flow" value={monthly(KPIS.avgCashFlow)} hint="Before the mortgage" accent="blue" />
+        <Kpi label="Avg suggested offer" value={usd(KPIS.avgOffer)} hint="50% down" />
+        <Kpi label="Submarkets" value={String(KPIS.markets)} hint="Tampa Bay book" accent="taupe" />
       </div>
 
       <section>

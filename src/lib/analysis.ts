@@ -1,4 +1,4 @@
-import type { AnalysisRequest, AnalysisResult, AssetType } from "./types";
+import type { AnalysisRequest, AnalysisResult } from "./types";
 import { monthly, pct, usd } from "./format";
 
 /** Matches Sam's High ROI Picks: 7% fixed, 30-year, 50% down. */
@@ -84,16 +84,16 @@ export function analyzeProperty(req: AnalysisRequest): AnalysisResult {
     recommendation: rec,
     summary:
       rec === "pursue"
-        ? `Underwriting at 50% down / 7% / 30-year produces ${monthly(noi)} NOI and ${monthly(afterDebt)} after debt service. Offer ${usd(offer)} against an ask of ${usd(ask)}.`
+        ? `At 50% down, 7%, 30 years, this screens at ${monthly(noi)} cash flow and ${monthly(afterDebt)} after the mortgage. Offer ${usd(offer)} against an ask of ${usd(ask)}.`
         : rec === "watch"
-          ? `The numbers work on paper (${monthly(noi)} NOI) but HOA, taxes, or rent estimates need a second pass before a hard offer.`
-          : `Cash flow after conservative expenses does not clear the High ROI screen. Pass unless you can buy well below ${usd(offer)}.`,
+          ? `Cash flow looks like ${monthly(noi)} on paper, but HOA, taxes, or rent need a closer look before a hard offer.`
+          : `Cash flow after expenses does not clear the High ROI screen. Pass unless you can buy well below ${usd(offer)}.`,
     metrics: [
       { label: "Ask", value: usd(ask) },
       { label: "Offer", value: usd(offer), hint: "est. 1.8% under ask" },
       { label: "Rent (est.)", value: monthly(rent) },
-      { label: "NOI / Cash Flow", value: monthly(noi), hint: "rent − tax − HOA − insurance" },
-      { label: "After debt", value: monthly(afterDebt) },
+      { label: "Cash flow", value: monthly(noi), hint: "rent − tax − HOA − insurance" },
+      { label: "After the mortgage", value: monthly(afterDebt) },
       { label: "Mortgage", value: monthly(mortgage), hint: "7% · 30yr · 50% down" },
       { label: "Tax", value: monthly(tax) },
       { label: "HOA", value: monthly(hoa) },
@@ -103,21 +103,21 @@ export function analyzeProperty(req: AnalysisRequest): AnalysisResult {
     cashFlow: { rent, tax, hoa, insurance, mortgage, noi, afterDebt, ask, offer },
     sections: [
       {
-        heading: "Underwriting notes",
-        body: "Figures follow the same stack as Sam's High ROI Picks digest: asking vs. suggested offer, estimated market rent, monthly tax / HOA / insurance, and a 7% fixed 30-year mortgage at 50% down. Mortgage is shown separately so cash flow matches the digest (NOI before debt service).",
+        heading: "Notes",
+        body: "These figures use the same High ROI Picks numbers: asking vs. suggested offer, estimated market rent, monthly tax / HOA / insurance, and a 7% fixed 30-year mortgage at 50% down. Mortgage is shown separately so cash flow matches the weekly list.",
         bullets: [
-          "All figures are estimates. Confirm rent comps, HOA budget, and tax assessed value before offering.",
+          "All figures are estimates. Confirm rent, HOA, and taxes before offering.",
           "This payment decreases when rates drop and the property is refinanced.",
-          "Vacancy and capex reserves are not deducted from the digest cash-flow line.",
+          "Vacancy and repair reserves are not taken out of cash flow.",
         ],
       },
       {
-        heading: "Next diligence",
-        body: "Run the n8n property workflow to pull live Zillow / county data, then walk the asset.",
+        heading: "Before you offer",
+        body: "Walk the home and confirm rent comps, the HOA budget, and the tax bill.",
         bullets: [
-          "Pull T12-equivalent: trailing rents, HOA special assessments, insurance quotes.",
-          "Check flood zone, HOA rental cap, and remaining useful life on roof / HVAC.",
-          "Model a 25% down refinance after stabilization.",
+          "Confirm trailing rents, any HOA special assessments, and insurance quotes.",
+          "Check flood zone, HOA rental cap, and remaining life on roof and HVAC.",
+          "Model a refinance after you stabilize the property.",
         ],
       },
     ],
@@ -188,7 +188,7 @@ export function analyzeLand(req: AnalysisRequest): AnalysisResult {
     sections: [
       {
         heading: "Development scenarios",
-        body: "RIP ranks three exits: hold, SFR/townhome pad, and garden multifamily. Costs are Tampa Bay 2026 conceptual — not a GC bid.",
+        body: "REIP ranks three exits: hold, SFR/townhome pad, and garden multifamily. Costs are Tampa Bay 2026 conceptual — not a GC bid.",
         bullets: [
           `Hold 24 months: carry ~${usd(ask * 0.07)} (taxes + interest) with optionality on zoning.`,
           `Townhome pad (${Math.min(maxUnits, 6)} units): vertical cost ~$165k/door, exit $280–310k/door.`,
@@ -197,7 +197,7 @@ export function analyzeLand(req: AnalysisRequest): AnalysisResult {
       },
       {
         heading: "Site diligence",
-        body: "Confirm flood panel, wetlands, access, and concurrency before depositing. n8n land workflow can attach county GIS + FEMA overlays.",
+        body: "Confirm flood panel, wetlands, access, and concurrency before depositing. Pull county maps and FEMA flood overlays in diligence.",
       },
     ],
     raw: { type: "land", acres, maxUnits },
@@ -223,27 +223,27 @@ export function analyzeMultifamily(req: AnalysisRequest): AnalysisResult {
     subtitle: `${units}-unit garden / small multifamily · Tampa Bay`,
     investorScore: score,
     recommendation: recommendation(score),
-    summary: `At ${usd(offer)} (${usd(ppu)}/unit) the asset underwrites to a ${pct(cap)} cap and ${pct(debtYield)} debt yield on 65% LTV. ${score >= 78 ? "Pursue with a rent-roll audit." : "Needs in-place rent growth or a basis reduction."}`,
+    summary: `At ${usd(offer)} (${usd(ppu)} per unit) this screens at a ${pct(cap)} cap rate. ${score >= 78 ? "Worth a rent-roll review." : "Needs higher rents or a lower purchase price."}`,
     metrics: [
       { label: "Ask", value: usd(ask) },
       { label: "Offer", value: usd(offer) },
       { label: "Units", value: String(units) },
       { label: "$ / unit", value: usd(ppu) },
-      { label: "GPR", value: usd(gpr) },
-      { label: "EGI", value: usd(egi) },
-      { label: "NOI", value: usd(noi) },
+      { label: "Gross rent", value: usd(gpr) },
+      { label: "Collected rent", value: usd(egi) },
+      { label: "Net income", value: usd(noi) },
       { label: "Cap rate", value: pct(cap) },
       { label: "GRM", value: grm.toFixed(2) },
-      { label: "Debt yield", value: pct(debtYield), hint: "NOI / 65% LTV" },
+      { label: "Debt yield", value: pct(debtYield) },
     ],
     sections: [
       {
-        heading: "Underwriting",
-        body: "T12 is not attached. RIP uses 5% vacancy and a 38% expense ratio — typical for Tampa garden product without a full payroll. Replace with actuals when the OM lands.",
+        heading: "Notes",
+        body: "A full rent roll is not attached. REIP assumes 5% vacancy and expenses at 38% of collected rent — typical for Tampa garden apartments. Replace with actuals when you have them.",
         bullets: [
-          "Confirm unit mix, in-place vs. market rents, and any HAP / Section 8 concentration.",
-          "Insurance is the swing factor on Florida multifamily — re-quote before IC.",
-          "Exit: 5-year hold, 25 bps cap compression only if you can mark rents to market.",
+          "Confirm unit mix and in-place vs. market rents.",
+          "Re-quote insurance before you go under contract — it moves Florida deals.",
+          "Plan a five-year hold and only mark rents to market if you can actually get them.",
         ],
       },
     ],
@@ -262,15 +262,4 @@ export function runLocalAnalysis(req: AnalysisRequest): AnalysisResult {
     default:
       return analyzeProperty(req);
   }
-}
-
-export function webhookForType(type: AssetType | "digest") {
-  const map: Record<string, string | undefined> = {
-    property: process.env.N8N_WEBHOOK_PROPERTY,
-    area: process.env.N8N_WEBHOOK_AREA,
-    land: process.env.N8N_WEBHOOK_LAND,
-    multifamily: process.env.N8N_WEBHOOK_MULTIFAMILY,
-    digest: process.env.N8N_WEBHOOK_DIGEST,
-  };
-  return map[type]?.trim() || "";
 }

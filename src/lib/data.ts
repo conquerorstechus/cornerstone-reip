@@ -586,7 +586,7 @@ export const MULTIFAMILY: MultifamilyAsset[] = [
     ],
     investorScore: 88,
     thesis:
-      "Value-add garden product inside the Wesley Chapel renter shed. In-place rents trail market by ~$140/door. Insurance and 1990s systems are the IC questions; the cap is honest at this basis.",
+      "Value-add garden product inside the Wesley Chapel renter shed. In-place rents trail market by ~$140/door. Insurance and 1990s systems are the questions to ask; the cap is honest at this basis.",
     risks: ["Florida insurance", "Deferred roof / HVAC", "New Class A down SR-54"],
     areaSlug: "wesley-chapel",
   },
@@ -655,9 +655,9 @@ export const DIGEST: DigestReport = {
   id: "digest-2026-08-21",
   title: "Sam's High ROI Picks",
   date: "Friday, August 21, 2026",
-  source: "Conquerors Tech Ops · n8n digest workflow",
+  source: "REIP · High ROI digest",
   intro:
-    "Top 10 Tampa Bay deals ranked by cash flow (NOI before debt service). Mortgage estimated at 7% fixed, 30-year, 50% down. All figures are estimates.",
+    "Top 10 Tampa Bay deals ranked by cash flow. Mortgage estimated at 7% fixed, 30-year, 50% down. All figures are estimates.",
   deals: PROPERTIES,
 };
 
@@ -683,5 +683,4 @@ export const KPIS = {
   avgCashFlow: Math.round(PROPERTIES.reduce((s, p) => s + p.cashFlow, 0) / PROPERTIES.length),
   avgOffer: Math.round(PROPERTIES.reduce((s, p) => s + p.offer, 0) / PROPERTIES.length),
   markets: AREAS.length,
-  n8nWorkflows: 5,
 };

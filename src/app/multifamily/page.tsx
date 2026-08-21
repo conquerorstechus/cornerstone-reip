@@ -9,11 +9,11 @@ export default function MultifamilyPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="display text-[11px] tracking-[0.28em] text-magenta">GARDEN / SMALL MF</p>
+        <p className="display text-[11px] tracking-[0.28em] text-magenta">APARTMENTS</p>
         <h2 className="display mt-1 text-3xl font-semibold">Multifamily</h2>
         <p className="mt-2 max-w-2xl text-sm text-taupe">
-          Cap rate, GRM, debt yield, and unit mix — the same questions an IC memo asks, before you
-          pay for a full T12. Push live rent rolls through the n8n multifamily workflow.
+          Income, expenses, and cap rate for small apartment buildings. Review unit mix and
+          occupancy before you tour.
         </p>
       </div>
       <div className="grid gap-4">

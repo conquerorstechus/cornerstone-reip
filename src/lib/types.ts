@@ -1,6 +1,6 @@
 export type AssetType = "property" | "area" | "land" | "multifamily";
 
-export type RunStatus = "queued" | "running" | "complete" | "failed" | "local";
+export type RunStatus = "complete" | "failed";
 
 export type DealThesis =
   | "cashflow"
@@ -141,7 +141,6 @@ export type AnalysisRun = {
   type: AssetType;
   query: string;
   status: RunStatus;
-  source: "n8n" | "local";
   createdAt: string;
   completedAt?: string;
   error?: string;
@@ -177,12 +176,4 @@ export type DigestReport = {
   source: string;
   intro: string;
   deals: Property[];
-};
-
-export type WorkflowDef = {
-  id: AssetType | "digest";
-  name: string;
-  webhookEnv: string;
-  description: string;
-  n8nFile: string;
 };

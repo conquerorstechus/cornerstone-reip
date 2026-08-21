@@ -26,20 +26,19 @@ export default async function ReportsPage() {
       </div>
 
       <p className="text-xs text-taupe">
-        Supplementary detail in the same shape as the Friday, August 21, 2026 ops email. Mortgage
-        estimated at 7% fixed, 30yr, 50% down. All figures are estimates.
+        Mortgage estimated at 7% fixed, 30 years, 50% down. All figures are estimates.
       </p>
 
       <section>
         <div className="mb-3 flex items-end justify-between">
-          <h3 className="display text-xl font-semibold">Analysis runs</h3>
+          <h3 className="display text-xl font-semibold">Your analyses</h3>
           <Link href="/analyze" className="text-sm text-blue hover:underline">
             New analysis
           </Link>
         </div>
         {runs.length === 0 ? (
           <p className="bg-cream px-5 py-8 text-sm text-taupe ring-1 ring-line">
-            No custom runs yet. Analyze an address or trigger an n8n workflow — results land here.
+            No saved analyses yet. Check an address and it will show up here.
           </p>
         ) : (
           <ul className="divide-y divide-stone bg-cream ring-1 ring-line">
@@ -48,15 +47,11 @@ export default async function ReportsPage() {
                 <Link href={`/reports/${r.id}`} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 hover:bg-stone/40">
                   <div>
                     <p className="font-semibold">{r.result?.title ?? r.query}</p>
-                    <p className="text-xs text-taupe">
-                      {r.type} · {r.source} · {r.status} · {new Date(r.createdAt).toLocaleString()}
-                    </p>
+                    <p className="text-xs text-taupe">{new Date(r.createdAt).toLocaleString()}</p>
                   </div>
                   {r.result?.cashFlow ? (
                     <p className="text-sm font-semibold text-blue">{monthly(r.result.cashFlow.noi)}</p>
-                  ) : (
-                    <p className="display text-[10px] tracking-[0.16em] text-taupe">{r.status}</p>
-                  )}
+                  ) : null}
                 </Link>
               </li>
             ))}

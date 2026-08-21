@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AnalyzeForm } from "../../../components/AnalyzeForm";
 import { OsmMap } from "../../../components/OsmMap";
 import { ScoreBar, SectionTitle } from "../../../components/Ui";
 import { areaBySlug, landById } from "../../../lib/data";
@@ -101,7 +100,12 @@ export default async function LandDetailPage({
       </section>
 
       <OsmMap lat={l.lat} lng={l.lng} label={l.address} />
-      <AnalyzeForm defaultType="land" defaultQuery={`${l.address}, ${l.city}, FL ${l.zip}`} />
+      <Link
+        href={`/analyze?type=land&q=${encodeURIComponent(`${l.address}, ${l.city}, FL ${l.zip}`)}`}
+        className="inline-block bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+      >
+        Analyze this land
+      </Link>
     </div>
   );
 }

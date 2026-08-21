@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AnalyzeForm } from "../../../components/AnalyzeForm";
 import { OsmMap } from "../../../components/OsmMap";
-import { RecBadge, ScoreBar, SectionTitle } from "../../../components/Ui";
+import { RecBadge, ScoreBar } from "../../../components/Ui";
 import { areaBySlug, propertyById } from "../../../lib/data";
 import { monthly, usd } from "../../../lib/format";
 
@@ -68,18 +67,24 @@ export default async function PropertyPage({
         ))}
       </dl>
       <p className="text-xs text-taupe">
-        * Mortgage estimated at 7% fixed, 30yr, 50% down. This payment will decrease when interest
-        rates drop and the property is refinanced. Cash flow matches the digest (NOI before debt).
+        * Mortgage estimated at 7% fixed, 30 years, 50% down. This payment decreases when rates
+        drop and you refinance. Cash flow is rent minus tax, HOA, and insurance (before the mortgage).
       </p>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <OsmMap lat={p.lat} lng={p.lng} label={`${p.address}, ${p.city}`} />
-        <div className="bg-cream p-5 ring-1 ring-line">
-          <SectionTitle kicker="RE-RUN" title="Send to n8n" />
-          <p className="mb-4 text-sm text-taupe">
-            Prefills this address. Use n8n to pull live listing, rent comps, and county data.
+        <div className="flex flex-col justify-center bg-cream p-6 ring-1 ring-line">
+          <p className="display text-[10px] tracking-[0.22em] text-taupe">NEXT STEP</p>
+          <h3 className="display mt-2 text-lg font-semibold">Run the numbers yourself</h3>
+          <p className="mt-2 text-sm text-taupe">
+            Confirm rent, HOA, and tax before you offer.
           </p>
-          <AnalyzeForm defaultType="property" defaultQuery={`${p.address}, ${p.city}, ${p.state} ${p.zip}`} />
+          <Link
+            href={`/analyze?type=property&q=${encodeURIComponent(`${p.address}, ${p.city}, ${p.state} ${p.zip}`)}`}
+            className="mt-4 inline-block w-fit bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+          >
+            Analyze this home
+          </Link>
         </div>
       </div>
       {p.zillowUrl ? (

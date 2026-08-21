@@ -5,10 +5,10 @@ import { useState } from "react";
 import type { AssetType } from "../lib/types";
 
 const TYPES: { id: AssetType; label: string; hint: string }[] = [
-  { id: "property", label: "Property", hint: "SFR / townhome cash-flow screen" },
-  { id: "area", label: "Area", hint: "Submarket / zip snapshot" },
-  { id: "land", label: "Land", hint: "Parcel feasibility" },
-  { id: "multifamily", label: "Multifamily", hint: "Garden / small MF" },
+  { id: "property", label: "Home", hint: "House or townhome" },
+  { id: "area", label: "Area", hint: "City or zip code" },
+  { id: "land", label: "Land", hint: "Vacant lot or pad" },
+  { id: "multifamily", label: "Apartments", hint: "Small apartment building" },
 ];
 
 export function AnalyzeForm({
@@ -30,7 +30,6 @@ export function AnalyzeForm({
   const [rent, setRent] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [source, setSource] = useState<"auto" | "n8n" | "local">("auto");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -50,8 +49,6 @@ export function AnalyzeForm({
           units: units ? Number(units) : undefined,
           acres: acres ? Number(acres) : undefined,
           rent: rent ? Number(rent) : undefined,
-          preferN8n: source === "n8n" || source === "auto",
-          forceLocal: source === "local",
         }),
       });
       const json = await res.json();
@@ -123,26 +120,6 @@ export function AnalyzeForm({
             <Num label="In-place rent $/door" value={rent} onChange={setRent} />
           </div>
         ) : null}
-        <fieldset className="flex flex-wrap gap-4 text-sm">
-          <legend className="display sr-only">Engine</legend>
-          {(
-            [
-              ["auto", "n8n if configured, else local"],
-              ["n8n", "Force n8n webhook"],
-              ["local", "Local underwriting only"],
-            ] as const
-          ).map(([id, label]) => (
-            <label key={id} className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="source"
-                checked={source === id}
-                onChange={() => setSource(id)}
-              />
-              <span className="text-taupe">{label}</span>
-            </label>
-          ))}
-        </fieldset>
         {error ? <p className="text-sm text-danger">{error}</p> : null}
         <button
           disabled={busy}

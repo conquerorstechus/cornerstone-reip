@@ -9,11 +9,10 @@ export default function LandPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="display text-[11px] tracking-[0.28em] text-magenta">PARCELS</p>
-        <h2 className="display mt-1 text-3xl font-semibold">Land &amp; pads</h2>
+        <p className="display text-[11px] tracking-[0.28em] text-magenta">LOTS</p>
+        <h2 className="display mt-1 text-3xl font-semibold">Land</h2>
         <p className="mt-2 max-w-2xl text-sm text-taupe">
-          Feasibility first: zoning, utilities, flood, and three exits (hold, townhome pad, garden
-          MF). n8n can attach county GIS and FEMA overlays on a re-run.
+          Zoning, utilities, flood, and three ways out: hold, townhomes, or apartments.
         </p>
       </div>
       <div className="grid gap-4">
