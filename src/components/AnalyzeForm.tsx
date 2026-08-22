@@ -68,7 +68,7 @@ export function AnalyzeForm({
             key={t.id}
             type="button"
             onClick={() => setType(t.id)}
-            className={`px-4 py-3 text-left ${type === t.id ? "bg-navy text-cream" : "bg-cream"}`}
+            className={`min-h-14 px-3 py-3 text-left sm:px-4 ${type === t.id ? "bg-navy text-cream" : "bg-cream"}`}
           >
             <p className="display text-sm tracking-wide">{t.label}</p>
             <p className={`mt-0.5 text-[11px] ${type === t.id ? "text-taupe-2" : "text-taupe"}`}>
@@ -77,7 +77,7 @@ export function AnalyzeForm({
           </button>
         ))}
       </div>
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 p-4 sm:p-6">
         <label className="block">
           <span className="display text-[10px] tracking-[0.2em] text-taupe">
             {type === "area" ? "MARKET / ZIP / CITY" : "ADDRESS OR NAME"}
@@ -123,7 +123,7 @@ export function AnalyzeForm({
         {error ? <p className="text-sm text-danger">{error}</p> : null}
         <button
           disabled={busy}
-          className="bg-magenta px-5 py-2.5 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark disabled:opacity-60"
+          className="min-h-11 w-full bg-magenta px-5 py-2.5 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark disabled:opacity-60 sm:w-auto"
         >
           {busy ? "Running…" : "Run analysis"}
         </button>

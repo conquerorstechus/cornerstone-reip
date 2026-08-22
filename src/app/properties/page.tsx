@@ -8,7 +8,7 @@ export default function PropertiesPage() {
     <div className="space-y-6">
       <div>
         <p className="display text-[11px] tracking-[0.28em] text-magenta">HOMES</p>
-        <h2 className="display mt-1 text-3xl font-semibold">Properties</h2>
+        <h2 className="display mt-1 text-2xl font-semibold sm:text-3xl">Properties</h2>
         <p className="mt-2 max-w-2xl text-sm text-taupe">
           Ranked by monthly cash flow. Open a home for the full numbers and a map.
         </p>

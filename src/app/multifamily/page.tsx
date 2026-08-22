@@ -10,7 +10,7 @@ export default function MultifamilyPage() {
     <div className="space-y-6">
       <div>
         <p className="display text-[11px] tracking-[0.28em] text-magenta">APARTMENTS</p>
-        <h2 className="display mt-1 text-3xl font-semibold">Multifamily</h2>
+        <h2 className="display mt-1 text-2xl font-semibold sm:text-3xl">Multifamily</h2>
         <p className="mt-2 max-w-2xl text-sm text-taupe">
           Income, expenses, and cap rate for small apartment buildings. Review unit mix and
           occupancy before you tour.
@@ -19,18 +19,18 @@ export default function MultifamilyPage() {
       <div className="grid gap-4">
         {MULTIFAMILY.map((m) => (
           <Link key={m.id} href={`/multifamily/${m.id}`} className="block bg-cream ring-1 ring-line hover:ring-blue">
-            <div className="flex flex-wrap items-start justify-between gap-4 px-5 py-4">
-              <div>
-                <h3 className="display text-lg font-semibold">{m.name}</h3>
+            <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-4 sm:px-5">
+              <div className="min-w-0">
+                <h3 className="display text-lg font-semibold break-words">{m.name}</h3>
                 <p className="text-sm text-taupe">
                   {m.address}, {m.city} {m.zip} · {m.units} units · {m.yearBuilt}
                 </p>
               </div>
-              <div className="w-40">
+              <div className="w-full sm:w-40">
                 <ScoreBar score={m.investorScore} />
               </div>
             </div>
-            <p className="px-5 pb-3 text-sm leading-relaxed text-ink/80">{m.thesis}</p>
+            <p className="px-4 pb-3 text-sm leading-relaxed text-ink/80 sm:px-5">{m.thesis}</p>
             <dl className="grid grid-cols-2 gap-px bg-line sm:grid-cols-5">
               {[
                 ["Ask", usd(m.asking)],

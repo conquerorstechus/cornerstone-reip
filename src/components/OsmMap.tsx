@@ -14,7 +14,7 @@ export function OsmMap({
   const src = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${lat}%2C${lng}`;
   return (
     <figure className="overflow-hidden ring-1 ring-line">
-      <iframe title={label ?? "Map"} src={src} className="h-64 w-full border-0 grayscale-[20%]" />
+      <iframe title={label ?? "Map"} src={src} className="h-52 w-full border-0 grayscale-[20%] sm:h-64" />
       {label ? (
         <figcaption className="bg-cream px-3 py-2 text-xs text-taupe">{label}</figcaption>
       ) : null}

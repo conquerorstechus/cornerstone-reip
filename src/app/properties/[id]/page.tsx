@@ -24,7 +24,7 @@ export default async function PropertyPage({
           {p.rank ? (
             <p className="display text-[11px] tracking-[0.28em] text-magenta">RANK #{p.rank}</p>
           ) : null}
-          <h2 className="display mt-1 text-3xl font-semibold">{p.address}</h2>
+          <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{p.address}</h2>
           <p className="text-taupe">
             {p.city}, {p.state} {p.zip}
             {area ? (
@@ -37,7 +37,7 @@ export default async function PropertyPage({
             ) : null}
           </p>
         </div>
-        <div className="w-52">
+        <div className="w-full sm:w-52">
           <RecBadge rec={rec} />
           <div className="mt-3">
             <ScoreBar score={Math.min(96, 50 + Math.round(p.cashFlow / 40))} />
@@ -81,7 +81,7 @@ export default async function PropertyPage({
           </p>
           <Link
             href={`/analyze?type=property&q=${encodeURIComponent(`${p.address}, ${p.city}, ${p.state} ${p.zip}`)}`}
-            className="mt-4 inline-block w-fit bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+            className="mt-4 inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
           >
             Analyze this home
           </Link>

@@ -12,7 +12,7 @@ export default async function ReportsPage() {
     <div className="space-y-8">
       <div>
         <p className="display text-[11px] tracking-[0.28em] text-magenta">DIGEST</p>
-        <h2 className="display mt-1 text-3xl font-semibold">{DIGEST.title}</h2>
+        <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{DIGEST.title}</h2>
         <p className="mt-1 text-sm text-taupe">
           {DIGEST.date} · {DIGEST.source}
         </p>
@@ -30,7 +30,7 @@ export default async function ReportsPage() {
       </p>
 
       <section>
-        <div className="mb-3 flex items-end justify-between">
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
           <h3 className="display text-xl font-semibold">Your analyses</h3>
           <Link href="/analyze" className="text-sm text-blue hover:underline">
             New analysis

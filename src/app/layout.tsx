@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Exo_2, Manrope } from "next/font/google";
 import { AppShell } from "../components/AppShell";
 import "./globals.css";
@@ -38,6 +38,13 @@ function metadataBaseUrl(): URL {
   return new URL(PRODUCTION_APP_URL);
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#16171f",
+};
+
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
   title: {
@@ -46,7 +53,12 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  icons: { icon: "/logo.png" },
+  icons: { icon: "/logo.png", apple: "/logo.png" },
+  appleWebApp: {
+    capable: true,
+    title: "REIP",
+    statusBarStyle: "black-translucent",
+  },
   openGraph: {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
@@ -63,7 +75,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${exo.variable} ${manrope.variable} h-full antialiased`}>
-      <body className="min-h-full bg-paper text-ink">
+      <body className="min-h-dvh bg-paper text-ink">
         <AppShell>{children}</AppShell>
       </body>
     </html>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OsmMap } from "../../../components/OsmMap";
-import { ScoreBar, SectionTitle } from "../../../components/Ui";
+import { ScoreBar, SectionTitle, TableScroll } from "../../../components/Ui";
 import { areaBySlug, mfById } from "../../../lib/data";
 import { monthly, pct, usd } from "../../../lib/format";
 
@@ -20,7 +20,7 @@ export default async function MultifamilyDetailPage({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="display text-[11px] tracking-[0.28em] text-magenta">MULTIFAMILY</p>
-          <h2 className="display mt-1 text-3xl font-semibold">{m.name}</h2>
+          <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{m.name}</h2>
           <p className="text-taupe">
             {m.address}, {m.city} FL {m.zip}
             {area ? (
@@ -33,7 +33,7 @@ export default async function MultifamilyDetailPage({
             ) : null}
           </p>
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <ScoreBar score={m.investorScore} />
         </div>
       </div>
@@ -65,7 +65,8 @@ export default async function MultifamilyDetailPage({
 
       <section>
         <SectionTitle kicker="UNIT MIX" title="In-place rents" />
-        <table className="w-full bg-cream text-sm ring-1 ring-line">
+        <TableScroll>
+        <table className="w-full min-w-[28rem] bg-cream text-sm ring-1 ring-line">
           <thead>
             <tr className="display text-left text-[10px] tracking-[0.16em] text-taupe">
               <th className="px-4 py-2">Type</th>
@@ -85,6 +86,7 @@ export default async function MultifamilyDetailPage({
             ))}
           </tbody>
         </table>
+        </TableScroll>
       </section>
 
       <div className="bg-cream p-5 ring-1 ring-line">
@@ -102,7 +104,7 @@ export default async function MultifamilyDetailPage({
       <OsmMap lat={m.lat} lng={m.lng} label={m.name} />
       <Link
         href={`/analyze?type=multifamily&q=${encodeURIComponent(`${m.name}, ${m.city}`)}`}
-        className="inline-block bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+        className="inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
       >
         Analyze this building
       </Link>

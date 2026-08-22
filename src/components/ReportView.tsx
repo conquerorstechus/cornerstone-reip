@@ -5,20 +5,20 @@ import { RecBadge, ScoreBar } from "./Ui";
 export function ReportView({ result }: { result: AnalysisResult }) {
   return (
     <article className="bg-cream ring-1 ring-line">
-      <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line px-6 py-5">
+      <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line px-4 py-4 sm:px-6 sm:py-5">
         <div>
           <p className="display text-[10px] tracking-[0.26em] text-magenta">ANALYSIS REPORT</p>
-          <h2 className="display mt-1 text-2xl font-semibold tracking-wide">{result.title}</h2>
+          <h2 className="display mt-1 text-xl font-semibold tracking-wide break-words sm:text-2xl">{result.title}</h2>
           <p className="mt-1 text-sm text-taupe">{result.subtitle}</p>
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <RecBadge rec={result.recommendation} />
           <div className="mt-3">
             <ScoreBar score={result.investorScore} />
           </div>
         </div>
       </header>
-      <p className="border-b border-line px-6 py-4 text-sm leading-relaxed">{result.summary}</p>
+      <p className="border-b border-line px-4 py-4 text-sm leading-relaxed sm:px-6">{result.summary}</p>
       <dl className="grid grid-cols-2 gap-px bg-line sm:grid-cols-5">
         {result.metrics.map((m) => (
           <div key={m.label} className="bg-cream px-4 py-3">
@@ -29,7 +29,7 @@ export function ReportView({ result }: { result: AnalysisResult }) {
         ))}
       </dl>
       {result.cashFlow ? (
-        <div className="border-t border-line px-6 py-5">
+        <div className="border-t border-line px-4 py-5 sm:px-6">
           <p className="display text-[10px] tracking-[0.22em] text-taupe">MONTHLY CASH FLOW</p>
           <p className="mt-1 text-xs text-taupe">
             Cash flow is rent minus tax, HOA, and insurance. Mortgage is shown separately (7% /
@@ -49,7 +49,7 @@ export function ReportView({ result }: { result: AnalysisResult }) {
         </div>
       ) : null}
       {result.sections.map((s) => (
-        <section key={s.heading} className="border-t border-line px-6 py-5">
+        <section key={s.heading} className="border-t border-line px-4 py-5 sm:px-6">
           <h3 className="display text-sm font-semibold tracking-[0.08em]">{s.heading}</h3>
           <p className="mt-2 text-sm leading-relaxed text-ink/85">{s.body}</p>
           {s.bullets ? (

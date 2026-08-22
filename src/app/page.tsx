@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DealCard } from "../components/DealCard";
-import { Kpi, SectionTitle } from "../components/Ui";
+import { Kpi, SectionTitle, TableScroll } from "../components/Ui";
 import { AREAS, DIGEST, KPIS, MULTIFAMILY } from "../lib/data";
 import { monthly, usd } from "../lib/format";
 
@@ -10,7 +10,7 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <div>
         <p className="display text-[11px] tracking-[0.28em] text-magenta">TAMPA BAY · LIVE BOOK</p>
-        <h2 className="display mt-1 text-3xl font-semibold tracking-[0.04em]">
+        <h2 className="display mt-1 text-2xl font-semibold tracking-[0.04em] break-words sm:text-3xl">
           Intelligence for the next offer.
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-taupe">
@@ -27,7 +27,7 @@ export default function DashboardPage() {
       </div>
 
       <section>
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
           <SectionTitle kicker="DIGEST" title={DIGEST.title} />
           <Link href="/reports" className="text-sm text-blue hover:underline">
             Open full report
@@ -48,7 +48,8 @@ export default function DashboardPage() {
           <div className="border-b border-line px-5 py-4">
             <SectionTitle kicker="MARKETS" title="Tampa Bay submarkets" />
           </div>
-          <table className="w-full text-sm">
+          <TableScroll>
+          <table className="w-full min-w-[36rem] text-sm">
             <thead>
               <tr className="display text-left text-[10px] tracking-[0.16em] text-taupe">
                 <th className="px-5 py-2">Area</th>
@@ -75,8 +76,9 @@ export default function DashboardPage() {
               ))}
             </tbody>
           </table>
+          </TableScroll>
         </div>
-        <div className="bg-navy p-6 text-cream">
+        <div className="bg-navy p-5 text-cream sm:p-6">
           <p className="display text-[10px] tracking-[0.24em] text-taupe-2">MULTIFAMILY</p>
           <h3 className="display mt-2 text-lg font-semibold">On the book</h3>
           <ul className="mt-4 space-y-4">

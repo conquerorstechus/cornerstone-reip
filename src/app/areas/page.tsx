@@ -10,7 +10,7 @@ export default function AreasPage() {
     <div className="space-y-6">
       <div>
         <p className="display text-[11px] tracking-[0.28em] text-magenta">SUBMARKETS</p>
-        <h2 className="display mt-1 text-3xl font-semibold">Areas</h2>
+        <h2 className="display mt-1 text-2xl font-semibold sm:text-3xl">Areas</h2>
         <p className="mt-2 max-w-2xl text-sm text-taupe">
           Tampa Bay markets on this week’s High ROI list — cash flow, jobs, flood risk, and renter
           demand in one score.
@@ -18,20 +18,20 @@ export default function AreasPage() {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {AREAS.map((a) => (
-          <Link key={a.slug} href={`/areas/${a.slug}`} className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+          <Link key={a.slug} href={`/areas/${a.slug}`} className="bg-cream p-4 ring-1 ring-line hover:ring-blue sm:p-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+              <div className="min-w-0">
                 <h3 className="display text-lg font-semibold">{a.name}</h3>
                 <p className="text-sm text-taupe">
                   {a.county} · {a.zips.join(", ")}
                 </p>
               </div>
-              <div className="w-36">
+              <div className="w-full sm:w-36">
                 <ScoreBar score={a.investorScore} />
               </div>
             </div>
             <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink/80">{a.thesis}</p>
-            <dl className="mt-4 grid grid-cols-3 gap-3 text-sm">
+            <dl className="mt-4 grid grid-cols-3 gap-2 text-sm sm:gap-3">
               <div>
                 <dt className="display text-[9px] tracking-[0.16em] text-taupe">Median ask</dt>
                 <dd className="font-semibold">{usd(a.medianAsk)}</dd>

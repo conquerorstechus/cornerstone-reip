@@ -23,10 +23,10 @@ export default async function AreaDetailPage({
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <p className="display text-[11px] tracking-[0.28em] text-magenta">{a.county.toUpperCase()} COUNTY</p>
-          <h2 className="display mt-1 text-3xl font-semibold">{a.name}</h2>
+          <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{a.name}</h2>
           <p className="text-sm text-taupe">{a.zips.join(" · ")}</p>
         </div>
-        <div className="w-56">
+        <div className="w-full sm:w-56">
           <ScoreBar score={a.investorScore} />
         </div>
       </div>
@@ -118,7 +118,7 @@ export default async function AreaDetailPage({
 
       <Link
         href={`/analyze?type=area&q=${encodeURIComponent(`${a.name}, FL`)}`}
-        className="inline-block bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+        className="inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
       >
         Analyze this area
       </Link>

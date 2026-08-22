@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OsmMap } from "../../../components/OsmMap";
-import { ScoreBar, SectionTitle } from "../../../components/Ui";
+import { ScoreBar, SectionTitle, TableScroll } from "../../../components/Ui";
 import { areaBySlug, landById } from "../../../lib/data";
 import { pct, usd } from "../../../lib/format";
 
@@ -20,7 +20,7 @@ export default async function LandDetailPage({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="display text-[11px] tracking-[0.28em] text-magenta">LAND</p>
-          <h2 className="display mt-1 text-3xl font-semibold">{l.address}</h2>
+          <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{l.address}</h2>
           <p className="text-taupe">
             {l.city}, FL {l.zip}
             {area ? (
@@ -33,7 +33,7 @@ export default async function LandDetailPage({
             ) : null}
           </p>
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <ScoreBar score={l.investorScore} />
         </div>
       </div>
@@ -59,7 +59,8 @@ export default async function LandDetailPage({
 
       <section>
         <SectionTitle kicker="EXITS" title="Development scenarios" />
-        <table className="w-full bg-cream text-sm ring-1 ring-line">
+        <TableScroll>
+        <table className="w-full min-w-[36rem] bg-cream text-sm ring-1 ring-line">
           <thead>
             <tr className="display text-left text-[10px] tracking-[0.16em] text-taupe">
               <th className="px-4 py-2">Scenario</th>
@@ -83,6 +84,7 @@ export default async function LandDetailPage({
             ))}
           </tbody>
         </table>
+        </TableScroll>
       </section>
 
       <section>
@@ -102,7 +104,7 @@ export default async function LandDetailPage({
       <OsmMap lat={l.lat} lng={l.lng} label={l.address} />
       <Link
         href={`/analyze?type=land&q=${encodeURIComponent(`${l.address}, ${l.city}, FL ${l.zip}`)}`}
-        className="inline-block bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
+        className="inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
       >
         Analyze this land
       </Link>
