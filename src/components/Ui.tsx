@@ -68,3 +68,26 @@ export function SectionTitle({ kicker, title }: { kicker?: string; title: string
     </div>
   );
 }
+
+export function ComingSoon({
+  children,
+  title = "Coming soon",
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
+  return (
+    <div className="relative">
+      <div
+        className="mb-4 bg-cream px-4 py-3 ring-1 ring-line"
+        role="status"
+      >
+        <p className="display text-[11px] tracking-[0.28em] text-magenta">COMING SOON</p>
+        <p className="mt-1 text-sm text-taupe">{title} for Greater Tampa will be added here.</p>
+      </div>
+      <div className="pointer-events-none select-none opacity-[0.38] grayscale" aria-hidden>
+        {children}
+      </div>
+    </div>
+  );
+}

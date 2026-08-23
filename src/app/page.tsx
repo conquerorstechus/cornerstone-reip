@@ -1,21 +1,19 @@
 import Link from "next/link";
-import { DealCard } from "../components/DealCard";
-import { Kpi, SectionTitle, TableScroll } from "../components/Ui";
-import { AREAS, DIGEST, KPIS, MULTIFAMILY } from "../lib/data";
+import { Kpi, SectionTitle } from "../components/Ui";
+import { KPIS } from "../lib/data";
 import { monthly, usd } from "../lib/format";
 
 export default function DashboardPage() {
-  const top = DIGEST.deals.slice(0, 4);
   return (
     <div className="space-y-8">
       <div>
-        <p className="display text-[11px] tracking-[0.28em] text-magenta">TAMPA BAY · LIVE BOOK</p>
+        <p className="display text-[11px] tracking-[0.28em] text-magenta">GREATER TAMPA · LIVE BOOK</p>
         <h2 className="display mt-1 text-2xl font-semibold tracking-[0.04em] break-words sm:text-3xl">
           Intelligence for the next offer.
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-taupe">
-          REIP screens areas, homes, land, and apartments the same way High ROI Picks does — ask,
-          offer, rent, taxes, HOA, insurance, and cash flow on one page.
+          Screen Greater Tampa homes the way High ROI Picks does — ask, offer, rent, taxes, HOA,
+          insurance, and cash flow. Street addresses are sent on request.
         </p>
       </div>
 
@@ -23,83 +21,18 @@ export default function DashboardPage() {
         <Kpi label="Deals screened" value={String(KPIS.dealsScreened)} hint="This week" accent="magenta" />
         <Kpi label="Avg cash flow" value={monthly(KPIS.avgCashFlow)} hint="Before the mortgage" accent="blue" />
         <Kpi label="Avg suggested offer" value={usd(KPIS.avgOffer)} hint="50% down" />
-        <Kpi label="Submarkets" value={String(KPIS.markets)} hint="Tampa Bay book" accent="taupe" />
+        <Kpi label="Submarkets" value={String(KPIS.markets)} hint="Greater Tampa" accent="taupe" />
       </div>
 
-      <section>
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
-          <SectionTitle kicker="DIGEST" title={DIGEST.title} />
-          <Link href="/reports" className="text-sm text-blue hover:underline">
-            Open full report
-          </Link>
-        </div>
-        <p className="mb-4 text-sm text-taupe">
-          {DIGEST.date} · {DIGEST.intro}
-        </p>
-        <div className="grid gap-4 lg:grid-cols-2">
-          {top.map((d) => (
-            <DealCard key={d.id} deal={d} />
-          ))}
-        </div>
-      </section>
-
-      <section className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2 bg-cream ring-1 ring-line">
-          <div className="border-b border-line px-5 py-4">
-            <SectionTitle kicker="MARKETS" title="Tampa Bay submarkets" />
-          </div>
-          <TableScroll>
-          <table className="w-full min-w-[36rem] text-sm">
-            <thead>
-              <tr className="display text-left text-[10px] tracking-[0.16em] text-taupe">
-                <th className="px-5 py-2">Area</th>
-                <th className="px-3 py-2">Score</th>
-                <th className="px-3 py-2">Median ask</th>
-                <th className="px-3 py-2">Median CF</th>
-                <th className="px-3 py-2">YoY</th>
-              </tr>
-            </thead>
-            <tbody>
-              {AREAS.map((a) => (
-                <tr key={a.slug} className="border-t border-stone">
-                  <td className="px-5 py-2.5">
-                    <Link href={`/areas/${a.slug}`} className="font-semibold hover:text-blue">
-                      {a.name}
-                    </Link>
-                    <span className="ml-2 text-taupe">{a.county}</span>
-                  </td>
-                  <td className="px-3 py-2.5 font-semibold">{a.investorScore}</td>
-                  <td className="px-3 py-2.5">{usd(a.medianAsk)}</td>
-                  <td className="px-3 py-2.5 text-blue">{monthly(a.medianCf)}</td>
-                  <td className="px-3 py-2.5">{a.yoyPrice.toFixed(1)}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          </TableScroll>
-        </div>
-        <div className="bg-navy p-5 text-cream sm:p-6">
-          <p className="display text-[10px] tracking-[0.24em] text-taupe-2">MULTIFAMILY</p>
-          <h3 className="display mt-2 text-lg font-semibold">On the book</h3>
-          <ul className="mt-4 space-y-4">
-            {MULTIFAMILY.map((m) => (
-              <li key={m.id}>
-                <Link href={`/multifamily/${m.id}`} className="block hover:text-magenta">
-                  <p className="font-semibold">{m.name}</p>
-                  <p className="text-sm text-taupe-2">
-                    {m.units} units · {m.capRate.toFixed(2)}% cap · {usd(m.pricePerUnit)}/door
-                  </p>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link
-            href="/analyze"
-            className="mt-6 inline-block bg-magenta px-4 py-2 text-sm font-semibold text-white"
-          >
-            Analyze an address
-          </Link>
-        </div>
+      <section className="grid gap-4 sm:grid-cols-2">
+        <Link href="/reports" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
+          <SectionTitle kicker="DIGEST" title="Sam's High ROI Picks" />
+          <p className="text-sm text-taupe">This week’s ranked cash-flow list. Request the address when you’re ready to tour.</p>
+        </Link>
+        <Link href="/areas" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
+          <SectionTitle kicker="MARKETS" title="Greater Tampa areas" />
+          <p className="text-sm text-taupe">Submarket scores, rents, and jobs — open a city to see what’s on the digest.</p>
+        </Link>
       </section>
     </div>
   );

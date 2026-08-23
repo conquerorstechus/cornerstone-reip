@@ -21,6 +21,11 @@ export function monthly(n: number) {
   return `${usd(n)}/mo`;
 }
 
+export function listingHeadline(p: { beds: number; baths: number; city: string }) {
+  const bath = Number.isInteger(p.baths) ? String(p.baths) : String(p.baths);
+  return `${p.beds} bed / ${bath} bath · ${p.city}`;
+}
+
 export function hashId(prefix: string, seed: string) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;

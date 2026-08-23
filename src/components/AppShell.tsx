@@ -6,24 +6,32 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import {
   Building2,
+  FileBarChart,
+  HardHat,
   Layers,
   LayoutDashboard,
   MapPinned,
   Menu,
   ScanSearch,
+  Store,
   Trees,
-  FileBarChart,
   X,
 } from "lucide-react";
+import { MarketSelect } from "./MarketSelect";
 
-const NAV = [
+const NAV_MAIN: { href: string; label: string; icon: typeof LayoutDashboard }[] = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/reports", label: "High ROI Picks", icon: FileBarChart },
-  { href: "/properties", label: "Properties", icon: Building2 },
   { href: "/areas", label: "Areas", icon: MapPinned },
+  { href: "/analyze", label: "Analyze", icon: ScanSearch },
+];
+
+const NAV_SOON: { href: string; label: string; icon: typeof LayoutDashboard }[] = [
   { href: "/land", label: "Land", icon: Trees },
   { href: "/multifamily", label: "Multifamily", icon: Layers },
-  { href: "/analyze", label: "Analyze", icon: ScanSearch },
+  { href: "/commercial", label: "Commercial", icon: Building2 },
+  { href: "/businesses", label: "Businesses for sale", icon: Store },
+  { href: "/contractors", label: "Contractors", icon: HardHat },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -126,13 +134,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </h1>
             </div>
           </div>
-          <Link
-            href="/analyze"
-            className="inline-flex min-h-11 shrink-0 items-center bg-magenta px-3 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark sm:px-4"
-          >
-            <span className="sm:hidden">Analyze</span>
-            <span className="hidden sm:inline">New analysis</span>
-          </Link>
+          <MarketSelect />
         </header>
         <main className="min-w-0 flex-1 px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-6 lg:px-8 lg:py-7">
           {children}
@@ -163,7 +165,7 @@ function SidebarBrand() {
 function NavLinks({ path, onNavigate }: { path: string; onNavigate?: () => void }) {
   return (
     <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3">
-      {NAV.map((item) => {
+      {NAV_MAIN.map((item) => {
         const active = item.href === "/" ? path === "/" : path.startsWith(item.href);
         const Icon = item.icon;
         return (
@@ -177,13 +179,24 @@ function NavLinks({ path, onNavigate }: { path: string; onNavigate?: () => void 
                 : "text-taupe-2 hover:bg-white/5 hover:text-cream"
             }`}
           >
-            <Icon
-              size={16}
-              className={active ? "text-magenta" : "text-taupe"}
-              strokeWidth={1.75}
-            />
+            <Icon size={16} className={active ? "text-magenta" : "text-taupe"} strokeWidth={1.75} />
             {item.label}
           </Link>
+        );
+      })}
+      <p className="display mt-4 px-3 pb-1 text-[9px] tracking-[0.2em] text-taupe/45">COMING SOON</p>
+      {NAV_SOON.map((item) => {
+        const Icon = item.icon;
+        return (
+          <span
+            key={item.href}
+            className="flex min-h-11 cursor-not-allowed items-center gap-3 rounded-md px-3 py-2.5 text-sm tracking-wide text-taupe/45"
+            aria-disabled="true"
+          >
+            <Icon size={16} className="text-taupe/40" strokeWidth={1.75} />
+            <span className="flex-1">{item.label}</span>
+            <span className="display text-[9px] tracking-[0.16em] text-taupe/50">SOON</span>
+          </span>
         );
       })}
     </nav>

@@ -1,13 +1,9 @@
-import Link from "next/link";
 import { DealCard } from "../../components/DealCard";
 import { DIGEST } from "../../lib/data";
-import { listRuns } from "../../lib/store";
-import { monthly } from "../../lib/format";
 
-export const metadata = { title: "Reports" };
+export const metadata = { title: "High ROI Picks" };
 
-export default async function ReportsPage() {
-  const runs = await listRuns();
+export default function ReportsPage() {
   return (
     <div className="space-y-8">
       <div>
@@ -26,38 +22,9 @@ export default async function ReportsPage() {
       </div>
 
       <p className="text-xs text-taupe">
-        Mortgage estimated at 7% fixed, 30 years, 50% down. All figures are estimates.
+        Mortgage estimated at 7% fixed, 30 years, 50% down. All figures are estimates. Street
+        addresses are withheld until you request more info.
       </p>
-
-      <section>
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-          <h3 className="display text-xl font-semibold">Your analyses</h3>
-          <Link href="/analyze" className="text-sm text-blue hover:underline">
-            New analysis
-          </Link>
-        </div>
-        {runs.length === 0 ? (
-          <p className="bg-cream px-5 py-8 text-sm text-taupe ring-1 ring-line">
-            No saved analyses yet. Check an address and it will show up here.
-          </p>
-        ) : (
-          <ul className="divide-y divide-stone bg-cream ring-1 ring-line">
-            {runs.map((r) => (
-              <li key={r.id}>
-                <Link href={`/reports/${r.id}`} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 hover:bg-stone/40">
-                  <div>
-                    <p className="font-semibold">{r.result?.title ?? r.query}</p>
-                    <p className="text-xs text-taupe">{new Date(r.createdAt).toLocaleString()}</p>
-                  </div>
-                  {r.result?.cashFlow ? (
-                    <p className="text-sm font-semibold text-blue">{monthly(r.result.cashFlow.noi)}</p>
-                  ) : null}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
     </div>
   );
 }

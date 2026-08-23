@@ -657,7 +657,7 @@ export const DIGEST: DigestReport = {
   date: "Friday, August 21, 2026",
   source: "REIP · High ROI digest",
   intro:
-    "Top 10 Tampa Bay deals ranked by cash flow. Mortgage estimated at 7% fixed, 30-year, 50% down. All figures are estimates.",
+    "Top 10 Greater Tampa deals ranked by cash flow. Mortgage estimated at 7% fixed, 30-year, 50% down. All figures are estimates.",
   deals: PROPERTIES,
 };
 

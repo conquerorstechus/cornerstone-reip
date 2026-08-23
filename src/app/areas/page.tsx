@@ -12,8 +12,8 @@ export default function AreasPage() {
         <p className="display text-[11px] tracking-[0.28em] text-magenta">SUBMARKETS</p>
         <h2 className="display mt-1 text-2xl font-semibold sm:text-3xl">Areas</h2>
         <p className="mt-2 max-w-2xl text-sm text-taupe">
-          Tampa Bay markets on this week’s High ROI list — cash flow, jobs, flood risk, and renter
-          demand in one score.
+          Greater Tampa submarkets on this week’s High ROI list — cash flow, jobs, flood risk, and
+          renter demand in one score.
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">

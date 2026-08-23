@@ -1,9 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { GetMoreInfoButton } from "../../../components/GetMoreInfoButton";
 import { OsmMap } from "../../../components/OsmMap";
 import { RecBadge, ScoreBar } from "../../../components/Ui";
 import { areaBySlug, propertyById } from "../../../lib/data";
-import { monthly, usd } from "../../../lib/format";
+import { listingHeadline, monthly, usd } from "../../../lib/format";
 
 export default async function PropertyPage({
   params,
@@ -24,9 +25,11 @@ export default async function PropertyPage({
           {p.rank ? (
             <p className="display text-[11px] tracking-[0.28em] text-magenta">RANK #{p.rank}</p>
           ) : null}
-          <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{p.address}</h2>
+          <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">
+            {listingHeadline(p)}
+          </h2>
           <p className="text-taupe">
-            {p.city}, {p.state} {p.zip}
+            Greater Tampa
             {area ? (
               <>
                 {" · "}
@@ -35,6 +38,7 @@ export default async function PropertyPage({
                 </Link>
               </>
             ) : null}
+            {" · Address on request"}
           </p>
         </div>
         <div className="w-full sm:w-52">
@@ -71,26 +75,10 @@ export default async function PropertyPage({
         drop and you refinance. Cash flow is rent minus tax, HOA, and insurance (before the mortgage).
       </p>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <OsmMap lat={p.lat} lng={p.lng} label={`${p.address}, ${p.city}`} />
-        <div className="flex flex-col justify-center bg-cream p-6 ring-1 ring-line">
-          <p className="display text-[10px] tracking-[0.22em] text-taupe">NEXT STEP</p>
-          <h3 className="display mt-2 text-lg font-semibold">Run the numbers yourself</h3>
-          <p className="mt-2 text-sm text-taupe">
-            Confirm rent, HOA, and tax before you offer.
-          </p>
-          <Link
-            href={`/analyze?type=property&q=${encodeURIComponent(`${p.address}, ${p.city}, ${p.state} ${p.zip}`)}`}
-            className="mt-4 inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold text-white hover:bg-magenta-dark"
-          >
-            Analyze this home
-          </Link>
-        </div>
-      </div>
-      {p.zillowUrl ? (
-        <a href={p.zillowUrl} className="text-sm text-blue hover:underline" target="_blank">
-          View on Zillow
-        </a>
+      <GetMoreInfoButton dealId={p.id} />
+
+      {area ? (
+        <OsmMap lat={area.lat} lng={area.lng} zoom={12} label={`${area.name} · Greater Tampa`} />
       ) : null}
     </div>
   );

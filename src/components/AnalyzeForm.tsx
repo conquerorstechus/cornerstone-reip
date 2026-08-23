@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { AssetType } from "../lib/types";
 
-const TYPES: { id: AssetType; label: string; hint: string }[] = [
+const TYPES: { id: AssetType; label: string; hint: string; disabled?: boolean }[] = [
   { id: "property", label: "Home", hint: "House or townhome" },
   { id: "area", label: "Area", hint: "City or zip code" },
-  { id: "land", label: "Land", hint: "Vacant lot or pad" },
-  { id: "multifamily", label: "Apartments", hint: "Small apartment building" },
+  { id: "land", label: "Land", hint: "Coming soon", disabled: true },
+  { id: "multifamily", label: "Apartments", hint: "Coming soon", disabled: true },
 ];
 
 export function AnalyzeForm({
@@ -19,7 +19,9 @@ export function AnalyzeForm({
   defaultQuery?: string;
 }) {
   const router = useRouter();
-  const [type, setType] = useState<AssetType>(defaultType);
+  const [type, setType] = useState<AssetType>(
+    defaultType === "land" || defaultType === "multifamily" ? "property" : defaultType,
+  );
   const [query, setQuery] = useState(defaultQuery);
   const [ask, setAsk] = useState("");
   const [beds, setBeds] = useState("3");
@@ -67,11 +69,20 @@ export function AnalyzeForm({
           <button
             key={t.id}
             type="button"
-            onClick={() => setType(t.id)}
-            className={`min-h-14 px-3 py-3 text-left sm:px-4 ${type === t.id ? "bg-navy text-cream" : "bg-cream"}`}
+            disabled={t.disabled}
+            onClick={() => {
+              if (!t.disabled) setType(t.id);
+            }}
+            className={`min-h-14 px-3 py-3 text-left sm:px-4 ${
+              t.disabled
+                ? "cursor-not-allowed bg-cream text-taupe/40"
+                : type === t.id
+                  ? "bg-navy text-cream"
+                  : "bg-cream"
+            }`}
           >
             <p className="display text-sm tracking-wide">{t.label}</p>
-            <p className={`mt-0.5 text-[11px] ${type === t.id ? "text-taupe-2" : "text-taupe"}`}>
+            <p className={`mt-0.5 text-[11px] ${type === t.id && !t.disabled ? "text-taupe-2" : "text-taupe"}`}>
               {t.hint}
             </p>
           </button>

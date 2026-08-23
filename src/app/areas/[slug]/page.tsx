@@ -96,22 +96,40 @@ export default async function AreaDetailPage({
       {land.length || mf.length ? (
         <section className="grid gap-3 sm:grid-cols-2">
           {land.map((l) => (
-            <Link key={l.id} href={`/land/${l.id}`} className="bg-cream p-4 ring-1 ring-line hover:ring-blue">
-              <p className="display text-[10px] tracking-[0.2em] text-taupe">LAND</p>
-              <p className="mt-1 font-semibold">{l.address}</p>
-              <p className="text-sm text-taupe">
-                {l.acres} ac · {usd(l.asking)}
+            <div
+              key={l.id}
+              className="relative bg-cream p-4 ring-1 ring-line"
+              aria-disabled="true"
+            >
+              <div className="pointer-events-none select-none opacity-40 grayscale" aria-hidden>
+                <p className="display text-[10px] tracking-[0.2em] text-taupe">LAND</p>
+                <p className="mt-1 font-semibold">{l.address}</p>
+                <p className="text-sm text-taupe">
+                  {l.acres} ac · {usd(l.asking)}
+                </p>
+              </div>
+              <p className="display absolute right-3 top-3 text-[9px] tracking-[0.16em] text-taupe">
+                SOON
               </p>
-            </Link>
+            </div>
           ))}
           {mf.map((m) => (
-            <Link key={m.id} href={`/multifamily/${m.id}`} className="bg-cream p-4 ring-1 ring-line hover:ring-blue">
-              <p className="display text-[10px] tracking-[0.2em] text-taupe">MULTIFAMILY</p>
-              <p className="mt-1 font-semibold">{m.name}</p>
-              <p className="text-sm text-taupe">
-                {m.units} units · {m.capRate.toFixed(2)}% cap
+            <div
+              key={m.id}
+              className="relative bg-cream p-4 ring-1 ring-line"
+              aria-disabled="true"
+            >
+              <div className="pointer-events-none select-none opacity-40 grayscale" aria-hidden>
+                <p className="display text-[10px] tracking-[0.2em] text-taupe">MULTIFAMILY</p>
+                <p className="mt-1 font-semibold">{m.name}</p>
+                <p className="text-sm text-taupe">
+                  {m.units} units · {m.capRate.toFixed(2)}% cap
+                </p>
+              </div>
+              <p className="display absolute right-3 top-3 text-[9px] tracking-[0.16em] text-taupe">
+                SOON
               </p>
-            </Link>
+            </div>
           ))}
         </section>
       ) : null}
