@@ -3,7 +3,10 @@ import { propertyById } from "@/lib/data";
 
 export const runtime = "nodejs";
 
-/** Buyer-agent lead. Wire LEAD_WEBHOOK_URL to email Sam the listing address. */
+const N8N_LEAD_WEBHOOK =
+  "https://n8n.srv1393511.hstgr.cloud/webhook/cef18bdf-8d8f-4f94-bc21-8c8e8aff001a";
+
+/** Buyer-agent lead. POSTs contact + listing to n8n (LEAD_WEBHOOK_URL overrides). */
 export async function POST(req: NextRequest) {
   let body: { dealId?: string; source?: string; name?: string; email?: string; phone?: string } = {};
   try {
@@ -26,7 +29,7 @@ export async function POST(req: NextRequest) {
   const email = body.email?.trim() ?? "";
   const phone = body.phone?.trim() ?? "";
 
-  const webhook = process.env.LEAD_WEBHOOK_URL?.trim();
+  const webhook = process.env.LEAD_WEBHOOK_URL?.trim() || N8N_LEAD_WEBHOOK;
   if (webhook) {
     try {
       await fetch(webhook, {
