@@ -3,7 +3,15 @@
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 
-export function GetMoreInfoButton({ dealId }: { dealId: string }) {
+export function GetMoreInfoButton({
+  dealId,
+  dealType = "property",
+  label = "Send me the address",
+}: {
+  dealId: string;
+  dealType?: "property" | "land";
+  label?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -35,7 +43,7 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
     const submittedName = String(data.get("leadName") ?? "").trim();
     const submittedEmail = String(data.get("leadEmail") ?? "").trim();
     const submittedPhone = String(data.get("leadPhone") ?? "").trim();
-    if (!submittedName || !submittedEmail || !submittedPhone) {
+    if (!submittedEmail || !submittedPhone) {
       setState("error");
       return;
     }
@@ -47,7 +55,9 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           dealId,
+          dealType,
           source: "high-roi",
+          deliverImmediately: true,
           name: submittedName,
           email: submittedEmail,
           phone: submittedPhone,
@@ -84,11 +94,14 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
             >
               {state === "sent" ? (
                 <div>
-                  <p className="display text-[10px] tracking-[0.24em] text-magenta">REQUEST</p>
+                  <p className="display text-[10px] tracking-[0.24em] text-magenta">SENT</p>
                   <h2 id={titleId} className="display mt-1 text-lg font-semibold tracking-wide">
-                    Received. Submitted.
+                    Address is on the way
                   </h2>
-                  <p className="mt-2 text-sm text-taupe">We’ll follow up with the address and details.</p>
+                  <p className="mt-2 text-sm text-taupe">
+                    We just sent the street address and deal details to your email and phone. Check
+                    both — it should arrive in a minute or two.
+                  </p>
                   <button
                     type="button"
                     onClick={close}
@@ -99,24 +112,21 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
                 </div>
               ) : (
                 <form onSubmit={onSubmit}>
-                  <p className="display text-[10px] tracking-[0.24em] text-magenta">GET MORE INFO</p>
+                  <p className="display text-[10px] tracking-[0.24em] text-magenta">GET THE ADDRESS</p>
                   <h2 id={titleId} className="display mt-1 text-lg font-semibold tracking-wide">
-                    Leave your contact
+                    Where should we send it?
                   </h2>
-                  <p className="mt-1 text-sm text-taupe">We’ll send listing details to you.</p>
+                  <p className="mt-1 text-sm text-taupe">
+                    Enter your email and phone. We send the listing address to both right away.{" "}
+                    <a href="/disclaimers" className="font-semibold text-blue hover:underline">
+                      Disclaimers
+                    </a>
+                  </p>
 
                   <label className="mt-5 block">
-                    <span className="display text-[10px] tracking-[0.2em] text-taupe">NAME</span>
-                    <input
-                      name="leadName"
-                      required
-                      autoComplete="name"
-                      className="mt-1 w-full border-0 border-b border-line bg-transparent py-2 outline-none focus:border-blue"
-                    />
-                  </label>
-
-                  <label className="mt-4 block">
-                    <span className="display text-[10px] tracking-[0.2em] text-taupe">EMAIL</span>
+                    <span className="display text-[10px] tracking-[0.2em] text-taupe">
+                      EMAIL <span className="text-magenta">*</span>
+                    </span>
                     <input
                       name="leadEmail"
                       required
@@ -129,7 +139,9 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
                   </label>
 
                   <label className="mt-4 block">
-                    <span className="display text-[10px] tracking-[0.2em] text-taupe">PHONE NUMBER</span>
+                    <span className="display text-[10px] tracking-[0.2em] text-taupe">
+                      PHONE <span className="text-magenta">*</span>
+                    </span>
                     <input
                       name="leadPhone"
                       required
@@ -141,8 +153,21 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
                     />
                   </label>
 
+                  <label className="mt-4 block">
+                    <span className="display text-[10px] tracking-[0.2em] text-taupe">
+                      NAME <span className="text-taupe/60">(optional)</span>
+                    </span>
+                    <input
+                      name="leadName"
+                      autoComplete="name"
+                      className="mt-1 w-full border-0 border-b border-line bg-transparent py-2 outline-none focus:border-blue"
+                    />
+                  </label>
+
                   {state === "error" ? (
-                    <p className="mt-3 text-xs text-danger">Couldn’t send. Try again.</p>
+                    <p className="mt-3 text-xs text-danger">
+                      Couldn’t send. Check email and phone, then try again.
+                    </p>
                   ) : null}
 
                   <div className="mt-6 flex flex-wrap gap-2">
@@ -151,7 +176,7 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
                       disabled={state === "sending"}
                       className="inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark disabled:opacity-60"
                     >
-                      {state === "sending" ? "Sending…" : "Submit"}
+                      {state === "sending" ? "Sending now…" : "Send me the address now"}
                     </button>
                     <button
                       type="button"
@@ -173,7 +198,7 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
   return (
     <>
       {state === "sent" && !open ? (
-        <p className="text-sm text-success">Received. Submitted.</p>
+        <p className="text-sm text-success">Sent — check your email and phone.</p>
       ) : (
         <button
           type="button"
@@ -181,9 +206,9 @@ export function GetMoreInfoButton({ dealId }: { dealId: string }) {
             setOpen(true);
             if (state === "error") setState("idle");
           }}
-          className="inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark"
+          className="inline-flex min-h-11 w-full items-center justify-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark sm:w-auto"
         >
-          Get more info
+          {label}
         </button>
       )}
       {dialog}

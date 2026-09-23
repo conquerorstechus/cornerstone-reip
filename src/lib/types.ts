@@ -11,6 +11,8 @@ export type DealThesis =
   | "development"
   | "multifamily";
 
+export type HomeKind = "sfh" | "condo" | "townhouse";
+
 export type Property = {
   id: string;
   rank?: number;
@@ -21,11 +23,14 @@ export type Property = {
   lat: number;
   lng: number;
   zillowUrl?: string;
+  mortgageUrl?: string;
   thesis: DealThesis;
+  homeKind?: HomeKind;
   description: string;
   beds: number;
   baths: number;
   sqft: number;
+  lotSqft?: number;
   yearBuilt: number;
   ask: number;
   offer: number;
@@ -36,6 +41,7 @@ export type Property = {
   mortgageMonthly: number;
   cashFlow: number;
   vacancyNote?: string;
+  flags?: string[];
   tags: string[];
   areaSlug: string;
 };
@@ -68,21 +74,32 @@ export type Area = {
 
 export type LandParcel = {
   id: string;
+  rank?: number;
   address: string;
   city: string;
   zip: string;
   lat: number;
   lng: number;
   acres: number;
+  lotSqft?: number;
   zoning: string;
   floodZone: string;
   utilities: string[];
   asking: number;
+  offer?: number;
   pricePerAcre: number;
   buildableSf: number;
   maxUnits: number;
   investorScore: number;
   thesis: string;
+  zillowUrl?: string;
+  mortgageUrl?: string;
+  taxMonthly?: number;
+  hoaMonthly?: number;
+  insuranceMonthly?: number;
+  mortgageMonthly?: number;
+  cashFlow?: number;
+  flags?: string[];
   comps: { address: string; acres: number; price: number; closed: string }[];
   scenarios: {
     name: string;

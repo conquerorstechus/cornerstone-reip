@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import path from "path";
 import { cache } from "react";
-import { hashId, titleCaseAddress } from "./format";
+import { hashId, sanitizeDescription, titleCaseAddress } from "./format";
 import type { DealThesis, DigestReport, LandParcel, Property } from "./types";
 
 /** Approx coords for known area slugs (avoids importing data.ts). */
@@ -38,6 +38,7 @@ export type SamListItem = {
   monthlyInsurance?: number;
   offerPrice?: number;
   monthlyMortgage?: number;
+  mortgageUrl?: string;
   cashFlow?: number;
   flags?: string[];
   category?: string;
@@ -131,27 +132,44 @@ export function isLandItem(item: SamListItem) {
   return item.category === "land" || item.homeType === "LOT";
 }
 
+function homeKindFor(item: SamListItem): "sfh" | "condo" | "townhouse" {
+  if (item.homeType === "CONDO") return "condo";
+  if (item.homeType === "TOWNHOUSE" || item.category === "townhouse_condo") return "townhouse";
+  return "sfh";
+}
+
 export function mapSamItemToProperty(item: SamListItem): Property {
   const areaSlug = areaSlugForCity(item.city);
   const { lat, lng } = coordsForArea(areaSlug);
   const seed = item.url || item.fullAddress;
   const rank = num(item.rank, 0) || undefined;
+  const address = streetAddress(item.fullAddress, item.city);
+  const rawDesc = (item.descRaw || item.description || item.desc || "").trim();
+  const description = sanitizeDescription(rawDesc, {
+    address,
+    city: item.city,
+    state: item.state || "FL",
+    zip: String(item.zip),
+  });
 
   return {
     id: hashId("p", seed),
     rank,
-    address: streetAddress(item.fullAddress, item.city),
+    address,
     city: item.city,
     state: item.state || "FL",
     zip: String(item.zip),
     lat,
     lng,
     zillowUrl: item.url,
+    mortgageUrl: item.mortgageUrl,
     thesis: thesisFor(item),
-    description: (item.descRaw || item.description || item.desc || "").trim(),
+    homeKind: homeKindFor(item),
+    description,
     beds: num(item.beds),
     baths: num(item.baths),
     sqft: num(item.sqft),
+    lotSqft: num(item.lotSqft) || undefined,
     yearBuilt: num(item.yearBuilt) || new Date().getFullYear(),
     ask: num(item.price),
     offer: num(item.offerPrice, num(item.price)),
@@ -161,6 +179,7 @@ export function mapSamItemToProperty(item: SamListItem): Property {
     insuranceMonthly: num(item.monthlyInsurance),
     mortgageMonthly: num(item.monthlyMortgage),
     cashFlow: num(item.cashFlow),
+    flags: item.flags?.filter(Boolean),
     tags: tagsFor(item),
     areaSlug,
   };
@@ -174,27 +193,45 @@ export function mapSamItemToLand(item: SamListItem): LandParcel {
   const asking = num(item.price);
   const pricePerAcre = acres > 0 ? Math.round(asking / acres) : asking;
   const seed = item.url || item.fullAddress;
-  const thesis =
+  const address = streetAddress(item.fullAddress, item.city);
+  const raw =
     (item.descRaw || item.description || item.desc || "").trim() ||
     "Lot from Sam's High ROI land screen. Underwrite zoning, utilities, and flood before LOI.";
+  const thesis = sanitizeDescription(raw, {
+    address,
+    city: item.city,
+    state: item.state || "FL",
+    zip: String(item.zip),
+  });
 
   return {
     id: hashId("l", seed),
-    address: streetAddress(item.fullAddress, item.city),
+    rank: num(item.rank, 0) || undefined,
+    address,
     city: item.city,
     zip: String(item.zip),
     lat,
     lng,
     acres: Math.round(acres * 100) / 100,
+    lotSqft: lot || undefined,
     zoning: "Verify with county",
     floodZone: "Check FEMA",
     utilities: ["Verify at site"],
     asking,
+    offer: num(item.offerPrice, asking),
     pricePerAcre,
     buildableSf: Math.round(acres * 43560 * 0.35),
     maxUnits: Math.max(1, Math.floor(acres * 8)),
     investorScore: Math.min(90, Math.max(40, 55 + Math.round(num(item.cashFlow) / 50))),
     thesis,
+    zillowUrl: item.url,
+    mortgageUrl: item.mortgageUrl,
+    taxMonthly: num(item.monthlyTax),
+    hoaMonthly: num(item.monthlyHoa),
+    insuranceMonthly: num(item.monthlyInsurance),
+    mortgageMonthly: num(item.monthlyMortgage),
+    cashFlow: num(item.cashFlow),
+    flags: item.flags?.filter(Boolean),
     comps: [],
     scenarios: [
       {
@@ -245,18 +282,22 @@ export const fetchSamList = cache(async (): Promise<SamListItem[]> => {
 });
 
 export function propertiesFromSamList(items: SamListItem[]): Property[] {
-  return items
-    .filter(isHomeItem)
-    .map(mapSamItemToProperty)
-    .sort((a, b) => b.cashFlow - a.cashFlow)
-    .map((p, i) => ({ ...p, rank: i + 1 }));
+  const homes = items.filter(isHomeItem).map(mapSamItemToProperty);
+  const rankKind = (kind: "sfh" | "condo" | "townhouse") =>
+    homes
+      .filter((p) => (p.homeKind ?? "sfh") === kind)
+      .sort((a, b) => b.cashFlow - a.cashFlow)
+      .map((p, i) => ({ ...p, rank: i + 1 }));
+
+  return [...rankKind("sfh"), ...rankKind("condo"), ...rankKind("townhouse")];
 }
 
 export function landFromSamList(items: SamListItem[]): LandParcel[] {
   return items
     .filter(isLandItem)
     .map(mapSamItemToLand)
-    .sort((a, b) => a.asking - b.asking);
+    .sort((a, b) => (b.cashFlow ?? 0) - (a.cashFlow ?? 0) || a.asking - b.asking)
+    .map((l, i) => ({ ...l, rank: i + 1 }));
 }
 
 export function digestFromProperties(deals: Property[], scrapeDate?: string): DigestReport {
@@ -280,7 +321,7 @@ export function digestFromProperties(deals: Property[], scrapeDate?: string): Di
     date: dateLabel,
     source: "REIP · High ROI digest",
     intro:
-      "Greater Tampa deals ranked by cash flow. Mortgage estimated at 7% fixed, 30-year, 50% down. All figures are estimates.",
+      "Greater Tampa deals ranked by cash flow within each product type. Mortgage estimated at 7% fixed, 30-year, 50% down. All figures are estimates.",
     deals,
   };
 }

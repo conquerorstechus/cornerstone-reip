@@ -7,7 +7,7 @@ import type { AssetType } from "../lib/types";
 const TYPES: { id: AssetType; label: string; hint: string; disabled?: boolean }[] = [
   { id: "property", label: "Home", hint: "House or townhome" },
   { id: "area", label: "Area", hint: "City or zip code" },
-  { id: "land", label: "Land", hint: "Coming soon", disabled: true },
+  { id: "land", label: "Land", hint: "Lot or acreage" },
   { id: "multifamily", label: "Apartments", hint: "Coming soon", disabled: true },
 ];
 
@@ -20,7 +20,7 @@ export function AnalyzeForm({
 }) {
   const router = useRouter();
   const [type, setType] = useState<AssetType>(
-    defaultType === "land" || defaultType === "multifamily" ? "property" : defaultType,
+    defaultType === "multifamily" ? "property" : defaultType,
   );
   const [query, setQuery] = useState(defaultQuery);
   const [ask, setAsk] = useState("");

@@ -38,3 +38,68 @@ export function titleCaseAddress(s: string) {
     .replace(/\b([a-z])/g, (m) => m.toUpperCase())
     .replace(/\bFl\b/, "FL");
 }
+
+/** Strip street addresses and trailing location crumbs from listing copy. */
+export function sanitizeDescription(
+  text: string,
+  opts: { address?: string; city?: string; state?: string; zip?: string } = {},
+): string {
+  let s = text.replace(/\r\n/g, "\n").trim();
+  if (!s) return "";
+
+  // Drop pipe-appended underwriting summary from some exports.
+  s = s.replace(/\s*\|\s*Offer:\s*\$[\d,]+.*$/i, "");
+
+  const needles: string[] = [];
+  if (opts.address) {
+    needles.push(opts.address);
+    needles.push(opts.address.replace(/,/g, ""));
+  }
+  if (opts.address && opts.city) {
+    needles.push(`${opts.address}, ${opts.city}`);
+  }
+  if (opts.city && opts.state && opts.zip) {
+    needles.push(`${opts.city}, ${opts.state} ${opts.zip}`);
+    needles.push(`${opts.city}, ${opts.state}, ${opts.zip}`);
+  }
+  for (const n of needles) {
+    if (!n.trim()) continue;
+    const esc = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    s = s.replace(new RegExp(esc, "gi"), " ");
+  }
+
+  // Leading "123 Main St, City, ST ZIP" style openers.
+  s = s.replace(
+    /^\s*\d{1,6}[A-Za-z]?\s+[A-Za-z0-9.'\-]+(?:\s+[A-Za-z0-9.'\-]+){0,6}\s*,?\s*[A-Za-z .'-]+,?\s*[A-Z]{2}\s*\d{5}(?:-\d{4})?\s*[|·•\-]?\s*/i,
+    "",
+  );
+
+  // Bare street patterns remaining in the body.
+  s = s.replace(
+    /\b\d{1,6}[A-Za-z]?\s+(?:[NSEW]\.?\s+)?[A-Za-z0-9.'\-]+(?:\s+[A-Za-z0-9.'\-]+){0,4}\s+(?:St|Street|Ave|Avenue|Rd|Road|Dr|Drive|Blvd|Boulevard|Ln|Lane|Ct|Court|Cir|Circle|Way|Pl|Place|Trl|Trail|Pkwy|Parkway|Ter|Terrace|Hwy|Highway|Point)\b\.?/gi,
+    " ",
+  );
+
+  // "Life at 123 …" / "features 123 …" leftovers.
+  s = s.replace(/\b(?:at|on|of)\s+\d{1,6}[A-Za-z]?\b/gi, " ");
+
+  // Trailing "· FL, 34667" crumbs from the digest template.
+  s = s.replace(/\s*[·•]\s*[A-Z]{2},?\s*\d{5}(?:-\d{4})?\s*$/g, "");
+  s = s.replace(/\s*[·•]\s*FL,?\s*\d{5}(?:-\d{4})?\s*/gi, " ");
+
+  s = s
+    .replace(/\s*[|·•]\s*[|·•]/g, " · ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[\s|,.\-–—:]+/, "")
+    .replace(/[\s|,.\-–—]+$/, "")
+    .trim();
+
+  return s;
+}
+
+export function truncateCopy(s: string, max = 220) {
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max);
+  const at = cut.lastIndexOf(" ");
+  return `${(at > 140 ? cut.slice(0, at) : cut).trim()}…`;
+}

@@ -16,6 +16,9 @@ export default async function AreaDetailPage({
   if (!a) notFound();
   const [allDeals, allLand] = await Promise.all([getProperties(), getLand()]);
   const deals = allDeals.filter((p) => p.areaSlug === slug);
+  const sfh = deals.filter((d) => (d.homeKind ?? "sfh") === "sfh");
+  const condo = deals.filter((d) => d.homeKind === "condo");
+  const townhome = deals.filter((d) => d.homeKind === "townhouse");
   const land = allLand.filter((l) => l.areaSlug === slug);
   const mf = MULTIFAMILY.filter((m) => m.areaSlug === slug);
 
@@ -83,11 +86,33 @@ export default async function AreaDetailPage({
         </div>
       </div>
 
-      {deals.length ? (
+      {sfh.length ? (
         <section>
-          <SectionTitle kicker="ON THE DIGEST" title="Properties in this area" />
-          <div className="grid gap-4 lg:grid-cols-2">
-            {deals.map((d) => (
+          <SectionTitle kicker="SINGLE FAMILY" title="Single-family in this area" />
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            {sfh.map((d) => (
+              <DealCard key={d.id} deal={d} compact />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {condo.length ? (
+        <section>
+          <SectionTitle kicker="CONDOS" title="Condos in this area" />
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            {condo.map((d) => (
+              <DealCard key={d.id} deal={d} compact />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {townhome.length ? (
+        <section>
+          <SectionTitle kicker="TOWNHOMES" title="Townhomes in this area" />
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            {townhome.map((d) => (
               <DealCard key={d.id} deal={d} compact />
             ))}
           </div>
@@ -97,22 +122,19 @@ export default async function AreaDetailPage({
       {land.length || mf.length ? (
         <section className="grid gap-3 sm:grid-cols-2">
           {land.map((l) => (
-            <div
+            <Link
               key={l.id}
-              className="relative bg-cream p-4 ring-1 ring-line"
-              aria-disabled="true"
+              href={`/land/${l.id}`}
+              className="bg-cream p-4 ring-1 ring-line hover:ring-blue"
             >
-              <div className="pointer-events-none select-none opacity-40 grayscale" aria-hidden>
-                <p className="display text-[10px] tracking-[0.2em] text-taupe">LAND</p>
-                <p className="mt-1 font-semibold">{l.address}</p>
-                <p className="text-sm text-taupe">
-                  {l.acres} ac · {usd(l.asking)}
-                </p>
-              </div>
-              <p className="display absolute right-3 top-3 text-[9px] tracking-[0.16em] text-taupe">
-                SOON
+              <p className="display text-[10px] tracking-[0.2em] text-taupe">LAND</p>
+              <p className="mt-1 font-semibold">
+                {l.city}, FL {l.zip}
               </p>
-            </div>
+              <p className="text-sm text-taupe">
+                {l.acres} ac · {usd(l.asking)} · Address on request
+              </p>
+            </Link>
           ))}
           {mf.map((m) => (
             <div

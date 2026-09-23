@@ -8,6 +8,7 @@ import {
   Building2,
   FileBarChart,
   HardHat,
+  Home,
   Layers,
   LayoutDashboard,
   MapPinned,
@@ -18,17 +19,20 @@ import {
   X,
 } from "lucide-react";
 import { MarketSelect } from "./MarketSelect";
+import { SiteDisclaimerFooter } from "./Disclaimer";
 
 const NAV_MAIN: { href: string; label: string; icon: typeof LayoutDashboard }[] = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/reports", label: "High ROI Picks", icon: FileBarChart },
+  { href: "/picks/condos", label: "Condos", icon: Building2 },
+  { href: "/picks/townhomes", label: "Townhomes", icon: Layers },
+  { href: "/picks/sfh", label: "Single Family", icon: Home },
+  { href: "/land", label: "Land", icon: Trees },
   { href: "/areas", label: "Areas", icon: MapPinned },
   { href: "/analyze", label: "Analyze", icon: ScanSearch },
 ];
 
 const NAV_SOON: { href: string; label: string; icon: typeof LayoutDashboard }[] = [
-  { href: "/land", label: "Land", icon: Trees },
-  { href: "/multifamily", label: "Multifamily", icon: Layers },
+  { href: "/multifamily", label: "Multifamily", icon: FileBarChart },
   { href: "/commercial", label: "Commercial", icon: Building2 },
   { href: "/businesses", label: "Businesses for sale", icon: Store },
   { href: "/contractors", label: "Contractors", icon: HardHat },
@@ -139,6 +143,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="min-w-0 flex-1 px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-6 lg:px-8 lg:py-7">
           {children}
         </main>
+        <SiteDisclaimerFooter />
       </div>
     </div>
   );
@@ -166,7 +171,10 @@ function NavLinks({ path, onNavigate }: { path: string; onNavigate?: () => void 
   return (
     <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3">
       {NAV_MAIN.map((item) => {
-        const active = item.href === "/" ? path === "/" : path.startsWith(item.href);
+        const active =
+          item.href === "/"
+            ? path === "/"
+            : path === item.href || path.startsWith(`${item.href}/`);
         const Icon = item.icon;
         return (
           <Link
@@ -208,6 +216,12 @@ function SidebarFooter() {
     <div className="border-t border-white/10 px-5 py-4 text-[11px] leading-relaxed text-taupe">
       <p className="display tracking-[0.18em] text-taupe-2">REIP</p>
       <p className="mt-1">Cornerstone Digital Technologies</p>
+      <Link
+        href="/disclaimers"
+        className="mt-3 inline-block text-[10px] tracking-wide text-taupe-2 underline hover:text-cream"
+      >
+        Disclaimers
+      </Link>
     </div>
   );
 }

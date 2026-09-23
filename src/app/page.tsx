@@ -14,8 +14,8 @@ export default async function DashboardPage() {
           Intelligence for the next offer.
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-taupe">
-          Screen Greater Tampa homes the way High ROI Picks does — ask, offer, rent, taxes, HOA,
-          insurance, and cash flow. Street addresses are sent on request.
+          Screen Greater Tampa deals the way High ROI Picks does. Street addresses are sent to your
+          email and phone on request — not posted publicly.
         </p>
       </div>
 
@@ -26,14 +26,22 @@ export default async function DashboardPage() {
         <Kpi label="Submarkets" value={String(kpis.markets)} hint="Greater Tampa" accent="taupe" />
       </div>
 
-      <section className="grid gap-4 sm:grid-cols-2">
-        <Link href="/reports" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
-          <SectionTitle kicker="DIGEST" title="Sam's High ROI Picks" />
-          <p className="text-sm text-taupe">This week’s ranked cash-flow list. Request the address when you’re ready to tour.</p>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Link href="/picks/condos" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
+          <SectionTitle kicker="CONDOS" title="Condos" />
+          <p className="text-sm text-taupe">Condo picks from this week’s digest.</p>
         </Link>
-        <Link href="/areas" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
-          <SectionTitle kicker="MARKETS" title="Greater Tampa areas" />
-          <p className="text-sm text-taupe">Submarket scores, rents, and jobs — open a city to see what’s on the digest.</p>
+        <Link href="/picks/townhomes" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
+          <SectionTitle kicker="TOWNHOMES" title="Townhomes" />
+          <p className="text-sm text-taupe">Townhome cash-flow screen.</p>
+        </Link>
+        <Link href="/picks/sfh" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
+          <SectionTitle kicker="SFH" title="Single family" />
+          <p className="text-sm text-taupe">Detached homes ranked by cash flow.</p>
+        </Link>
+        <Link href="/land" className="bg-cream p-5 ring-1 ring-line hover:ring-blue">
+          <SectionTitle kicker="LOTS" title="Land" />
+          <p className="text-sm text-taupe">Lots and acreage with models.</p>
         </Link>
       </section>
     </div>

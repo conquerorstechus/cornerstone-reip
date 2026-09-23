@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function PropertiesPage() {
-  redirect("/reports");
+export default function PropertiesIndex() {
+  redirect("/picks/condos");
 }

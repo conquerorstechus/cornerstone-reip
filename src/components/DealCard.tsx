@@ -1,60 +1,133 @@
+import Link from "next/link";
 import { GetMoreInfoButton } from "./GetMoreInfoButton";
-import type { Property } from "../lib/types";
-import { listingHeadline, monthly, usd } from "../lib/format";
+import type { HomeKind, Property } from "../lib/types";
+import { monthly, truncateCopy, usd } from "../lib/format";
+
+const THEME: Record<
+  HomeKind,
+  { bar: string; head: string; body: string; label: string }
+> = {
+  sfh: {
+    bar: "border-l-[#1e40af]",
+    head: "bg-[#1e40af]",
+    body: "bg-[#eff6ff]",
+    label: "Single Family Home",
+  },
+  condo: {
+    bar: "border-l-[#7c3aed]",
+    head: "bg-[#7c3aed]",
+    body: "bg-[#f5f3ff]",
+    label: "Condo",
+  },
+  townhouse: {
+    bar: "border-l-[#6d28d9]",
+    head: "bg-[#6d28d9]",
+    body: "bg-[#f5f3ff]",
+    label: "Townhome",
+  },
+};
 
 export function DealCard({ deal, compact }: { deal: Property; compact?: boolean }) {
-  const tags = deal.tags.filter((t) => t.toLowerCase() !== deal.city.toLowerCase());
+  const kind = deal.homeKind ?? "sfh";
+  const theme = THEME[kind];
+  const cfPositive = deal.cashFlow >= 0;
+  const baths = Number.isInteger(deal.baths) ? String(deal.baths) : String(deal.baths);
+  const desc = truncateCopy(deal.description, compact ? 140 : 240);
+  const flags = (deal.flags ?? []).filter(Boolean);
+  const lotLabel =
+    deal.lotSqft && deal.lotSqft > 0 ? `${deal.lotSqft.toLocaleString()} sqft` : null;
 
   return (
-    <article className="bg-cream ring-1 ring-line">
-      <div className="flex flex-col gap-3 border-b border-line px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:px-5">
-        <div className="min-w-0">
-          {deal.rank ? (
-            <p className="display text-[10px] tracking-[0.24em] text-magenta">RANK #{deal.rank}</p>
-          ) : null}
-          <h3 className="display mt-1 text-base font-semibold tracking-wide break-words">
-            {listingHeadline(deal)}
-          </h3>
-          <p className="text-sm text-taupe">Greater Tampa · Address on request</p>
-        </div>
-        <div className="text-left sm:shrink-0 sm:text-right">
-          <p className="display text-[10px] tracking-[0.2em] text-taupe">CASH FLOW</p>
-          <p className="font-display text-xl font-semibold text-blue">{monthly(deal.cashFlow)}</p>
-        </div>
+    <article
+      className={`overflow-hidden rounded-lg border border-[#e5e7eb] border-l-4 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] ${theme.bar}`}
+    >
+      <div
+        className={`flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 text-[13px] text-white sm:px-4.5 ${theme.head}`}
+      >
+        <span className="font-bold">
+          {deal.rank ? `Rank #${deal.rank}` : "Deal"}
+        </span>
+        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+          {theme.label}
+        </span>
+        <span className="ml-auto font-medium">
+          Cash Flow:{" "}
+          <strong className={cfPositive ? "" : "text-red-100"}>{monthly(deal.cashFlow)}</strong>
+        </span>
       </div>
-      {!compact ? (
-        <p className="px-4 py-3 text-sm leading-relaxed text-ink/80 sm:px-5">{deal.description}</p>
-      ) : null}
-      <dl className="grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
-        <Stat label="Ask" value={usd(deal.ask)} />
-        <Stat label="Offer" value={usd(deal.offer)} />
-        <Stat label="Rent" value={monthly(deal.rent)} />
-        <Stat label="Mortgage*" value={monthly(deal.mortgageMonthly)} />
-        <Stat label="Tax" value={monthly(deal.taxMonthly)} />
-        <Stat label="HOA" value={monthly(deal.hoaMonthly)} />
-        <Stat label="Sqft" value={deal.sqft.toLocaleString()} />
-      </dl>
-      {tags.length ? (
-        <div className="flex flex-wrap gap-2 px-4 py-3 sm:px-5">
-          {tags.map((t) => (
-            <span key={t} className="bg-stone px-2 py-0.5 text-[11px] tracking-wide text-navy">
-              {t}
-            </span>
-          ))}
+
+      <div className={`space-y-3 px-4 py-3.5 sm:px-4.5 ${theme.body}`}>
+        <div>
+          <p className="text-[13px] font-bold text-[#1e3a5f]">
+            {deal.beds} bed / {baths} bath · {deal.city}, {deal.state} {deal.zip}
+            <span className="font-medium text-[#6b7280]"> · Address on request</span>
+          </p>
+          {desc ? (
+            <p className="mt-1 text-[13px] leading-relaxed text-[#6b7280] italic">{desc}</p>
+          ) : null}
         </div>
-      ) : null}
-      <div className="border-t border-line px-4 py-3 sm:px-5">
-        <GetMoreInfoButton dealId={deal.id} />
+
+        {flags.length ? (
+          <p className="text-[11px] text-[#b45309]">
+            Imputed from peer data: {flags.join(", ")}
+          </p>
+        ) : null}
+
+        <div className="grid gap-1.5 text-[13px] text-[#374151] sm:grid-cols-2">
+          <p>
+            <strong>
+              {deal.beds}bd / {baths}ba
+            </strong>
+            {" · "}
+            {deal.sqft.toLocaleString()} sqft
+          </p>
+          <p className="sm:text-right">
+            Asking: <strong>{usd(deal.ask)}</strong>
+          </p>
+          {lotLabel ? (
+            <p className="sm:col-span-2">
+              Lot size: <strong>{lotLabel}</strong>
+            </p>
+          ) : null}
+          <p>
+            Offer: <strong>{usd(deal.offer)}</strong>
+          </p>
+          <p className="sm:text-right">HOA: {monthly(deal.hoaMonthly)}</p>
+          <p>Taxes: {monthly(deal.taxMonthly)}</p>
+          <p className="sm:text-right">Insurance: {monthly(deal.insuranceMonthly)}</p>
+          <p>
+            Rent:{" "}
+            <strong>{deal.rent > 0 ? monthly(deal.rent) : "Unable to calculate"}</strong>
+          </p>
+          <p className="sm:text-right">
+            Cash flow:{" "}
+            <strong className={cfPositive ? "text-[#16a34a]" : "text-[#dc2626]"}>
+              {monthly(deal.cashFlow)}
+            </strong>
+          </p>
+        </div>
+
+        <div className="border-t border-black/5 pt-3 text-[13px] text-[#374151]">
+          <p>
+            Mortgage (30yr · 50% down · 7%): <strong>{monthly(deal.mortgageMonthly)}</strong>
+          </p>
+          <p className="mt-1 text-[11px] italic text-[#6b7280]">
+            * This payment will decrease when interest rates drop and the property is refinanced.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <Link
+            href={`/properties/${deal.id}`}
+            className={`inline-flex min-h-10 flex-1 items-center justify-center px-3 py-2 text-sm font-semibold text-white ${theme.head} hover:opacity-90`}
+          >
+            Full analysis &amp; models
+          </Link>
+          <div className="flex-1">
+            <GetMoreInfoButton dealId={deal.id} dealType="property" />
+          </div>
+        </div>
       </div>
     </article>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-cream px-4 py-3">
-      <dt className="display text-[9px] tracking-[0.18em] text-taupe">{label}</dt>
-      <dd className="mt-0.5 text-sm font-semibold">{value}</dd>
-    </div>
   );
 }
