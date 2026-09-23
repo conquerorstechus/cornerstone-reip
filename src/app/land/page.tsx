@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { ScoreBar } from "../../components/Ui";
-import { LAND } from "../../lib/data";
+import { getLand } from "../../lib/data";
 import { usd } from "../../lib/format";
 
 export const metadata = { title: "Land" };
 
-export default function LandPage() {
+export default async function LandPage() {
+  const land = await getLand();
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,7 +18,7 @@ export default function LandPage() {
         </p>
       </div>
       <div className="grid gap-4">
-        {LAND.map((l) => (
+        {land.map((l) => (
           <Link key={l.id} href={`/land/${l.id}`} className="block bg-cream ring-1 ring-line hover:ring-blue">
             <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-4 sm:px-5">
               <div className="min-w-0">

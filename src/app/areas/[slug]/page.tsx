@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { DealCard } from "../../../components/DealCard";
 import { OsmMap } from "../../../components/OsmMap";
 import { ScoreBar, SectionTitle } from "../../../components/Ui";
-import { areaBySlug, LAND, MULTIFAMILY, PROPERTIES } from "../../../lib/data";
+import { areaBySlug, getLand, getProperties, MULTIFAMILY } from "../../../lib/data";
 import { monthly, pct, usd } from "../../../lib/format";
 
 export default async function AreaDetailPage({
@@ -14,8 +14,9 @@ export default async function AreaDetailPage({
   const { slug } = await params;
   const a = areaBySlug(slug);
   if (!a) notFound();
-  const deals = PROPERTIES.filter((p) => p.areaSlug === slug);
-  const land = LAND.filter((l) => l.areaSlug === slug);
+  const [allDeals, allLand] = await Promise.all([getProperties(), getLand()]);
+  const deals = allDeals.filter((p) => p.areaSlug === slug);
+  const land = allLand.filter((l) => l.areaSlug === slug);
   const mf = MULTIFAMILY.filter((m) => m.areaSlug === slug);
 
   return (

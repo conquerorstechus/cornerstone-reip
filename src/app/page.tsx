@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Kpi, SectionTitle } from "../components/Ui";
-import { KPIS } from "../lib/data";
+import { getKpis } from "../lib/data";
 import { monthly, usd } from "../lib/format";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const kpis = await getKpis();
+
   return (
     <div className="space-y-8">
       <div>
@@ -18,10 +20,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Deals screened" value={String(KPIS.dealsScreened)} hint="This week" accent="magenta" />
-        <Kpi label="Avg cash flow" value={monthly(KPIS.avgCashFlow)} hint="Before the mortgage" accent="blue" />
-        <Kpi label="Avg suggested offer" value={usd(KPIS.avgOffer)} hint="50% down" />
-        <Kpi label="Submarkets" value={String(KPIS.markets)} hint="Greater Tampa" accent="taupe" />
+        <Kpi label="Deals screened" value={String(kpis.dealsScreened)} hint="This week" accent="magenta" />
+        <Kpi label="Avg cash flow" value={monthly(kpis.avgCashFlow)} hint="Before the mortgage" accent="blue" />
+        <Kpi label="Avg suggested offer" value={usd(kpis.avgOffer)} hint="50% down" />
+        <Kpi label="Submarkets" value={String(kpis.markets)} hint="Greater Tampa" accent="taupe" />
       </div>
 
       <section className="grid gap-4 sm:grid-cols-2">

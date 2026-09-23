@@ -11,7 +11,7 @@ export default async function LandDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const l = landById(id);
+  const l = await landById(id);
   if (!l) notFound();
   const area = areaBySlug(l.areaSlug);
 

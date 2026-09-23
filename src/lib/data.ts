@@ -1,3 +1,9 @@
+import {
+  digestFromProperties,
+  fetchSamList,
+  landFromSamList,
+  propertiesFromSamList,
+} from "./sam-list";
 import type { Area, DigestReport, LandParcel, MultifamilyAsset, Property } from "./types";
 
 export const PROPERTIES: Property[] = [
@@ -661,22 +667,74 @@ export const DIGEST: DigestReport = {
   deals: PROPERTIES,
 };
 
-export function propertyById(id: string) {
-  return PROPERTIES.find((p) => p.id === id);
+/** Live digest properties from SAM_LIST_URL or local sams-list JSON. */
+export async function getProperties(): Promise<Property[]> {
+  try {
+    const items = await fetchSamList();
+    const live = propertiesFromSamList(items);
+    if (live.length) return live;
+  } catch {
+    // Fall back to static book when remote/local list is unavailable.
+  }
+  return PROPERTIES;
+}
+
+export async function getLand(): Promise<LandParcel[]> {
+  try {
+    const items = await fetchSamList();
+    const live = landFromSamList(items);
+    if (live.length) return live;
+  } catch {
+    // Fall back to static land book.
+  }
+  return LAND;
+}
+
+export async function getDigest(): Promise<DigestReport> {
+  try {
+    const items = await fetchSamList();
+    const deals = propertiesFromSamList(items);
+    if (deals.length) {
+      const scrape = items.find((i) => i.scrape_date)?.scrape_date;
+      return digestFromProperties(deals, scrape);
+    }
+  } catch {
+    // Fall back below.
+  }
+  return DIGEST;
+}
+
+export async function propertyById(id: string) {
+  const list = await getProperties();
+  return list.find((p) => p.id === id);
 }
 
 export function areaBySlug(slug: string) {
   return AREAS.find((a) => a.slug === slug);
 }
 
-export function landById(id: string) {
-  return LAND.find((l) => l.id === id);
+export async function landById(id: string) {
+  const list = await getLand();
+  return list.find((l) => l.id === id);
 }
 
 export function mfById(id: string) {
   return MULTIFAMILY.find((m) => m.id === id);
 }
 
+export async function getKpis() {
+  const deals = await getProperties();
+  const n = deals.length || 1;
+  return {
+    dealsScreened: deals.length,
+    digestCount: deals.length,
+    avgCashFlow: Math.round(deals.reduce((s, p) => s + p.cashFlow, 0) / n),
+    avgOffer: Math.round(deals.reduce((s, p) => s + p.offer, 0) / n),
+    markets: AREAS.length,
+  };
+}
+
+/** @deprecated Prefer getKpis() — static snapshot of the seed book. */
 export const KPIS = {
   dealsScreened: 142,
   digestCount: PROPERTIES.length,

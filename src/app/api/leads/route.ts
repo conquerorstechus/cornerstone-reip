@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "dealId is required" }, { status: 400 });
   }
 
-  const property = propertyById(dealId);
+  const property = await propertyById(dealId);
   if (!property) {
     return NextResponse.json({ error: "Unknown deal" }, { status: 404 });
   }

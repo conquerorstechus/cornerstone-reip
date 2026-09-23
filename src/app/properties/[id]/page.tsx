@@ -12,7 +12,7 @@ export default async function PropertyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const p = propertyById(id);
+  const p = await propertyById(id);
   if (!p) notFound();
   const area = areaBySlug(p.areaSlug);
   const afterDebt = p.cashFlow - p.mortgageMonthly;
