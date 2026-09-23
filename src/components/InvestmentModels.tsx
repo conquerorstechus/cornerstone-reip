@@ -9,7 +9,6 @@ import {
   type DealFinancials,
 } from "../lib/investment";
 import { monthly, pct, usd } from "../lib/format";
-import { DisclaimerNote } from "./Disclaimer";
 
 const SCENARIOS: { id: AppreciationScenario; label: string; plain: string }[] = [
   {
@@ -153,6 +152,13 @@ export function InvestmentModels({
               <span>100% all cash</span>
             </div>
           </div>
+
+          <a
+            href={`/mortgage?price=${Math.round(financials.purchasePrice)}&down=${Math.round(coc.downPayment)}&rate=${((financials.rate ?? 0.07) * 100).toFixed(3)}`}
+            className="inline-flex text-[13px] font-semibold text-[#1d4ed8] hover:underline"
+          >
+            Open mortgage calculator with these numbers →
+          </a>
         </div>
       </section>
 
@@ -429,8 +435,6 @@ export function InvestmentModels({
           </p>
         </div>
       </section>
-
-      <DisclaimerNote />
     </div>
   );
 }

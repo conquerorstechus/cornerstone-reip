@@ -723,13 +723,21 @@ export function mfById(id: string) {
 }
 
 export async function getKpis() {
-  const deals = await getProperties();
-  const n = deals.length || 1;
+  const [deals, land] = await Promise.all([getProperties(), getLand()]);
+  const total = deals.length + land.length;
+  const priced = deals.filter((p) => p.offer > 0 || p.ask > 0);
+  const n = priced.length || 1;
   return {
-    dealsScreened: deals.length,
+    /** Total rows in the live Sam list (homes + land). */
+    totalInJson: total,
+    dealsScreened: total,
     digestCount: deals.length,
-    avgCashFlow: Math.round(deals.reduce((s, p) => s + p.cashFlow, 0) / n),
-    avgOffer: Math.round(deals.reduce((s, p) => s + p.offer, 0) / n),
+    landCount: land.length,
+    condoCount: deals.filter((d) => d.homeKind === "condo").length,
+    townhomeCount: deals.filter((d) => d.homeKind === "townhouse").length,
+    sfhCount: deals.filter((d) => (d.homeKind ?? "sfh") === "sfh").length,
+    avgCashFlow: Math.round(deals.reduce((s, p) => s + p.cashFlow, 0) / (deals.length || 1)),
+    avgOffer: Math.round(priced.reduce((s, p) => s + (p.offer || p.ask), 0) / n),
     markets: AREAS.length,
   };
 }

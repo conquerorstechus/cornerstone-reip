@@ -1,5 +1,4 @@
 import { DealCard } from "./DealCard";
-import { DisclaimerNote } from "./Disclaimer";
 import type { Property } from "../lib/types";
 import type { PicksKind } from "../lib/picks";
 import { PICKS_META } from "../lib/picks";
@@ -47,8 +46,6 @@ export function PicksList({
       {!deals.length ? (
         <p className="text-sm text-[#6b7280]">No deals in this category this week.</p>
       ) : null}
-
-      <DisclaimerNote />
 
       <p className="text-xs text-[#6b7280]">
         Mortgage estimated at 7% fixed, 30 years, 50% down unless you change the slider on a deal

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { GetMoreInfoButton } from "./GetMoreInfoButton";
 import type { LandParcel } from "../lib/types";
-import { monthly, truncateCopy, usd } from "../lib/format";
+import { cashDownYearlyRor, monthly, pct, truncateCopy, usd } from "../lib/format";
 
 export function LandCard({ parcel }: { parcel: LandParcel }) {
   const cf = parcel.cashFlow ?? 0;
@@ -14,6 +14,9 @@ export function LandCard({ parcel }: { parcel: LandParcel }) {
       : parcel.lotSqft
         ? `${parcel.lotSqft.toLocaleString()} sqft`
         : null;
+  const purchase = parcel.offer ?? parcel.asking;
+  const yearlyRor = cashDownYearlyRor({ cashFlowMonthly: cf, purchasePrice: purchase });
+  const rorPositive = yearlyRor >= 0;
 
   return (
     <article className="overflow-hidden rounded-lg border border-[#e5e7eb] border-l-4 border-l-[#0d9488] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
@@ -22,8 +25,14 @@ export function LandCard({ parcel }: { parcel: LandParcel }) {
         <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
           Land
         </span>
-        <span className="ml-auto font-medium">
-          Cash Flow: <strong className={cfPositive ? "" : "text-red-100"}>{monthly(cf)}</strong>
+        <span className="ml-auto flex flex-wrap items-center justify-end gap-x-3 gap-y-1 font-medium">
+          <span>
+            Cash Flow: <strong className={cfPositive ? "" : "text-red-100"}>{monthly(cf)}</strong>
+          </span>
+          <span>
+            Yr ROR (cash):{" "}
+            <strong className={rorPositive ? "" : "text-red-100"}>{pct(yearlyRor * 100, 1)}</strong>
+          </span>
         </span>
       </div>
 
@@ -70,6 +79,16 @@ export function LandCard({ parcel }: { parcel: LandParcel }) {
           </p>
           <p className="sm:text-right">
             Mortgage*: <strong>{monthly(parcel.mortgageMonthly ?? 0)}</strong>
+          </p>
+          <p className="sm:col-span-2">
+            Yearly ROR (100% cash down):{" "}
+            <strong className={rorPositive ? "text-[#16a34a]" : "text-[#dc2626]"}>
+              {pct(yearlyRor * 100, 1)}
+            </strong>
+            <span className="text-[#6b7280]">
+              {" "}
+              · leftover cash ÷ {usd(purchase)} with no mortgage
+            </span>
           </p>
         </div>
 

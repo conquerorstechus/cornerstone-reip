@@ -21,6 +21,16 @@ export function monthly(n: number) {
   return `${usd(n)}/mo`;
 }
 
+/** Yearly cash-on-cash (rate of return) with 100% cash down — no mortgage. */
+export function cashDownYearlyRor(opts: {
+  cashFlowMonthly: number;
+  purchasePrice: number;
+}): number {
+  const price = opts.purchasePrice;
+  if (!price || price <= 0) return 0;
+  return (opts.cashFlowMonthly * 12) / price;
+}
+
 export function listingHeadline(p: { beds: number; baths: number; city: string }) {
   const bath = Number.isInteger(p.baths) ? String(p.baths) : String(p.baths);
   return `${p.beds} bed / ${bath} bath · ${p.city}`;

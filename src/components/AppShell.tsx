@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import {
   Building2,
+  Calculator,
   FileBarChart,
   HardHat,
   Home,
@@ -27,6 +28,7 @@ const NAV_MAIN: { href: string; label: string; icon: typeof LayoutDashboard }[] 
   { href: "/picks/townhomes", label: "Townhomes", icon: Layers },
   { href: "/picks/sfh", label: "Single Family", icon: Home },
   { href: "/land", label: "Land", icon: Trees },
+  { href: "/mortgage", label: "Mortgage calc", icon: Calculator },
   { href: "/areas", label: "Areas", icon: MapPinned },
   { href: "/analyze", label: "Analyze", icon: ScanSearch },
 ];

@@ -1,5 +1,4 @@
 import { LandCard } from "../../components/LandCard";
-import { DisclaimerNote } from "../../components/Disclaimer";
 import { getLand } from "../../lib/data";
 
 export const metadata = { title: "Land for Sale" };
@@ -35,8 +34,6 @@ export default async function LandPage() {
           <LandCard key={l.id} parcel={l} />
         ))}
       </div>
-
-      <DisclaimerNote />
     </div>
   );
 }

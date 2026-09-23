@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { GetMoreInfoButton } from "./GetMoreInfoButton";
 import type { HomeKind, Property } from "../lib/types";
-import { monthly, truncateCopy, usd } from "../lib/format";
+import { cashDownYearlyRor, monthly, pct, truncateCopy, usd } from "../lib/format";
 
 const THEME: Record<
   HomeKind,
@@ -36,6 +36,12 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
   const flags = (deal.flags ?? []).filter(Boolean);
   const lotLabel =
     deal.lotSqft && deal.lotSqft > 0 ? `${deal.lotSqft.toLocaleString()} sqft` : null;
+  const purchase = deal.offer || deal.ask;
+  const yearlyRor = cashDownYearlyRor({
+    cashFlowMonthly: deal.cashFlow,
+    purchasePrice: purchase,
+  });
+  const rorPositive = yearlyRor >= 0;
 
   return (
     <article
@@ -50,9 +56,15 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
         <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
           {theme.label}
         </span>
-        <span className="ml-auto font-medium">
-          Cash Flow:{" "}
-          <strong className={cfPositive ? "" : "text-red-100"}>{monthly(deal.cashFlow)}</strong>
+        <span className="ml-auto flex flex-wrap items-center justify-end gap-x-3 gap-y-1 font-medium">
+          <span>
+            Cash Flow:{" "}
+            <strong className={cfPositive ? "" : "text-red-100"}>{monthly(deal.cashFlow)}</strong>
+          </span>
+          <span>
+            Yr ROR (cash):{" "}
+            <strong className={rorPositive ? "" : "text-red-100"}>{pct(yearlyRor * 100, 1)}</strong>
+          </span>
         </span>
       </div>
 
@@ -105,6 +117,16 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
               {monthly(deal.cashFlow)}
             </strong>
           </p>
+          <p className="sm:col-span-2">
+            Yearly ROR (100% cash down):{" "}
+            <strong className={rorPositive ? "text-[#16a34a]" : "text-[#dc2626]"}>
+              {pct(yearlyRor * 100, 1)}
+            </strong>
+            <span className="text-[#6b7280]">
+              {" "}
+              · leftover cash ÷ {usd(purchase)} with no mortgage
+            </span>
+          </p>
         </div>
 
         <div className="border-t border-black/5 pt-3 text-[13px] text-[#374151]">
@@ -112,7 +134,13 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
             Mortgage (30yr · 50% down · 7%): <strong>{monthly(deal.mortgageMonthly)}</strong>
           </p>
           <p className="mt-1 text-[11px] italic text-[#6b7280]">
-            * This payment will decrease when interest rates drop and the property is refinanced.
+            * This payment will decrease when interest rates drop and the property is refinanced.{" "}
+            <Link
+              href={`/mortgage?price=${Math.round(purchase)}&down=${Math.round(purchase * 0.5)}&rate=7`}
+              className="font-semibold text-[#1d4ed8] not-italic hover:underline"
+            >
+              Open calculator →
+            </Link>
           </p>
         </div>
 
