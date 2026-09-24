@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import { MortgageCalculator } from "../../components/MortgageCalculator";
 
 export const metadata = {
-  title: "Mortgage Calculator",
+  title: "Mortgage & Closing Cost Calculator",
   description:
-    "Estimate mortgage payments with principal, interest, taxes, insurance, and HOA. Connect with Arki Koul at Shopwise Mortgage.",
+    "Full amortization schedule, Florida-typical closing costs (title, deed stamps, survey, escrow), taxes, insurance, and HOA. Connect with Arki Koul at Shopwise Mortgage.",
 };
 
 export default function MortgagePage() {

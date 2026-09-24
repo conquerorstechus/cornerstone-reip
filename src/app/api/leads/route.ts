@@ -6,26 +6,35 @@ export const runtime = "nodejs";
 const N8N_LEAD_WEBHOOK =
   "https://n8n.srv1393511.hstgr.cloud/webhook/cef18bdf-8d8f-4f94-bc21-8c8e8aff001a";
 
+type MortgageQuote = {
+  price?: number;
+  downPayment?: number;
+  downPct?: number;
+  rate?: number;
+  program?: string;
+  zip?: string;
+  loanAmount?: number;
+  taxes?: number;
+  insurance?: number;
+  hoa?: number;
+};
+
 /** Lead capture: deliver street address to the buyer via email + SMS (n8n). */
 export async function POST(req: NextRequest) {
   let body: {
     dealId?: string;
-    dealType?: "property" | "land";
+    dealType?: "property" | "land" | "mortgage";
     source?: string;
     deliverImmediately?: boolean;
     name?: string;
     email?: string;
     phone?: string;
+    mortgage?: MortgageQuote;
   } = {};
   try {
     body = (await req.json()) as typeof body;
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
-
-  const dealId = body.dealId?.trim();
-  if (!dealId) {
-    return NextResponse.json({ error: "dealId is required" }, { status: 400 });
   }
 
   const email = body.email?.trim() ?? "";
@@ -34,15 +43,62 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "email and phone are required" }, { status: 400 });
   }
 
+  const name = body.name?.trim() ?? "";
+  const webhook = process.env.LEAD_WEBHOOK_URL?.trim() || N8N_LEAD_WEBHOOK;
+
+  // Mortgage quote request (no deal required)
+  if (body.dealType === "mortgage" || body.source === "mortgage-quote") {
+    const m = body.mortgage ?? {};
+    const payload = {
+      action: "mortgage_quote_request",
+      deliverImmediately: body.deliverImmediately !== false,
+      source: body.source ?? "mortgage-quote",
+      requestedAt: new Date().toISOString(),
+      name,
+      email,
+      phone,
+      dealType: "mortgage" as const,
+      mortgage: {
+        price: m.price ?? null,
+        downPayment: m.downPayment ?? null,
+        downPct: m.downPct ?? null,
+        rate: m.rate ?? null,
+        program: m.program ?? null,
+        zip: m.zip ?? null,
+        loanAmount: m.loanAmount ?? null,
+        taxes: m.taxes ?? null,
+        insurance: m.insurance ?? null,
+        hoa: m.hoa ?? null,
+      },
+      messageToLead: `Thanks — Arki Koul at Shopwise Mortgage will follow up with a Closing Disclosure–level quote for your scenario (price ${m.price ?? "n/a"}, down ${m.downPct ?? "n/a"}%, rate ${m.rate ?? "n/a"}%).`,
+    };
+
+    if (webhook) {
+      try {
+        await fetch(webhook, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch {
+        // Keep the form successful even if the optional webhook is down.
+      }
+    }
+
+    return NextResponse.json({ ok: true, delivered: true });
+  }
+
+  const dealId = body.dealId?.trim();
+  if (!dealId) {
+    return NextResponse.json({ error: "dealId is required" }, { status: 400 });
+  }
+
   const dealType = body.dealType === "land" ? "land" : "property";
   const property = dealType === "property" ? await propertyById(dealId) : null;
   const land = dealType === "land" ? await landById(dealId) : null;
   if (!property && !land) {
     return NextResponse.json({ error: "Unknown deal" }, { status: 404 });
   }
-
-  const name = body.name?.trim() ?? "";
-  const webhook = process.env.LEAD_WEBHOOK_URL?.trim() || N8N_LEAD_WEBHOOK;
 
   const payload =
     property != null

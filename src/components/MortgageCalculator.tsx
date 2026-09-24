@@ -4,10 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  amortizationByYear,
+  buildClosingCosts,
+  categoryLabel,
+  fullAmortizationSchedule,
+  type ClosingCostLine,
+} from "../lib/closing-costs";
 import { LOAN_OFFICER } from "../lib/loan-officer";
 import { monthly, pct, usd } from "../lib/format";
+import { MortgageQuoteButton } from "./MortgageQuoteButton";
 
 type LoanProgram = "30-fixed" | "15-fixed" | "5-arm";
+type MainTab = "payment" | "closing" | "schedule" | "lifetime";
 
 const DEFAULTS = {
   price: 350_000,
@@ -15,7 +24,7 @@ const DEFAULTS = {
   rate: 7,
   zip: "33602",
   program: "30-fixed" as LoanProgram,
-  taxAnnual: 0, // 0 = auto from price
+  taxAnnual: 0,
   insuranceAnnual: 0,
   hoaMonthly: 0,
 };
@@ -23,14 +32,6 @@ const DEFAULTS = {
 function programYears(program: LoanProgram): number {
   if (program === "15-fixed") return 15;
   return 30;
-}
-
-function piPayment(principal: number, annualRatePct: number, years: number): number {
-  if (principal <= 0) return 0;
-  const r = annualRatePct / 100 / 12;
-  const n = years * 12;
-  if (r === 0) return principal / n;
-  return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
 function pmiMonthly(loan: number, price: number): number {
@@ -64,7 +65,10 @@ export function MortgageCalculator({
   const searchParams = useSearchParams();
 
   const boot = useMemo(() => {
-    const price = parseNum(searchParams.get("price") ?? searchParams.get("homePrice"), initial?.price ?? DEFAULTS.price);
+    const price = parseNum(
+      searchParams.get("price") ?? searchParams.get("homePrice"),
+      initial?.price ?? DEFAULTS.price,
+    );
     const downDollar = searchParams.get("down") ?? searchParams.get("downPayment");
     const downPctParam = searchParams.get("downPct") ?? searchParams.get("downpercent");
     let downPct = initial?.downPct ?? DEFAULTS.downPct;
@@ -77,7 +81,10 @@ export function MortgageCalculator({
       downPct = (initial.down / price) * 100;
     }
 
-    const rate = parseNum(searchParams.get("rate") ?? searchParams.get("interestRate"), initial?.rate ?? DEFAULTS.rate);
+    const rate = parseNum(
+      searchParams.get("rate") ?? searchParams.get("interestRate"),
+      initial?.rate ?? DEFAULTS.rate,
+    );
     const zip = searchParams.get("zip") ?? initial?.zip ?? DEFAULTS.zip;
     const programRaw = searchParams.get("program") ?? initial?.program ?? DEFAULTS.program;
     const program: LoanProgram =
@@ -108,9 +115,10 @@ export function MortgageCalculator({
   const [insuranceAnnual, setInsuranceAnnual] = useState(boot.insuranceAnnual);
   const [hoaMonthly, setHoaMonthly] = useState(boot.hoaMonthly);
   const [showAdvanced, setShowAdvanced] = useState(true);
-  const [tab, setTab] = useState<"breakdown" | "schedule">("breakdown");
+  const [tab, setTab] = useState<MainTab>("payment");
+  const [scheduleYear, setScheduleYear] = useState(1);
+  const [showAllMonths, setShowAllMonths] = useState(false);
 
-  // Sync when URL changes (e.g. linked from a deal with ?price=&rate=)
   useEffect(() => {
     setPrice(boot.price);
     setDownPct(boot.downPct);
@@ -125,29 +133,44 @@ export function MortgageCalculator({
   const downPayment = (price * downPct) / 100;
   const loanAmount = Math.max(0, price - downPayment);
   const years = programYears(program);
-  const pi = piPayment(loanAmount, rate, years);
+  const effectiveTaxAnnual = taxAnnual > 0 ? taxAnnual : price * 0.012;
+  const effectiveInsAnnual = insuranceAnnual > 0 ? insuranceAnnual : price * 0.0046;
 
-  const taxMo = (taxAnnual > 0 ? taxAnnual : price * 0.012) / 12;
-  const insMo = (insuranceAnnual > 0 ? insuranceAnnual : price * 0.0046) / 12;
+  const amort = useMemo(
+    () => fullAmortizationSchedule(loanAmount, rate, years),
+    [loanAmount, rate, years],
+  );
+  const yearly = useMemo(() => amortizationByYear(amort.rows), [amort.rows]);
+
+  const taxMo = effectiveTaxAnnual / 12;
+  const insMo = effectiveInsAnnual / 12;
   const pmi = pmiMonthly(loanAmount, price);
+  const pi = amort.payment;
   const totalPayment = pi + taxMo + insMo + pmi + hoaMonthly;
 
-  const schedule = useMemo(() => {
-    const rows: { month: number; interest: number; principal: number; balance: number }[] = [];
-    let bal = loanAmount;
-    const r = rate / 100 / 12;
-    const n = years * 12;
-    const pay = pi;
-    for (let m = 1; m <= n && bal > 0.5; m++) {
-      const interest = bal * r;
-      const principal = Math.min(bal, pay - interest);
-      bal = Math.max(0, bal - principal);
-      if (m <= 12 || m % 12 === 0 || m === n) {
-        rows.push({ month: m, interest, principal, balance: bal });
-      }
-    }
-    return rows;
-  }, [loanAmount, rate, years, pi]);
+  const closing = useMemo(
+    () =>
+      buildClosingCosts({
+        price,
+        loanAmount,
+        annualRatePct: rate,
+        taxAnnual: effectiveTaxAnnual,
+        insuranceAnnual: effectiveInsAnnual,
+        hoaMonthly,
+      }),
+    [price, loanAmount, rate, effectiveTaxAnnual, effectiveInsAnnual, hoaMonthly],
+  );
+
+  const cashToClose = downPayment + closing.cashToCloseExDown;
+  const firstYearTaxes = effectiveTaxAnnual;
+  const firstYearInsurance = effectiveInsAnnual;
+  const firstYearHoa = hoaMonthly * 12;
+  const firstYearPmi = pmi * 12;
+  const firstYearHousing =
+    pi * 12 + firstYearTaxes + firstYearInsurance + firstYearHoa + firstYearPmi;
+
+  const monthsInYear = amort.rows.filter((r) => r.year === scheduleYear);
+  const scheduleRows = showAllMonths ? amort.rows : monthsInYear;
 
   const pushUrl = useCallback(
     (next: {
@@ -187,22 +210,37 @@ export function MortgageCalculator({
   const pmiShare = totalPayment > 0 ? (pmi / totalPayment) * 100 : 0;
   const hoaShare = totalPayment > 0 ? (hoaMonthly / totalPayment) * 100 : 0;
 
+  const linesByCat = useMemo(() => {
+    const m = new Map<ClosingCostLine["category"], ClosingCostLine[]>();
+    for (const l of closing.lines) {
+      const arr = m.get(l.category) ?? [];
+      arr.push(l);
+      m.set(l.category, arr);
+    }
+    return m;
+  }, [closing.lines]);
+
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <div>
-        <p className="text-[11px] font-semibold tracking-[0.2em] text-[#2563eb] uppercase">Mortgage</p>
-        <h1 className="mt-1 text-2xl font-bold text-[#1e3a5f] sm:text-3xl">Mortgage calculator</h1>
-        <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[#6b7280]">
-          Estimate principal &amp; interest, taxes, insurance, PMI, and HOA. Shareable links update
-          automatically — pass <code className="text-[12px]">?price=</code>,{" "}
-          <code className="text-[12px]">down=</code>, and <code className="text-[12px]">rate=</code>{" "}
-          in the URL.
+        <p className="text-[11px] font-semibold tracking-[0.2em] text-[#2563eb] uppercase">
+          Mortgage
+        </p>
+        <h1 className="mt-1 text-2xl font-bold text-[#1e3a5f] sm:text-3xl">
+          Mortgage &amp; closing-cost calculator
+        </h1>
+        <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-[#6b7280]">
+          Monthly payment, full amortization, Florida-typical closing costs (title, deed stamps,
+          survey, escrow, and more). URL params{" "}
+          <code className="text-[12px]">price</code>, <code className="text-[12px]">down</code>,{" "}
+          <code className="text-[12px]">rate</code> update live.
         </p>
       </div>
 
       <LoanOfficerCard />
 
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        {/* Inputs */}
         <div className="space-y-4 rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-6">
           <Field label="Home price">
             <MoneyInput value={price} onChange={setPrice} />
@@ -279,9 +317,6 @@ export function MortgageCalculator({
               />
               <span className="text-[#6b7280]">%</span>
             </div>
-            <p className="mt-1 text-[11px] text-[#6b7280]">
-              Override via URL: <code>?rate=6.75</code>. Default for High ROI models is 7%.
-            </p>
           </Field>
 
           <button
@@ -289,20 +324,20 @@ export function MortgageCalculator({
             onClick={() => setShowAdvanced((v) => !v)}
             className="text-[13px] font-semibold text-[#2563eb] hover:underline"
           >
-            {showAdvanced ? "Hide advanced" : "Show advanced"} · taxes, insurance, HOA
+            {showAdvanced ? "Hide" : "Show"} taxes, insurance, HOA
           </button>
 
           {showAdvanced ? (
             <div className="grid gap-3 border-t border-[#e5e7eb] pt-4 sm:grid-cols-3">
               <Field label="Property tax ($/yr)">
                 <MoneyInput
-                  value={taxAnnual > 0 ? taxAnnual : Math.round(price * 0.012)}
+                  value={Math.round(effectiveTaxAnnual)}
                   onChange={setTaxAnnual}
                 />
               </Field>
               <Field label="Home insurance ($/yr)">
                 <MoneyInput
-                  value={insuranceAnnual > 0 ? insuranceAnnual : Math.round(price * 0.0046)}
+                  value={Math.round(effectiveInsAnnual)}
                   onChange={setInsuranceAnnual}
                 />
               </Field>
@@ -311,36 +346,53 @@ export function MortgageCalculator({
               </Field>
             </div>
           ) : null}
+
+          <dl className="grid grid-cols-2 gap-2 rounded-lg bg-[#f8fafc] p-3 text-[12px] text-[#374151] sm:grid-cols-4">
+            <Stat label="Loan amount" value={usd(loanAmount)} />
+            <Stat label="LTV" value={pct(price > 0 ? (loanAmount / price) * 100 : 0, 1)} />
+            <Stat label="Cash to close (est.)" value={usd(cashToClose)} />
+            <Stat label="Lifetime interest" value={usd(amort.totalInterest)} />
+          </dl>
         </div>
 
+        {/* Results panel */}
         <div className="space-y-4">
           <div className="rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-6">
-            <div className="flex gap-4 border-b border-[#e5e7eb] text-[13px] font-semibold">
-              <button
-                type="button"
-                onClick={() => setTab("breakdown")}
-                className={`pb-2 ${tab === "breakdown" ? "border-b-2 border-[#2563eb] text-[#2563eb]" : "text-[#6b7280]"}`}
-              >
-                Breakdown
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab("schedule")}
-                className={`pb-2 ${tab === "schedule" ? "border-b-2 border-[#2563eb] text-[#2563eb]" : "text-[#6b7280]"}`}
-              >
-                Schedule
-              </button>
+            <div className="flex flex-wrap gap-3 border-b border-[#e5e7eb] text-[12px] font-semibold sm:text-[13px]">
+              {(
+                [
+                  ["payment", "Monthly"],
+                  ["closing", "Cash to close"],
+                  ["schedule", "Full schedule"],
+                  ["lifetime", "Lifetime"],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setTab(id)}
+                  className={`pb-2 ${
+                    tab === id
+                      ? "border-b-2 border-[#2563eb] text-[#2563eb]"
+                      : "text-[#6b7280] hover:text-[#374151]"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
 
-            {tab === "breakdown" ? (
+            {tab === "payment" ? (
               <div className="mt-4 space-y-4">
                 <div>
                   <p className="text-[12px] font-semibold tracking-wide text-[#6b7280] uppercase">
-                    Your payment
+                    Total monthly housing payment
                   </p>
                   <p className="text-3xl font-bold text-[#1e3a5f]">{monthly(totalPayment)}</p>
                   <p className="text-[12px] text-[#6b7280]">
-                    Loan {usd(loanAmount)} · {years}-year · {pct(rate, 3)} rate
+                    P&amp;I {monthly(pi)} + taxes + insurance
+                    {pmi > 0 ? " + PMI" : ""}
+                    {hoaMonthly > 0 ? " + HOA" : ""}
                   </p>
                 </div>
 
@@ -356,39 +408,196 @@ export function MortgageCalculator({
                   <Row color="bg-[#2563eb]" label="Principal & interest" value={monthly(pi)} />
                   <Row color="bg-[#f97316]" label="Property taxes" value={monthly(taxMo)} />
                   <Row color="bg-[#22c55e]" label="Homeowners insurance" value={monthly(insMo)} />
-                  {pmi > 0 ? <Row color="bg-[#a855f7]" label="PMI (est.)" value={monthly(pmi)} /> : null}
+                  {pmi > 0 ? (
+                    <Row color="bg-[#a855f7]" label="PMI (est. until ~20% equity)" value={monthly(pmi)} />
+                  ) : (
+                    <li className="text-[12px] text-[#6b7280]">PMI: none (down payment ≥ 20%)</li>
+                  )}
                   {hoaMonthly > 0 ? (
-                    <Row color="bg-[#64748b]" label="HOA" value={monthly(hoaMonthly)} />
+                    <Row color="bg-[#64748b]" label="HOA dues" value={monthly(hoaMonthly)} />
                   ) : null}
                 </ul>
+
+                <div className="rounded-lg border border-[#e5e7eb] bg-[#f8fafc] p-3 text-[12px] leading-relaxed text-[#4b5563]">
+                  <p className="font-semibold text-[#1e3a5f]">First-year housing cost (est.)</p>
+                  <p className="mt-1">
+                    {usd(firstYearHousing)} / year — includes 12× P&amp;I, annual taxes (
+                    {usd(firstYearTaxes)}), insurance ({usd(firstYearInsurance)})
+                    {firstYearHoa > 0 ? `, HOA (${usd(firstYearHoa)})` : ""}
+                    {firstYearPmi > 0 ? `, PMI (${usd(firstYearPmi)})` : ""}.
+                  </p>
+                </div>
               </div>
-            ) : (
-              <div className="mt-4 overflow-x-auto">
-                <table className="w-full min-w-[20rem] text-left text-[12px] text-[#374151]">
-                  <thead>
-                    <tr className="border-b border-[#e5e7eb] text-[10px] tracking-wide text-[#6b7280] uppercase">
-                      <th className="py-2 pr-2">Month</th>
-                      <th className="py-2 pr-2">Principal</th>
-                      <th className="py-2 pr-2">Interest</th>
-                      <th className="py-2">Balance</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {schedule.map((r) => (
-                      <tr key={r.month} className="border-b border-[#f1f5f9]">
-                        <td className="py-1.5 pr-2">{r.month}</td>
-                        <td className="py-1.5 pr-2 tabular-nums">{usd(r.principal)}</td>
-                        <td className="py-1.5 pr-2 tabular-nums">{usd(r.interest)}</td>
-                        <td className="py-1.5 tabular-nums">{usd(r.balance)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <p className="mt-2 text-[11px] text-[#6b7280]">
-                  Showing first year monthly, then yearly snapshots.
+            ) : null}
+
+            {tab === "closing" ? (
+              <div className="mt-4 space-y-4">
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <BigStat label="Down payment" value={usd(downPayment)} />
+                  <BigStat label="Closing + prepaids + escrow" value={usd(closing.cashToCloseExDown)} />
+                  <BigStat label="Est. cash to close" value={usd(cashToClose)} highlight />
+                  <BigStat label="Purchase price" value={usd(price)} />
+                </div>
+
+                <p className="text-[12px] leading-relaxed text-[#6b7280]">
+                  Typical Greater Tampa / Florida buyer costs. Deed documentary stamps are often
+                  seller-paid locally but listed for a complete picture. County and contract terms
+                  change who pays what — confirm on your Closing Disclosure.
                 </p>
+
+                {([...linesByCat.entries()] as [ClosingCostLine["category"], ClosingCostLine[]][]).map(
+                  ([cat, lines]) => (
+                    <div key={cat}>
+                      <div className="mb-1.5 flex items-baseline justify-between">
+                        <h3 className="text-[13px] font-bold text-[#1e3a5f]">
+                          {categoryLabel(cat)}
+                        </h3>
+                        <span className="text-[13px] font-semibold tabular-nums text-[#374151]">
+                          {usd(closing.byCategory[cat])}
+                        </span>
+                      </div>
+                      <ul className="divide-y divide-[#f1f5f9] rounded-md border border-[#e5e7eb] bg-[#fafafa]">
+                        {lines.map((l) => (
+                          <li key={l.id} className="px-3 py-2 text-[12px]">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <p className="font-medium text-[#374151]">{l.label}</p>
+                                {l.note ? (
+                                  <p className="mt-0.5 text-[11px] text-[#6b7280]">{l.note}</p>
+                                ) : null}
+                                {l.typicallyPaidBy ? (
+                                  <p className="mt-0.5 text-[10px] tracking-wide text-[#94a3b8] uppercase">
+                                    Typically: {l.typicallyPaidBy}
+                                  </p>
+                                ) : null}
+                              </div>
+                              <span className="shrink-0 tabular-nums font-semibold text-[#1e3a5f]">
+                                {usd(l.amount)}
+                              </span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ),
+                )}
               </div>
-            )}
+            ) : null}
+
+            {tab === "schedule" ? (
+              <div className="mt-4 space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label className="text-[12px] font-semibold text-[#6b7280]">
+                    Year
+                    <select
+                      className="ml-2 rounded border border-[#e5e7eb] px-2 py-1 text-[13px] text-[#1e3a5f]"
+                      value={scheduleYear}
+                      onChange={(e) => setScheduleYear(Number(e.target.value))}
+                      disabled={showAllMonths}
+                    >
+                      {yearly.map((y) => (
+                        <option key={y.year} value={y.year}>
+                          Year {y.year}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowAllMonths((v) => !v)}
+                    className="rounded-full bg-[#eff6ff] px-3 py-1 text-[12px] font-semibold text-[#2563eb]"
+                  >
+                    {showAllMonths ? "Show one year" : `Show all ${amort.rows.length} months`}
+                  </button>
+                </div>
+
+                {!showAllMonths && yearly[scheduleYear - 1] ? (
+                  <p className="text-[12px] text-[#6b7280]">
+                    Year {scheduleYear}: principal {usd(yearly[scheduleYear - 1].principal)}, interest{" "}
+                    {usd(yearly[scheduleYear - 1].interest)}, ending balance{" "}
+                    {usd(yearly[scheduleYear - 1].endingBalance)}.
+                  </p>
+                ) : null}
+
+                <div className="max-h-[28rem] overflow-auto rounded-md border border-[#e5e7eb]">
+                  <table className="w-full min-w-[32rem] text-left text-[11px] text-[#374151]">
+                    <thead className="sticky top-0 bg-[#f8fafc]">
+                      <tr className="border-b border-[#e5e7eb] text-[10px] tracking-wide text-[#6b7280] uppercase">
+                        <th className="px-2 py-2">#</th>
+                        <th className="px-2 py-2">Payment</th>
+                        <th className="px-2 py-2">Principal</th>
+                        <th className="px-2 py-2">Interest</th>
+                        <th className="px-2 py-2">Balance</th>
+                        <th className="px-2 py-2">Cum. interest</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {scheduleRows.map((r) => (
+                        <tr key={r.month} className="border-b border-[#f1f5f9]">
+                          <td className="px-2 py-1 tabular-nums">{r.month}</td>
+                          <td className="px-2 py-1 tabular-nums">{usd(r.payment)}</td>
+                          <td className="px-2 py-1 tabular-nums">{usd(r.principal)}</td>
+                          <td className="px-2 py-1 tabular-nums">{usd(r.interest)}</td>
+                          <td className="px-2 py-1 tabular-nums">{usd(r.balance)}</td>
+                          <td className="px-2 py-1 tabular-nums">{usd(r.cumulativeInterest)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : null}
+
+            {tab === "lifetime" ? (
+              <div className="mt-4 space-y-4">
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <BigStat label="Total of all P&I payments" value={usd(amort.totalPaid)} />
+                  <BigStat label="Total interest over life" value={usd(amort.totalInterest)} highlight />
+                  <BigStat label="Amount borrowed" value={usd(loanAmount)} />
+                  <BigStat
+                    label="Interest as % of loan"
+                    value={
+                      loanAmount > 0 ? pct((amort.totalInterest / loanAmount) * 100, 0) : "—"
+                    }
+                  />
+                </div>
+
+                <div>
+                  <h3 className="mb-2 text-[13px] font-bold text-[#1e3a5f]">Year-by-year summary</h3>
+                  <div className="max-h-80 overflow-auto rounded-md border border-[#e5e7eb]">
+                    <table className="w-full text-left text-[11px] text-[#374151]">
+                      <thead className="sticky top-0 bg-[#f8fafc]">
+                        <tr className="border-b border-[#e5e7eb] text-[10px] text-[#6b7280] uppercase">
+                          <th className="px-2 py-2">Year</th>
+                          <th className="px-2 py-2">Principal paid</th>
+                          <th className="px-2 py-2">Interest paid</th>
+                          <th className="px-2 py-2">Ending balance</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {yearly.map((y) => (
+                          <tr key={y.year} className="border-b border-[#f1f5f9]">
+                            <td className="px-2 py-1">{y.year}</td>
+                            <td className="px-2 py-1 tabular-nums">{usd(y.principal)}</td>
+                            <td className="px-2 py-1 tabular-nums">{usd(y.interest)}</td>
+                            <td className="px-2 py-1 tabular-nums">{usd(y.endingBalance)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border border-[#e5e7eb] bg-[#f8fafc] p-3 text-[12px] leading-relaxed text-[#4b5563]">
+                  <p className="font-semibold text-[#1e3a5f]">All-in first-check estimate</p>
+                  <p className="mt-1">
+                    Down payment {usd(downPayment)} + closing/prepaids/escrow{" "}
+                    {usd(closing.cashToCloseExDown)} = <strong>{usd(cashToClose)}</strong> due around
+                    closing (before any seller credits or lender credits).
+                  </p>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <a
@@ -397,23 +606,101 @@ export function MortgageCalculator({
           >
             Call {LOAN_OFFICER.name} · {LOAN_OFFICER.phone}
           </a>
-          <a
-            href={LOAN_OFFICER.emailHref}
-            className="flex min-h-11 items-center justify-center rounded-lg border border-[#2563eb] px-4 text-[14px] font-semibold text-[#2563eb] hover:bg-[#eff6ff]"
-          >
-            Email for a more accurate quote
-          </a>
+          <MortgageQuoteButton
+            scenario={{
+              price,
+              downPayment,
+              downPct,
+              rate,
+              program,
+              zip,
+              loanAmount,
+              taxes: effectiveTaxAnnual,
+              insurance: effectiveInsAnnual,
+              hoa: hoaMonthly,
+            }}
+          />
         </div>
       </div>
 
+      <OwnershipCheatSheet
+        taxAnnual={effectiveTaxAnnual}
+        insAnnual={effectiveInsAnnual}
+        hoaMonthly={hoaMonthly}
+        price={price}
+      />
+
       <p className="text-[11px] leading-relaxed text-[#6b7280]">
-        Estimates only — not a loan commitment. Rates and payments vary by credit, property, and
-        underwriting. NMLS #{LOAN_OFFICER.nmls} · Company NMLS #{LOAN_OFFICER.companyNmls}.{" "}
+        Estimates only — not a Loan Estimate or Closing Disclosure. Florida documentary stamps,
+        intangible tax, title premiums, and escrow cushions vary by county, lender, and title
+        company. NMLS #{LOAN_OFFICER.nmls} · Company NMLS #{LOAN_OFFICER.companyNmls}.{" "}
         <Link href="/disclaimers" className="font-semibold text-[#2563eb] hover:underline">
           Disclaimers
         </Link>
       </p>
     </div>
+  );
+}
+
+function OwnershipCheatSheet({
+  taxAnnual,
+  insAnnual,
+  hoaMonthly,
+  price,
+}: {
+  taxAnnual: number;
+  insAnnual: number;
+  hoaMonthly: number;
+  price: number;
+}) {
+  const rows = [
+    {
+      title: "Property taxes",
+      body: `Est. ${usd(taxAnnual)}/yr (${pct(price > 0 ? (taxAnnual / price) * 100 : 0, 2)} of price). FL millage varies by county; homestead exemption can lower this after you occupy.`,
+    },
+    {
+      title: "Homeowners insurance",
+      body: `Est. ${usd(insAnnual)}/yr. Coastal / older roofs / claims history can push this much higher in Florida.`,
+    },
+    {
+      title: "Flood insurance",
+      body: "Not in the base payment. Required in Special Flood Hazard Areas; often $400–$2,000+/yr. Get an elevation certificate quote early.",
+    },
+    {
+      title: "HOA / condo / CDD",
+      body: hoaMonthly > 0
+        ? `${monthly(hoaMonthly)} entered. Also budget special assessments and condo master insurance deductible risk.`
+        : "None entered. Gated / townhome / condo deals often add $50–$500+/mo plus estoppel fees at closing.",
+    },
+    {
+      title: "Maintenance reserve",
+      body: `Rule of thumb 1–2% of price / year (${usd(price * 0.01)}–${usd(price * 0.02)}) for repairs, appliances, HVAC.`,
+    },
+    {
+      title: "Utilities (owner-occupied est.)",
+      body: "Electric, water, trash, internet — often $250–$450/mo for a typical Tampa-area SFR (highly variable).",
+    },
+    {
+      title: "Vacancy / capex (if investing)",
+      body: "Underwrite 5% vacancy and separate capital reserves; cash-flow screens on REIP are before these buffers.",
+    },
+  ];
+
+  return (
+    <section className="rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+      <h2 className="text-lg font-bold text-[#1e3a5f]">Ongoing ownership — don’t forget these</h2>
+      <p className="mt-1 text-[13px] text-[#6b7280]">
+        Beyond the mortgage payment, real ownership includes the line items below.
+      </p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {rows.map((r) => (
+          <div key={r.title} className="rounded-lg bg-[#f8fafc] px-3 py-3 ring-1 ring-[#e5e7eb]">
+            <p className="text-[13px] font-semibold text-[#1e3a5f]">{r.title}</p>
+            <p className="mt-1 text-[12px] leading-relaxed text-[#4b5563]">{r.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -516,5 +803,35 @@ function Row({ color, label, value }: { color: string; label: string; value: str
       </span>
       <strong className="tabular-nums">{value}</strong>
     </li>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-[10px] tracking-wide text-[#6b7280] uppercase">{label}</dt>
+      <dd className="font-semibold tabular-nums text-[#1e3a5f]">{value}</dd>
+    </div>
+  );
+}
+
+function BigStat({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-lg px-3 py-3 ring-1 ${
+        highlight ? "bg-[#eff6ff] ring-[#bfdbfe]" : "bg-[#f8fafc] ring-[#e5e7eb]"
+      }`}
+    >
+      <p className="text-[10px] font-semibold tracking-wide text-[#6b7280] uppercase">{label}</p>
+      <p className="mt-1 text-lg font-bold tabular-nums text-[#1e3a5f]">{value}</p>
+    </div>
   );
 }
