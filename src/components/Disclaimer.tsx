@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DISCLAIMER_PATH, DISCLAIMER_SHORT } from "../lib/disclaimers";
+import { RefreshListingsButton } from "./RefreshListingsButton";
 
 /** Compact disclaimer with link to the full legal page. */
 export function DisclaimerNote({ className = "" }: { className?: string }) {
@@ -22,7 +23,8 @@ export function SiteDisclaimerFooter() {
         <DisclaimerNote />
         <p className="text-[11px] text-[#6b7280]">
           Licensed solicitation by Sam Kasimalla, FL Real Estate Agent, LPT Realty LLC · Equal Housing
-          Opportunity ·{" "}
+          Opportunity
+          <RefreshListingsButton /> ·{" "}
           <Link href={DISCLAIMER_PATH} className="font-semibold text-[#1d4ed8] hover:underline">
             Read full disclaimers
           </Link>

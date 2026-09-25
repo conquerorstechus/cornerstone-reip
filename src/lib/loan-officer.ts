@@ -12,5 +12,5 @@ export const LOAN_OFFICER = {
   websiteLabel: "www.shopwisemortgage.com",
   licensedIn: "FL, GA, TX",
   addressLines: ["3250 West Big Beaver Road", "Suite 229", "Troy, MI 48084"],
-  photoSrc: "/arki-koul.png",
+  photoSrc: "/arki-koul-card.png",
 } as const;

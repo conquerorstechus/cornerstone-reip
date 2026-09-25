@@ -258,27 +258,36 @@ async function readLocalSamList(): Promise<SamListItem[] | null> {
   }
 }
 
-/** Fetch Sam's list from SAM_LIST_URL (JSONBlob, etc.) or local fallback file. */
+/** Slow listings webhook. Cached in the Next.js data cache, not in function memory. */
+export const LISTINGS_URL =
+  process.env.SAM_LIST_URL?.trim() ||
+  "https://n8n.srv1393511.hstgr.cloud/webhook/latest-listings";
+
+export const LISTINGS_CACHE_TAG = "latest-listings";
+
+/** One day. Refreshed only when a request arrives and the cache is stale, or on manual refresh. */
+export const LISTINGS_REVALIDATE_SECONDS = 60 * 60 * 24;
+
+/** Fetch Sam's list from the listings webhook (or SAM_LIST_URL). Falls back to the local file if that request fails. */
 export const fetchSamList = cache(async (): Promise<SamListItem[]> => {
-  const url = process.env.SAM_LIST_URL?.trim();
-  if (url) {
-    const res = await fetch(url, {
+  try {
+    const res = await fetch(LISTINGS_URL, {
       headers: { Accept: "application/json" },
-      next: { revalidate: 60 },
+      next: { revalidate: LISTINGS_REVALIDATE_SECONDS, tags: [LISTINGS_CACHE_TAG] },
     });
     if (!res.ok) {
-      throw new Error(`SAM_LIST_URL fetch failed: ${res.status} ${res.statusText}`);
+      throw new Error(`Listings fetch failed: ${res.status} ${res.statusText}`);
     }
     const data = (await res.json()) as unknown;
     if (!Array.isArray(data)) {
-      throw new Error("SAM_LIST_URL must return a JSON array");
+      throw new Error("Listings URL must return a JSON array");
     }
     return data as SamListItem[];
+  } catch (err) {
+    const local = await readLocalSamList();
+    if (local) return local;
+    throw err;
   }
-
-  const local = await readLocalSamList();
-  if (local) return local;
-  return [];
 });
 
 export function propertiesFromSamList(items: SamListItem[]): Property[] {

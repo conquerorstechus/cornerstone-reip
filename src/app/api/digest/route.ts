@@ -14,6 +14,6 @@ export async function GET() {
     digest,
     properties,
     land,
-    source: process.env.SAM_LIST_URL?.trim() ? "remote" : "local",
+    source: "remote",
   });
 }
