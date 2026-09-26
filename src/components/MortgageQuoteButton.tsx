@@ -19,7 +19,7 @@ export type MortgageQuoteScenario = {
 
 export function MortgageQuoteButton({
   scenario,
-  label = "Email for a Closing Disclosure–level quote",
+  label = "Request a Closing Disclosure–level quote",
 }: {
   scenario: MortgageQuoteScenario;
   label?: string;
@@ -228,7 +228,7 @@ export function MortgageQuoteButton({
             setOpen(true);
             if (state === "error") setState("idle");
           }}
-          className="flex min-h-11 w-full items-center justify-center rounded-lg border border-[#2563eb] px-4 text-[14px] font-semibold text-[#2563eb] hover:bg-[#eff6ff]"
+          className="flex min-h-12 w-full items-center justify-center rounded-lg bg-[#f97316] px-4 text-[15px] font-bold text-white hover:bg-[#ea580c]"
         >
           {label}
         </button>

@@ -600,12 +600,6 @@ export function MortgageCalculator({
             ) : null}
           </div>
 
-          <a
-            href={LOAN_OFFICER.phoneHref}
-            className="flex min-h-12 items-center justify-center rounded-lg bg-[#f97316] px-4 text-[15px] font-bold text-white hover:bg-[#ea580c]"
-          >
-            Call {LOAN_OFFICER.name} · {LOAN_OFFICER.phone}
-          </a>
           <MortgageQuoteButton
             scenario={{
               price,
@@ -721,16 +715,6 @@ function LoanOfficerCard() {
           <div className="h-px bg-[#2563eb]/30" />
           <p className="text-[13px] font-bold tracking-wide text-[#2563eb]">{lo.company}</p>
           <ul className="space-y-1.5 text-[13px] text-[#374151]">
-            <li>
-              <a href={lo.phoneHref} className="font-medium text-[#2563eb] hover:underline">
-                {lo.phone}
-              </a>
-            </li>
-            <li>
-              <a href={lo.emailHref} className="font-medium text-[#2563eb] hover:underline">
-                {lo.email}
-              </a>
-            </li>
             <li className="text-[#6b7280]">{lo.addressLines.join(", ")}</li>
             <li className="text-[#6b7280]">
               Company NMLS # {lo.companyNmls} · Licensed in {lo.licensedIn}
@@ -750,10 +734,10 @@ function LoanOfficerCard() {
         <div className="justify-self-center sm:justify-self-end">
           <Image
             src={lo.photoSrc}
-            alt={`${lo.name} — ${lo.title}, ${lo.company}`}
-            width={640}
-            height={280}
-            className="h-auto w-full max-w-md rounded-lg border border-[#e5e7eb] object-contain"
+            alt={lo.name}
+            width={160}
+            height={164}
+            className="h-36 w-36 rounded-full border border-[#e5e7eb] object-cover"
             priority
           />
         </div>

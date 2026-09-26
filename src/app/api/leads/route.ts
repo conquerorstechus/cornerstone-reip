@@ -4,7 +4,7 @@ import { landById, propertyById } from "@/lib/data";
 export const runtime = "nodejs";
 
 const N8N_LEAD_WEBHOOK =
-  "https://n8n.srv1393511.hstgr.cloud/webhook/cef18bdf-8d8f-4f94-bc21-8c8e8aff001a";
+  "https://n8n.srv1393511.hstgr.cloud/webhook/form-submission";
 
 type MortgageQuote = {
   price?: number;
@@ -46,6 +46,26 @@ export async function POST(req: NextRequest) {
   const name = body.name?.trim() ?? "";
   const webhook = process.env.LEAD_WEBHOOK_URL?.trim() || N8N_LEAD_WEBHOOK;
 
+  async function deliver(payload: unknown) {
+    let res: Response;
+    try {
+      res = await fetch(webhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error("Lead webhook request failed", err);
+      return NextResponse.json({ error: "Could not record this enquiry" }, { status: 502 });
+    }
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error("Lead webhook rejected submission", res.status, detail.slice(0, 500));
+      return NextResponse.json({ error: "Could not record this enquiry" }, { status: 502 });
+    }
+    return NextResponse.json({ ok: true, delivered: true });
+  }
+
   // Mortgage quote request (no deal required)
   if (body.dealType === "mortgage" || body.source === "mortgage-quote") {
     const m = body.mortgage ?? {};
@@ -73,19 +93,7 @@ export async function POST(req: NextRequest) {
       messageToLead: `Thanks — Arki Koul at Shopwise Mortgage will follow up with a Closing Disclosure–level quote for your scenario (price ${m.price ?? "n/a"}, down ${m.downPct ?? "n/a"}%, rate ${m.rate ?? "n/a"}%).`,
     };
 
-    if (webhook) {
-      try {
-        await fetch(webhook, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-      } catch {
-        // Keep the form successful even if the optional webhook is down.
-      }
-    }
-
-    return NextResponse.json({ ok: true, delivered: true });
+    return deliver(payload);
   }
 
   const dealId = body.dealId?.trim();
@@ -149,17 +157,5 @@ export async function POST(req: NextRequest) {
           messageToLead: `Here is the lot you requested: ${land!.address}, ${land!.city}, FL ${land!.zip}. Asking ${land!.asking}. ${land!.acres} acres.`,
         };
 
-  if (webhook) {
-    try {
-      await fetch(webhook, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } catch {
-      // Keep the form successful even if the optional webhook is down.
-    }
-  }
-
-  return NextResponse.json({ ok: true, delivered: true });
+  return deliver(payload);
 }
