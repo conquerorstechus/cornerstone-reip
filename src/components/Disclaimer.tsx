@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DISCLAIMER_PATH, DISCLAIMER_SHORT } from "../lib/disclaimers";
 import { RefreshListingsButton } from "./RefreshListingsButton";
+import { SubscribeBanner } from "./SubscribeForm";
 
 /** Compact disclaimer with link to the full legal page. */
 export function DisclaimerNote({ className = "" }: { className?: string }) {
@@ -18,7 +19,13 @@ export function DisclaimerNote({ className = "" }: { className?: string }) {
 export function SiteDisclaimerFooter() {
   return (
     <footer className="no-print mt-auto border-t border-line bg-cream/80 px-4 py-5 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl space-y-2">
+      <div className="mx-auto max-w-3xl space-y-5">
+        <SubscribeBanner
+          page="footer"
+          title="Subscribe for the next list"
+          body="Name, email, and phone. New picks come to you — you don’t have to remember to come back."
+        />
+        <div className="space-y-2">
         <p className="display text-[10px] tracking-[0.2em] text-taupe">DISCLAIMERS</p>
         <DisclaimerNote />
         <p className="text-[11px] text-[#6b7280]">
@@ -29,6 +36,7 @@ export function SiteDisclaimerFooter() {
             Read full disclaimers
           </Link>
         </p>
+        </div>
       </div>
     </footer>
   );

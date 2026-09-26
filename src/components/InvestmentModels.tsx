@@ -63,6 +63,7 @@ export function InvestmentModels({
   const selected = schedule[horizon - 1];
   const annualRate = annualRateForScenario(profile, scenario);
   const fullCash = useMemo(() => cashOnCashAtDown(financials, 100), [financials]);
+  const halfDown = useMemo(() => cashOnCashAtDown(financials, 50), [financials]);
 
   const blend = useMemo(() => {
     if (!selected) return null;
@@ -74,8 +75,98 @@ export function InvestmentModels({
     return { rentIncome, appreciationGain, total, rentShare, apprShare };
   }, [selected, coc.downPayment]);
 
+  const glance = useMemo(() => {
+    return SCENARIOS.map((s) => {
+      const row = appreciationSchedule(financials, profile, s.id, 50, 10).at(-1);
+      return row ? { ...s, row } : null;
+    }).filter((s): s is NonNullable<typeof s> => s != null);
+  }, [financials, profile]);
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" id="models">
+      <section className="overflow-hidden rounded-lg border border-[#e5e7eb] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+        <div className="px-4 py-3 text-white sm:px-5" style={{ backgroundColor: accent }}>
+          <p className="text-[11px] font-semibold tracking-wide uppercase opacity-90">Money Models</p>
+          <h3 className="text-lg font-bold">Summary of the various models</h3>
+        </div>
+        <div className="space-y-4 bg-[#f8fafc] px-4 py-5 sm:px-5">
+          <p className="text-[14px] leading-relaxed text-[#374151]">
+             These numbers use a simple setup: you put{" "}
+            <strong>half the price down</strong> and keep the property for <strong>10 years</strong>.
+            Each card is a different guess about how fast prices rise.
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-md bg-white px-3 py-3 ring-1 ring-[#e5e7eb]">
+              <p className="text-[10px] font-semibold tracking-wide text-[#6b7280] uppercase">
+                Cash left each month (half down)
+              </p>
+              <p
+                className={`mt-1 text-2xl font-bold tabular-nums ${
+                  halfDown.cashFlowMonthly >= 0 ? "text-[#16a34a]" : "text-[#dc2626]"
+                }`}
+              >
+                {monthly(halfDown.cashFlowMonthly)}
+              </p>
+              <p className="mt-1 text-[12px] text-[#6b7280]">
+                Rent minus taxes, HOA, insurance, and the mortgage. That’s about{" "}
+                {pct(halfDown.cashOnCash * 100, 1)} a year on the money you put in.
+              </p>
+            </div>
+            <div className="rounded-md bg-white px-3 py-3 ring-1 ring-[#e5e7eb]">
+              <p className="text-[10px] font-semibold tracking-wide text-[#6b7280] uppercase">
+                If you pay all cash
+              </p>
+              <p
+                className={`mt-1 text-2xl font-bold tabular-nums ${
+                  fullCash.cashFlowMonthly >= 0 ? "text-[#16a34a]" : "text-[#dc2626]"
+                }`}
+              >
+                {monthly(fullCash.cashFlowMonthly)}
+              </p>
+              <p className="mt-1 text-[12px] text-[#6b7280]">
+                No mortgage payment. About {pct(fullCash.cashOnCash * 100, 1)} a year on the full
+                purchase price.
+              </p>
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {glance.map((s) => {
+              const total = s.row.cumulativeCashFlow + (s.row.equity - halfDown.downPayment);
+              return (
+                <div key={s.id} className="rounded-md bg-white px-3 py-3 ring-1 ring-[#e5e7eb]">
+                  <p className="text-[13px] font-bold text-[#1e3a5f]">{s.label}</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-[#4b5563]">{s.plain}</p>
+                  <dl className="mt-3 space-y-1 text-[13px] text-[#374151]">
+                    <div className="flex justify-between gap-3">
+                      <dt>Worth in 10 years</dt>
+                      <dd className="font-semibold tabular-nums">{usd(s.row.propertyValue)}</dd>
+                    </div>
+                    <div className="flex justify-between gap-3">
+                      <dt>Rent leftovers stacked</dt>
+                      <dd className="font-semibold tabular-nums">{usd(s.row.cumulativeCashFlow)}</dd>
+                    </div>
+                    <div className="flex justify-between gap-3">
+                      <dt>Rent + price growth</dt>
+                      <dd
+                        className={`font-bold tabular-nums ${
+                          total >= 0 ? "text-[#16a34a]" : "text-[#dc2626]"
+                        }`}
+                      >
+                        {usd(total)}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[12px] text-[#6b7280]">
+            The sections below let you move the down payment and the years if you want. You already
+            have the picture if you stop here.
+          </p>
+        </div>
+      </section>
+
       {/* —— Cash on cash —— */}
       <section className="overflow-hidden rounded-lg border border-[#e5e7eb] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
         <div className="px-4 py-3 text-white sm:px-5" style={{ backgroundColor: accent }}>

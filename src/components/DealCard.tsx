@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { GetMoreInfoButton } from "./GetMoreInfoButton";
+import { assetClassFromHomeKind, getAppreciationProfile } from "../lib/appreciation";
+import { appreciationSchedule, cashOnCashAtDown } from "../lib/investment";
 import type { HomeKind, Property } from "../lib/types";
 import { cashDownYearlyRor, monthly, pct, truncateCopy, usd } from "../lib/format";
 
@@ -42,6 +44,24 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
     purchasePrice: purchase,
   });
   const rorPositive = yearlyRor >= 0;
+  const financials = {
+    purchasePrice: purchase,
+    rentMonthly: deal.rent,
+    taxMonthly: deal.taxMonthly,
+    hoaMonthly: deal.hoaMonthly,
+    insuranceMonthly: deal.insuranceMonthly,
+  };
+  const halfDown = cashOnCashAtDown(financials, 50);
+  const tenYear = appreciationSchedule(
+    financials,
+    getAppreciationProfile(assetClassFromHomeKind(kind)),
+    "base",
+    50,
+    10,
+  ).at(-1);
+  const tenYearTotal = tenYear
+    ? tenYear.cumulativeCashFlow + (tenYear.equity - halfDown.downPayment)
+    : null;
 
   return (
     <article
@@ -144,12 +164,39 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
           </p>
         </div>
 
+        <div className="rounded-md bg-white/80 px-3 py-3 text-[13px] leading-relaxed text-[#1e3a5f] ring-1 ring-black/5">
+          <p className="font-bold">The simple picture</p>
+          <p className="mt-1">
+            Put half down and about{" "}
+            <strong
+              className={halfDown.cashFlowMonthly >= 0 ? "text-[#16a34a]" : "text-[#dc2626]"}
+            >
+              {monthly(halfDown.cashFlowMonthly)}
+            </strong>{" "}
+            could be left each month after the bills.
+            {tenYear && tenYearTotal != null ? (
+              <>
+                {" "}
+                Hold it 10 years at a normal growth guess and it could be worth{" "}
+                <strong>{usd(tenYear.propertyValue)}</strong>, with rent leftovers and price growth
+                adding up to about <strong>{usd(tenYearTotal)}</strong>.
+              </>
+            ) : null}
+          </p>
+          <Link
+            href={`/properties/${deal.id}#models`}
+            className="mt-2 inline-flex font-semibold text-[#1d4ed8] hover:underline"
+          >
+            See all four growth stories on one page →
+          </Link>
+        </div>
+
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Link
-            href={`/properties/${deal.id}`}
+            href={`/properties/${deal.id}#models`}
             className={`inline-flex min-h-10 flex-1 items-center justify-center px-3 py-2 text-sm font-semibold text-white ${theme.head} hover:opacity-90`}
           >
-            Full analysis &amp; models
+            See the models
           </Link>
           <div className="flex-1">
             <GetMoreInfoButton dealId={deal.id} dealType="property" />
