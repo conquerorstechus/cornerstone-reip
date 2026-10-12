@@ -7,6 +7,7 @@ import { useEffect, useId, useState } from "react";
 import {
   Building2,
   Calculator,
+  Calendar,
   FileBarChart,
   HardHat,
   Home,
@@ -24,6 +25,7 @@ import { SiteDisclaimerFooter } from "./Disclaimer";
 
 const NAV_MAIN: { href: string; label: string; icon: typeof LayoutDashboard }[] = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/events", label: "Monday 7:30", icon: Calendar },
   { href: "/picks/condos", label: "Condos", icon: Building2 },
   { href: "/picks/townhomes", label: "Townhomes", icon: Layers },
   { href: "/picks/sfh", label: "Single Family", icon: Home },
@@ -62,6 +64,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       document.body.style.overflow = prev;
     };
   }, [open]);
+
+  if (path === "/events" || path.startsWith("/events/")) {
+    return <div className="min-h-dvh bg-[#f4f5f7] text-[#1c1d24]">{children}</div>;
+  }
 
   return (
     <div className="flex min-h-dvh">
