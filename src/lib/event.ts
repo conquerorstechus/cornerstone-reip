@@ -1,9 +1,9 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
 export const EVENT_TIME_ZONE = "America/New_York";
-export const EVENT_TITLE = "Monday Investor Session";
+export const EVENT_TITLE = "Weekly Top 10 Tampa Deals: Condos, Townhomes, SFH and Land";
 export const EVENT_HOST = "Sam Kasimalla";
-export const EVENT_DURATION_MINUTES = 60;
+export const EVENT_DURATION_MINUTES = 30;
 
 const DEFAULT_WEBHOOK = "https://n8n.srv1393511.hstgr.cloud/webhook/event-registration";
 const DEFAULT_MEETING_LINK = "https://meet.google.com/hgy-yoss-wek";

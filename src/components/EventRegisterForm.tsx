@@ -4,6 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { CaptchaChallenge, MondaySession } from "../lib/event";
+import {
+  EVENT_DESCRIPTION,
+  EVENT_DISCLAIMER,
+  PRESENTER_INTRO_LABEL,
+  PRESENTER_INTRO_URL,
+} from "../lib/event-copy";
 
 export function EventRegistration({
   sessions,
@@ -89,11 +95,28 @@ export function EventRegistration({
             <span className="text-2xl font-bold leading-none">{session.dayNum}</span>
             <span className="text-[11px] font-semibold tracking-wide text-[#6b7280]">{session.monthShort}</span>
           </div>
-          <h1 className="mt-6 max-w-xl text-3xl font-semibold tracking-tight sm:mt-8 sm:text-5xl">{session.title}</h1>
+          <h1 className="mt-6 max-w-xl text-2xl font-semibold leading-tight tracking-tight sm:mt-8 sm:text-4xl">{session.title}</h1>
           <p className="mt-4 max-w-lg text-base leading-relaxed text-white/90">
-            A weekly look at Greater Tampa deals — cash flow, offers, and what to watch. One hour.
-            Pick any Monday in the next month. The meeting link arrives by email after you register.
+            Thirty minutes, 7:30 to 8:00 PM. Pick any Monday in the next month.
           </p>
+        </div>
+
+        <div className="mt-6 max-w-xl space-y-4 text-[15px] leading-relaxed text-[#374151]">
+          {EVENT_DESCRIPTION.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+          <p>
+            Presenter Intro:{" "}
+            <a
+              href={PRESENTER_INTRO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-[#1d4ed8] underline"
+            >
+              {PRESENTER_INTRO_LABEL}
+            </a>
+          </p>
+          <p className="text-[12px] leading-relaxed text-[#6b7280]">Disclaimer: {EVENT_DISCLAIMER}</p>
         </div>
 
         <div className="mt-6 flex items-center gap-3">

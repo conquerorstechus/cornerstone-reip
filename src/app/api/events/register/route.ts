@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { eventDescriptionText } from "@/lib/event-copy";
 import {
   configuredMeetingLink,
   eventRegistrationWebhook,
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
     end: session.end,
     timeZone: session.timeZone,
     whenLabel: session.whenLabel,
+    eventDescription: eventDescriptionText(),
     emailConsent: true,
     ...(meetingLink ? { meetingLink } : {}),
   };
