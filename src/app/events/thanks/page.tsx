@@ -4,7 +4,7 @@ export const metadata = { title: "You’re registered" };
 
 export default function EventThanksPage() {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center px-4 py-16 text-center">
+    <div className="mx-auto flex max-w-lg flex-col py-10 text-center">
       <p className="text-xs font-semibold tracking-[0.18em] text-[#db2777] uppercase">Registered</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[#111827]">Check your email</h1>
       <p className="mt-3 text-base leading-relaxed text-[#4b5563]">

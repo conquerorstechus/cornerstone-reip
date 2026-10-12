@@ -67,25 +67,23 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
     <article
       className={`overflow-hidden rounded-lg border border-[#e5e7eb] border-l-4 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] ${theme.bar}`}
     >
-      <div
-        className={`flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 text-[13px] text-white sm:px-4.5 ${theme.head}`}
-      >
-        <span className="font-bold">
-          {deal.rank ? `Rank #${deal.rank}` : "Deal"}
-        </span>
-        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
-          {theme.label}
-        </span>
-        <span className="ml-auto flex flex-wrap items-center justify-end gap-x-3 gap-y-1 font-medium">
+      <div className={`px-4 py-3 text-[13px] text-white sm:px-4.5 ${theme.head}`}>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-bold">{deal.rank ? `Rank #${deal.rank}` : "Deal"}</span>
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+            {theme.label}
+          </span>
+        </div>
+        <div className="mt-2 grid grid-cols-2 gap-2 font-medium sm:mt-2">
           <span>
             Cash Flow:{" "}
             <strong className={cfPositive ? "" : "text-red-100"}>{monthly(deal.cashFlow)}</strong>
           </span>
-          <span>
-            Yr ROR (cash):{" "}
+          <span className="text-right">
+            Yr ROR:{" "}
             <strong className={rorPositive ? "" : "text-red-100"}>{pct(yearlyRor * 100, 1)}</strong>
           </span>
-        </span>
+        </div>
       </div>
 
       <div className={`space-y-3 px-4 py-3.5 sm:px-4.5 ${theme.body}`}>
@@ -194,7 +192,7 @@ export function DealCard({ deal, compact }: { deal: Property; compact?: boolean 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Link
             href={`/properties/${deal.id}#models`}
-            className={`inline-flex min-h-10 flex-1 items-center justify-center px-3 py-2 text-sm font-semibold text-white ${theme.head} hover:opacity-90`}
+            className={`inline-flex min-h-11 flex-1 items-center justify-center px-3 py-2 text-sm font-semibold text-white ${theme.head} hover:opacity-90`}
           >
             See the models
           </Link>

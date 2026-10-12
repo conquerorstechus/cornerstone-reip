@@ -47,7 +47,7 @@ export default function DisclaimersPage() {
         Mailing address: 19046 Bruce B Downs Blvd, #1376, Tampa, FL 33647.
       </p>
 
-      <Link href="/picks/condos" className="inline-flex text-[13px] font-semibold text-[#1d4ed8] hover:underline">
+      <Link href="/" className="inline-flex text-[13px] font-semibold text-[#1d4ed8] hover:underline">
         ← Back to deals
       </Link>
     </div>

@@ -91,7 +91,7 @@ export function MortgageQuoteButton({
   const dialog =
     open && mounted
       ? createPortal(
-          <div className="fixed inset-0 z-[100] flex items-end justify-center bg-[#0f172a]/50 p-4 sm:items-center">
+          <div className="fixed inset-0 z-[100] flex items-end justify-center bg-[#0f172a]/50 sm:items-center sm:p-4">
             <button
               type="button"
               aria-label="Close form"
@@ -102,7 +102,7 @@ export function MortgageQuoteButton({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="relative z-[101] w-full max-w-md rounded-xl bg-white p-5 shadow-lg ring-1 ring-[#e5e7eb] sm:p-6"
+              className="relative z-[101] max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-lg ring-1 ring-[#e5e7eb] sm:rounded-xl sm:p-6"
             >
               {state === "sent" ? (
                 <div>
@@ -119,7 +119,7 @@ export function MortgageQuoteButton({
                   <button
                     type="button"
                     onClick={close}
-                    className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-[#2563eb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d4ed8]"
+                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-[#2563eb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d4ed8]"
                   >
                     Close
                   </button>
@@ -190,11 +190,11 @@ export function MortgageQuoteButton({
                     </p>
                   ) : null}
 
-                  <div className="mt-6 flex flex-wrap gap-2">
+                  <div className="mt-6 flex flex-col gap-2">
                     <button
                       type="submit"
                       disabled={state === "sending"}
-                      className="inline-flex min-h-11 items-center rounded-lg bg-[#2563eb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d4ed8] disabled:opacity-60"
+                      className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-[#2563eb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d4ed8] disabled:opacity-60"
                     >
                       {state === "sending" ? "Sending…" : "Request quote"}
                     </button>
@@ -202,7 +202,7 @@ export function MortgageQuoteButton({
                       type="button"
                       onClick={close}
                       disabled={state === "sending"}
-                      className="inline-flex min-h-11 items-center px-4 py-2 text-sm font-semibold text-[#6b7280] hover:text-[#1e3a5f] disabled:opacity-60"
+                      className="inline-flex min-h-11 w-full items-center justify-center px-4 py-2 text-sm font-semibold text-[#6b7280] hover:text-[#1e3a5f] disabled:opacity-60"
                     >
                       Cancel
                     </button>

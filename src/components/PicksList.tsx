@@ -15,7 +15,7 @@ export function PicksList({
   const meta = PICKS_META[kind];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="space-y-8">
       <div>
         <div className={`mb-3 flex overflow-hidden rounded-lg ${meta.soft}`}>
           <div className="w-1.5 shrink-0" style={{ backgroundColor: meta.accent }} />

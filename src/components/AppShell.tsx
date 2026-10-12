@@ -11,31 +11,24 @@ import {
   FileBarChart,
   HardHat,
   Home,
-  Layers,
-  LayoutDashboard,
   MapPinned,
   Menu,
   ScanSearch,
   Store,
-  Trees,
   X,
 } from "lucide-react";
 import { MarketSelect } from "./MarketSelect";
 import { SiteDisclaimerFooter } from "./Disclaimer";
 
-const NAV_MAIN: { href: string; label: string; icon: typeof LayoutDashboard }[] = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/events", label: "Monday 7:30", icon: Calendar },
-  { href: "/picks/condos", label: "Condos", icon: Building2 },
-  { href: "/picks/townhomes", label: "Townhomes", icon: Layers },
-  { href: "/picks/sfh", label: "Single Family", icon: Home },
-  { href: "/land", label: "Land", icon: Trees },
-  { href: "/mortgage", label: "Mortgage calc", icon: Calculator },
-  { href: "/areas", label: "Areas", icon: MapPinned },
-  { href: "/analyze", label: "Analyze", icon: ScanSearch },
+const NAV_MAIN: { href: string; label: string; short: string; icon: typeof Home }[] = [
+  { href: "/", label: "Deals", short: "Deals", icon: Home },
+  { href: "/events", label: "Events", short: "Events", icon: Calendar },
+  { href: "/mortgage", label: "Mortgage calc", short: "Loan", icon: Calculator },
+  { href: "/areas", label: "Areas", short: "Areas", icon: MapPinned },
+  { href: "/analyze", label: "Analyze", short: "Analyze", icon: ScanSearch },
 ];
 
-const NAV_SOON: { href: string; label: string; icon: typeof LayoutDashboard }[] = [
+const NAV_SOON: { href: string; label: string; icon: typeof Home }[] = [
   { href: "/multifamily", label: "Multifamily", icon: FileBarChart },
   { href: "/commercial", label: "Commercial", icon: Building2 },
   { href: "/businesses", label: "Businesses for sale", icon: Store },
@@ -64,10 +57,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       document.body.style.overflow = prev;
     };
   }, [open]);
-
-  if (path === "/events" || path.startsWith("/events/")) {
-    return <div className="min-h-dvh bg-[#f4f5f7] text-[#1c1d24]">{children}</div>;
-  }
 
   return (
     <div className="flex min-h-dvh">
@@ -108,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarFooter />
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col pb-[calc(4.25rem+env(safe-area-inset-bottom))] lg:pb-0">
         <header className="no-print sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-cream/95 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-md lg:static lg:px-8 lg:py-4 lg:pt-4 lg:backdrop-blur-none">
           <div className="flex min-w-0 items-center gap-2">
             <button
@@ -153,6 +142,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </main>
         <SiteDisclaimerFooter />
       </div>
+
+      <nav
+        aria-label="Primary"
+        className="no-print fixed inset-x-0 bottom-0 z-30 border-t border-line bg-cream/95 backdrop-blur-md lg:hidden"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        <div className="grid grid-cols-5">
+          {NAV_MAIN.map((item) => {
+            const active =
+              item.href === "/"
+                ? path === "/"
+                : path === item.href || path.startsWith(`${item.href}/`);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-semibold tracking-wide ${
+                  active ? "text-magenta" : "text-taupe"
+                }`}
+              >
+                <Icon size={20} strokeWidth={1.75} />
+                {item.short}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 }

@@ -95,7 +95,7 @@ export function SubscribeForm({
       <button
         type="submit"
         disabled={state === "sending"}
-        className="inline-flex min-h-11 items-center rounded-lg bg-[#be185d] px-4 py-2 text-sm font-semibold text-white hover:bg-[#9d174d] disabled:opacity-60"
+        className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-[#be185d] px-4 py-2 text-sm font-semibold text-white hover:bg-[#9d174d] disabled:opacity-60 sm:w-auto"
       >
         {state === "sending" ? "Subscribing…" : "Subscribe"}
       </button>

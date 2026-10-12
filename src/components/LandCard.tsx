@@ -20,20 +20,22 @@ export function LandCard({ parcel }: { parcel: LandParcel }) {
 
   return (
     <article className="overflow-hidden rounded-lg border border-[#e5e7eb] border-l-4 border-l-[#0d9488] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 bg-[#0d9488] px-4 py-3 text-[13px] text-white sm:px-4.5">
-        <span className="font-bold">{parcel.rank ? `Rank #${parcel.rank}` : "Lot"}</span>
-        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
-          Land
-        </span>
-        <span className="ml-auto flex flex-wrap items-center justify-end gap-x-3 gap-y-1 font-medium">
+      <div className="bg-[#0d9488] px-4 py-3 text-[13px] text-white sm:px-4.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-bold">{parcel.rank ? `Rank #${parcel.rank}` : "Lot"}</span>
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+            Land
+          </span>
+        </div>
+        <div className="mt-2 grid grid-cols-2 gap-2 font-medium">
           <span>
             Cash Flow: <strong className={cfPositive ? "" : "text-red-100"}>{monthly(cf)}</strong>
           </span>
-          <span>
-            Yr ROR (cash):{" "}
+          <span className="text-right">
+            Yr ROR:{" "}
             <strong className={rorPositive ? "" : "text-red-100"}>{pct(yearlyRor * 100, 1)}</strong>
           </span>
-        </span>
+        </div>
       </div>
 
       <div className="space-y-3 bg-[#f0fdfa] px-4 py-3.5 sm:px-4.5">
@@ -101,7 +103,7 @@ export function LandCard({ parcel }: { parcel: LandParcel }) {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Link
             href={`/land/${parcel.id}`}
-            className="inline-flex min-h-10 flex-1 items-center justify-center bg-[#0d9488] px-3 py-2 text-sm font-semibold text-white hover:bg-[#0f766e]"
+            className="inline-flex min-h-11 flex-1 items-center justify-center bg-[#0d9488] px-3 py-2 text-sm font-semibold text-white hover:bg-[#0f766e]"
           >
             Full analysis &amp; models
           </Link>

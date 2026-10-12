@@ -91,7 +91,7 @@ function zonedTimeToUtc(year: number, month: number, day: number, hour: number, 
 }
 
 export type MondaySession = {
-  id: "monday-730";
+  id: string;
   title: string;
   host: string;
   timeZone: string;
@@ -105,25 +105,16 @@ export type MondaySession = {
   whenLabel: string;
 };
 
-export function upcomingMondaySession(now = new Date()): MondaySession {
-  const today = zonedParts(now, EVENT_TIME_ZONE);
-  const todayStart = zonedTimeToUtc(today.year, today.month, today.day, 0, 0);
+const HORIZON_MS = 30 * 24 * 60 * 60 * 1000;
 
-  let start: Date | null = null;
-  for (let add = 0; add < 14; add++) {
-    const probe = new Date(todayStart.getTime() + add * 24 * 60 * 60 * 1000);
-    const parts = zonedParts(probe, EVENT_TIME_ZONE);
-    if (parts.weekday !== "Mon") continue;
-    const candidate = zonedTimeToUtc(parts.year, parts.month, parts.day, 19, 30);
-    if (candidate.getTime() > now.getTime()) {
-      start = candidate;
-      break;
-    }
-  }
-  if (!start) {
-    start = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-  }
+function sessionFromStart(start: Date): MondaySession {
   const end = new Date(start.getTime() + EVENT_DURATION_MINUTES * 60 * 1000);
+  const dateKey = new Intl.DateTimeFormat("en-CA", {
+    timeZone: EVENT_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(start);
 
   const dateLine = new Intl.DateTimeFormat("en-US", {
     timeZone: EVENT_TIME_ZONE,
@@ -154,7 +145,7 @@ export function upcomingMondaySession(now = new Date()): MondaySession {
   }).format(start);
 
   return {
-    id: "monday-730",
+    id: `monday-${dateKey}`,
     title: EVENT_TITLE,
     host: EVENT_HOST,
     timeZone: EVENT_TIME_ZONE,
@@ -167,4 +158,28 @@ export function upcomingMondaySession(now = new Date()): MondaySession {
     timeLine: `${startTime} – ${endTime}`,
     whenLabel: `${dateLine} · ${startTime} – ${endTime}`,
   };
+}
+
+/** Monday 7:30 PM sessions that start within the next 30 days. */
+export function upcomingMondaySessions(now = new Date()): MondaySession[] {
+  const today = zonedParts(now, EVENT_TIME_ZONE);
+  const todayStart = zonedTimeToUtc(today.year, today.month, today.day, 0, 0);
+  const horizon = now.getTime() + HORIZON_MS;
+  const sessions: MondaySession[] = [];
+
+  for (let add = 0; add < 36; add++) {
+    const probe = new Date(todayStart.getTime() + add * 24 * 60 * 60 * 1000);
+    const parts = zonedParts(probe, EVENT_TIME_ZONE);
+    if (parts.weekday !== "Mon") continue;
+    const candidate = zonedTimeToUtc(parts.year, parts.month, parts.day, 19, 30);
+    if (candidate.getTime() <= now.getTime()) continue;
+    if (candidate.getTime() > horizon) break;
+    sessions.push(sessionFromStart(candidate));
+  }
+
+  return sessions;
+}
+
+export function sessionById(id: string, now = new Date()): MondaySession | null {
+  return upcomingMondaySessions(now).find((session) => session.id === id) ?? null;
 }

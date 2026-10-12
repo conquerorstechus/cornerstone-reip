@@ -23,7 +23,7 @@ export default async function LandDetailPage({
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <div>
-        <Link href="/land" className="text-[13px] font-medium text-[#1d4ed8] hover:underline">
+        <Link href="/?view=land" className="text-[13px] font-medium text-[#1d4ed8] hover:underline">
           ← Back to Land
         </Link>
       </div>

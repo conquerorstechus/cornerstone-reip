@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   configuredMeetingLink,
   eventRegistrationWebhook,
-  upcomingMondaySession,
+  sessionById,
   verifyCaptcha,
 } from "@/lib/event";
 
@@ -12,6 +12,8 @@ export async function POST(req: NextRequest) {
   let body: {
     name?: string;
     email?: string;
+    eventId?: string;
+    emailConsent?: boolean;
     captchaToken?: string;
     captchaAnswer?: string;
   } = {};
@@ -26,11 +28,17 @@ export async function POST(req: NextRequest) {
   if (!name || !email || !email.includes("@")) {
     return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
   }
+  if (body.emailConsent !== true) {
+    return NextResponse.json({ error: "Email consent is required" }, { status: 400 });
+  }
   if (!verifyCaptcha(body.captchaToken ?? "", body.captchaAnswer ?? "")) {
     return NextResponse.json({ error: "That math answer didn’t match. Try the new problem." }, { status: 400 });
   }
 
-  const session = upcomingMondaySession();
+  const session = sessionById(body.eventId?.trim() ?? "");
+  if (!session) {
+    return NextResponse.json({ error: "Pick a session in the next 30 days." }, { status: 400 });
+  }
   const meetingLink = configuredMeetingLink();
   const payload = {
     action: "event_registration",
@@ -45,6 +53,7 @@ export async function POST(req: NextRequest) {
     end: session.end,
     timeZone: session.timeZone,
     whenLabel: session.whenLabel,
+    emailConsent: true,
     ...(meetingLink ? { meetingLink } : {}),
   };
 

@@ -35,6 +35,10 @@ export function SiteDisclaimerFooter() {
           <Link href={DISCLAIMER_PATH} className="font-semibold text-[#1d4ed8] hover:underline">
             Read full disclaimers
           </Link>
+          {" · "}
+          <Link href="/privacy" className="font-semibold text-[#1d4ed8] hover:underline">
+            Privacy policy
+          </Link>
         </p>
         </div>
       </div>

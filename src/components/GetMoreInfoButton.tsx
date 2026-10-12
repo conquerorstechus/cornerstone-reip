@@ -79,7 +79,7 @@ export function GetMoreInfoButton({
   const dialog =
     open && mounted
       ? createPortal(
-          <div className="fixed inset-0 z-[100] flex items-end justify-center bg-navy/50 p-4 sm:items-center">
+          <div className="fixed inset-0 z-[100] flex items-end justify-center bg-navy/50 sm:items-center sm:p-4">
             <button
               type="button"
               aria-label="Close form"
@@ -90,7 +90,7 @@ export function GetMoreInfoButton({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="relative z-[101] w-full max-w-md bg-cream p-5 shadow-lg ring-1 ring-line sm:p-6"
+              className="relative z-[101] max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-cream p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-lg ring-1 ring-line sm:rounded-xl sm:p-6"
             >
               {state === "sent" ? (
                 <div>
@@ -105,7 +105,7 @@ export function GetMoreInfoButton({
                   <button
                     type="button"
                     onClick={close}
-                    className="mt-5 inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark"
+                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark"
                   >
                     Close
                   </button>
@@ -170,11 +170,11 @@ export function GetMoreInfoButton({
                     </p>
                   ) : null}
 
-                  <div className="mt-6 flex flex-wrap gap-2">
+                  <div className="mt-6 flex flex-col gap-2">
                     <button
                       type="submit"
                       disabled={state === "sending"}
-                      className="inline-flex min-h-11 items-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark disabled:opacity-60"
+                      className="inline-flex min-h-12 w-full items-center justify-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark disabled:opacity-60"
                     >
                       {state === "sending" ? "Sending now…" : "Send me the address now"}
                     </button>
@@ -182,7 +182,7 @@ export function GetMoreInfoButton({
                       type="button"
                       onClick={close}
                       disabled={state === "sending"}
-                      className="inline-flex min-h-11 items-center px-4 py-2 text-sm font-semibold tracking-wide text-taupe hover:text-ink disabled:opacity-60"
+                      className="inline-flex min-h-11 w-full items-center justify-center px-4 py-2 text-sm font-semibold tracking-wide text-taupe hover:text-ink disabled:opacity-60"
                     >
                       Cancel
                     </button>

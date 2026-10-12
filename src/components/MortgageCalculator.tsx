@@ -292,7 +292,7 @@ export function MortgageCalculator({
                   key={id}
                   type="button"
                   onClick={() => setProgram(id)}
-                  className={`rounded-full px-3 py-1.5 text-[13px] font-semibold ${
+                  className={`min-h-11 rounded-full px-4 text-[13px] font-semibold ${
                     program === id
                       ? "bg-[#2563eb] text-white"
                       : "bg-[#f3f4f6] text-[#374151] hover:bg-[#e5e7eb]"
@@ -358,7 +358,7 @@ export function MortgageCalculator({
         {/* Results panel */}
         <div className="space-y-4">
           <div className="rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-6">
-            <div className="flex flex-wrap gap-3 border-b border-[#e5e7eb] text-[12px] font-semibold sm:text-[13px]">
+            <div className="-mx-1 flex gap-1 overflow-x-auto border-b border-[#e5e7eb] text-[13px] font-semibold [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {(
                 [
                   ["payment", "Monthly"],
@@ -371,7 +371,7 @@ export function MortgageCalculator({
                   key={id}
                   type="button"
                   onClick={() => setTab(id)}
-                  className={`pb-2 ${
+                  className={`min-h-11 shrink-0 px-3 ${
                     tab === id
                       ? "border-b-2 border-[#2563eb] text-[#2563eb]"
                       : "text-[#6b7280] hover:text-[#374151]"

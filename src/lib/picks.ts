@@ -43,8 +43,14 @@ export function isPicksKind(v: string): v is PicksKind {
   return v === "sfh" || v === "condos" || v === "townhomes";
 }
 
+export type DealView = PicksKind | "land";
+
+export function isDealView(v: string): v is DealView {
+  return v === "land" || isPicksKind(v);
+}
+
 export function picksPathForHomeKind(kind?: HomeKind): string {
-  if (kind === "condo") return "/picks/condos";
-  if (kind === "townhouse") return "/picks/townhomes";
-  return "/picks/sfh";
+  if (kind === "condo") return "/?view=condos";
+  if (kind === "townhouse") return "/?view=townhomes";
+  return "/?view=sfh";
 }
