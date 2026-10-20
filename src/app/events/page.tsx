@@ -1,6 +1,8 @@
 import { EventRegistration } from "../../components/EventRegisterForm";
 import { issueCaptcha, upcomingMondaySessions } from "../../lib/event";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Weekly Top 10 Tampa Deals",
   description:

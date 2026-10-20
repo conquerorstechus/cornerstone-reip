@@ -11,6 +11,11 @@ import {
   PRESENTER_INTRO_URL,
 } from "../lib/event-copy";
 
+function stillAhead(sessions: MondaySession[]) {
+  const now = Date.now();
+  return sessions.filter((item) => Date.parse(item.start) > now);
+}
+
 export function EventRegistration({
   sessions,
   captcha,
@@ -18,12 +23,13 @@ export function EventRegistration({
   sessions: MondaySession[];
   captcha: CaptchaChallenge;
 }) {
+  const upcoming = stillAhead(sessions);
   const router = useRouter();
-  const [selectedId, setSelectedId] = useState(sessions[0]?.id ?? "");
+  const [selectedId, setSelectedId] = useState(upcoming[0]?.id ?? "");
   const [challenge, setChallenge] = useState(captcha);
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
-  const session = sessions.find((item) => item.id === selectedId) ?? sessions[0];
+  const session = upcoming.find((item) => item.id === selectedId) ?? upcoming[0];
 
   async function refreshCaptcha() {
     const res = await fetch("/api/events/captcha", { cache: "no-store" });
@@ -153,7 +159,7 @@ export function EventRegistration({
             onChange={(e) => setSelectedId(e.target.value)}
             className="w-full rounded-xl border border-[#e5e7eb] bg-white px-3 py-3 text-[15px] outline-none focus:border-[#111827]"
           >
-            {sessions.map((item) => (
+            {upcoming.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.dateLine} · {item.timeLine}
               </option>
