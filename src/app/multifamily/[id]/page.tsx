@@ -1,9 +1,38 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OsmMap } from "../../../components/OsmMap";
 import { ScoreBar, SectionTitle, TableScroll } from "../../../components/Ui";
 import { areaBySlug, mfById } from "../../../lib/data";
 import { monthly, pct, usd } from "../../../lib/format";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const asset = mfById(id);
+  if (!asset) return {};
+
+  const description = `${asset.units}-unit multifamily in ${asset.city}, FL ${asset.zip}. Asking ${usd(asset.asking)}. ${usd(asset.pricePerUnit)} per unit.`;
+
+  return {
+    title: asset.name,
+    description,
+    openGraph: {
+      title: `${asset.name} · Multifamily · REIP`,
+      description,
+      url: `/multifamily/${asset.id}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${asset.name} · Multifamily · REIP`,
+      description,
+    },
+  };
+}
 
 export default async function MultifamilyDetailPage({
   params,

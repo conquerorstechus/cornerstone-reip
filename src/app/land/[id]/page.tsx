@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GetMoreInfoButton } from "../../../components/GetMoreInfoButton";
@@ -7,6 +8,41 @@ import { ScoreBar, SectionTitle, TableScroll } from "../../../components/Ui";
 import { getAppreciationProfile } from "../../../lib/appreciation";
 import { areaBySlug, landById } from "../../../lib/data";
 import { monthly, pct, usd } from "../../../lib/format";
+
+function lotLabel(acres: number, lotSqft?: number) {
+  if (acres > 0) return `${acres.toFixed(2)} acres`;
+  if (lotSqft) return `${lotSqft.toLocaleString()} sqft`;
+  return "Lot";
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const parcel = await landById(id);
+  if (!parcel) return {};
+
+  const headline = `${lotLabel(parcel.acres, parcel.lotSqft)} · ${parcel.city}`;
+  const description = `Land in ${parcel.city}, FL ${parcel.zip}. Asking ${usd(parcel.asking)}. Estimated cash flow ${monthly(parcel.cashFlow ?? 0)}. Address on request.`;
+
+  return {
+    title: headline,
+    description,
+    openGraph: {
+      title: `${headline} · Land · REIP`,
+      description,
+      url: `/land/${parcel.id}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${headline} · Land · REIP`,
+      description,
+    },
+  };
+}
 
 export default async function LandDetailPage({
   params,
