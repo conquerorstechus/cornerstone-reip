@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GetMoreInfoButton } from "../../../components/GetMoreInfoButton";
@@ -19,6 +20,37 @@ const KIND_LABEL: Record<string, string> = {
   condo: "Condo",
   townhouse: "Townhome",
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const p = await propertyById(id);
+  if (!p) return {};
+
+  const kind = KIND_LABEL[p.homeKind ?? "sfh"] ?? "Home";
+  const headline = listingHeadline(p);
+  const title = `${headline} · ${kind}`;
+  const description = `${kind} in ${p.city}, ${p.state} ${p.zip}. Asking ${usd(p.ask)}. Estimated cash flow ${monthly(p.cashFlow)}. Address on request.`;
+
+  return {
+    title: headline,
+    description,
+    openGraph: {
+      title: `${title} · REIP`,
+      description,
+      url: `/properties/${p.id}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} · REIP`,
+      description,
+    },
+  };
+}
 
 export default async function PropertyPage({
   params,
