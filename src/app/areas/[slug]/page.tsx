@@ -26,7 +26,7 @@ export default async function AreaDetailPage({
     <div className="space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <p className="display text-[11px] tracking-[0.28em] text-magenta">{a.county.toUpperCase()} COUNTY</p>
+          <p className="eyebrow !text-magenta">{a.county.toUpperCase()} COUNTY</p>
           <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{a.name}</h2>
           <p className="text-sm text-taupe">{a.zips.join(" · ")}</p>
         </div>
@@ -36,7 +36,7 @@ export default async function AreaDetailPage({
       </div>
       <p className="max-w-3xl text-sm leading-relaxed">{a.thesis}</p>
 
-      <dl className="grid grid-cols-2 gap-px bg-line ring-1 ring-line sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-px bg-line ring-1 ring-line rounded-xl overflow-hidden sm:grid-cols-4">
         {[
           ["Median ask", usd(a.medianAsk)],
           ["Median rent", monthly(a.medianRent)],
@@ -52,7 +52,7 @@ export default async function AreaDetailPage({
           ["Commute", `${a.commuteMin} min`],
         ].map(([k, v]) => (
           <div key={k} className="bg-cream px-4 py-3">
-            <dt className="display text-[9px] tracking-[0.16em] text-taupe">{k}</dt>
+            <dt className="eyebrow">{k}</dt>
             <dd className="mt-1 text-sm font-semibold capitalize">{v}</dd>
           </div>
         ))}
@@ -61,7 +61,7 @@ export default async function AreaDetailPage({
       <div className="grid gap-6 lg:grid-cols-2">
         <OsmMap lat={a.lat} lng={a.lng} zoom={12} label={a.name} />
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="bg-cream p-5 ring-1 ring-line">
+          <div className="bg-cream p-5 ring-1 ring-line rounded-xl">
             <h3 className="display text-sm font-semibold tracking-[0.08em]">Catalysts</h3>
             <ul className="mt-3 space-y-2 text-sm">
               {a.catalysts.map((c) => (
@@ -72,7 +72,7 @@ export default async function AreaDetailPage({
               ))}
             </ul>
           </div>
-          <div className="bg-cream p-5 ring-1 ring-line">
+          <div className="bg-cream p-5 ring-1 ring-line rounded-xl">
             <h3 className="display text-sm font-semibold tracking-[0.08em]">Risks</h3>
             <ul className="mt-3 space-y-2 text-sm">
               {a.risks.map((c) => (
@@ -125,9 +125,9 @@ export default async function AreaDetailPage({
             <Link
               key={l.id}
               href={`/land/${l.id}`}
-              className="bg-cream p-4 ring-1 ring-line hover:ring-blue"
+              className="bg-cream p-4 ring-1 ring-line rounded-xl hover:ring-blue"
             >
-              <p className="display text-[10px] tracking-[0.2em] text-taupe">LAND</p>
+              <p className="eyebrow">LAND</p>
               <p className="mt-1 font-semibold">
                 {l.city}, FL {l.zip}
               </p>
@@ -139,11 +139,11 @@ export default async function AreaDetailPage({
           {mf.map((m) => (
             <div
               key={m.id}
-              className="relative bg-cream p-4 ring-1 ring-line"
+              className="relative bg-cream p-4 ring-1 ring-line rounded-xl"
               aria-disabled="true"
             >
               <div className="pointer-events-none select-none opacity-40 grayscale" aria-hidden>
-                <p className="display text-[10px] tracking-[0.2em] text-taupe">MULTIFAMILY</p>
+                <p className="eyebrow">MULTIFAMILY</p>
                 <p className="mt-1 font-semibold">{m.name}</p>
                 <p className="text-sm text-taupe">
                   {m.units} units · {m.capRate.toFixed(2)}% cap

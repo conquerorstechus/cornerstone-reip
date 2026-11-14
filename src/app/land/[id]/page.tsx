@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { GetMoreInfoButton } from "../../../components/GetMoreInfoButton";
 import { InvestmentModels } from "../../../components/InvestmentModels";
 import { OsmMap } from "../../../components/OsmMap";
-import { ScoreBar, SectionTitle, TableScroll } from "../../../components/Ui";
+import { SectionTitle, TableScroll } from "../../../components/Ui";
 import { getAppreciationProfile } from "../../../lib/appreciation";
 import { areaBySlug, landById } from "../../../lib/data";
 import { monthly, pct, usd } from "../../../lib/format";
@@ -58,32 +58,28 @@ export default async function LandDetailPage({
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
-      <div>
-        <Link href="/?view=land" className="text-[13px] font-medium text-[#1d4ed8] hover:underline">
-          ← Back to Land
-        </Link>
-      </div>
+      <Link href="/?view=land" className="inline-block text-sm font-semibold text-blue hover:underline">
+        ← Back to land
+      </Link>
 
-      <article className="overflow-hidden rounded-lg border border-[#e5e7eb] border-l-4 border-l-[#0d9488] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-        <div className="bg-[#0d9488] px-4 py-3 text-white sm:px-5">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px]">
-            <span className="font-bold">{l.rank ? `Rank #${l.rank}` : "Lot"}</span>
-            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+      <article className="card space-y-5 p-4 sm:p-6">
+        <div>
+          <div className="flex items-center justify-between gap-3">
+            <span className="eyebrow inline-flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-navy" aria-hidden />
               Land
             </span>
-            <span className="ml-auto font-medium">
-              Cash Flow: <strong>{monthly(cf)}</strong>
-            </span>
+            {l.rank ? <span className="eyebrow">#{l.rank}</span> : null}
           </div>
-          <h1 className="mt-2 text-xl font-bold sm:text-2xl">
-            {l.city}, FL {l.zip}
+          <h1 className="mt-2 text-2xl font-semibold text-navy sm:text-3xl">
+            {lotLabel(l.acres, l.lotSqft)}
           </h1>
-          <p className="mt-1 text-[13px] text-white/85">
-            Address on request
+          <p className="mt-1 text-sm text-taupe">
+            {l.city}, FL {l.zip}
             {area ? (
               <>
                 {" · "}
-                <Link href={`/areas/${area.slug}`} className="underline hover:text-white">
+                <Link href={`/areas/${area.slug}`} className="font-semibold text-blue hover:underline">
                   {area.name}
                 </Link>
               </>
@@ -91,48 +87,38 @@ export default async function LandDetailPage({
           </p>
         </div>
 
-        <div className="space-y-4 bg-[#f0fdfa] px-4 py-5 sm:px-5">
-          <div className="w-full max-w-xs">
-            <ScoreBar score={l.investorScore} />
-          </div>
-          {l.thesis ? (
-            <p className="text-[14px] leading-relaxed text-[#4b5563]">{l.thesis}</p>
-          ) : null}
+        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            ["Asking", usd(l.asking)],
+            ["Per acre", usd(l.pricePerAcre)],
+            ["Max units", String(l.maxUnits)],
+            ["Cash flow", monthly(cf)],
+          ].map(([k, v]) => (
+            <div key={k} className="rounded-xl bg-paper px-3 py-3">
+              <dt className="eyebrow">{k}</dt>
+              <dd
+                className={`mt-1 font-display text-lg font-semibold tabular-nums ${
+                  k === "Cash flow" ? (cf >= 0 ? "text-success" : "text-danger") : "text-navy"
+                }`}
+              >
+                {v}
+              </dd>
+            </div>
+          ))}
+        </dl>
 
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-md bg-[#e5e7eb] ring-1 ring-[#e5e7eb] sm:grid-cols-4">
-            {[
-              ["Asking", usd(l.asking)],
-              ["Offer", usd(l.offer ?? l.asking)],
-              ["$/acre", usd(l.pricePerAcre)],
-              ["Acres", l.acres.toFixed(2)],
-              ["Buildable", `${l.buildableSf.toLocaleString()} sf`],
-              ["Max units", String(l.maxUnits)],
-              ["Zoning", l.zoning],
-              ["Flood", l.floodZone],
-              ["Tax", monthly(l.taxMonthly ?? 0)],
-              ["HOA", monthly(l.hoaMonthly ?? 0)],
-              ["Insurance", monthly(l.insuranceMonthly ?? 0)],
-              ["Mortgage*", monthly(l.mortgageMonthly ?? 0)],
-            ].map(([k, v]) => (
-              <div key={k} className="bg-white px-3 py-2.5">
-                <dt className="text-[10px] font-semibold tracking-wide text-[#6b7280] uppercase">
-                  {k}
-                </dt>
-                <dd className="mt-0.5 text-sm font-semibold text-[#1e3a5f]">{v}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="text-[11px] text-[#6b7280]">
-            * Mortgage estimated at 7% fixed, 30 years, 50% down. Land typically has little or no
-            rent — CoC will often be negative until you entitle or sell.
-          </p>
+        <p className="text-sm text-taupe">
+          Zoning {l.zoning} · Flood {l.floodZone} · Tax {monthly(l.taxMonthly ?? 0)} · Mortgage{" "}
+          {monthly(l.mortgageMonthly ?? 0)} at 50% down. Land rarely rents, so cash-on-cash is often
+          negative until you entitle or sell.
+        </p>
 
-          <GetMoreInfoButton dealId={l.id} dealType="land" />
-        </div>
+        {l.thesis ? <p className="text-sm leading-relaxed text-ink/80">{l.thesis}</p> : null}
+
+        <GetMoreInfoButton dealId={l.id} dealType="land" className="w-full sm:w-auto" />
       </article>
 
       <InvestmentModels
-        accent="#0d9488"
         profile={profile}
         financials={{
           purchasePrice: l.offer ?? l.asking,
@@ -147,7 +133,7 @@ export default async function LandDetailPage({
         <section>
           <SectionTitle kicker="EXITS" title="Development scenarios" />
           <TableScroll>
-            <table className="w-full min-w-[36rem] bg-cream text-sm ring-1 ring-line">
+            <table className="w-full min-w-[36rem] bg-cream text-sm ring-1 ring-line rounded-xl">
               <thead>
                 <tr className="display text-left text-[10px] tracking-[0.16em] text-taupe">
                   <th className="px-4 py-2">Scenario</th>

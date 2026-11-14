@@ -1,115 +1,70 @@
 import Link from "next/link";
 import { GetMoreInfoButton } from "./GetMoreInfoButton";
+import { monthly, usd } from "../lib/format";
+import { LAND_ACCENT } from "../lib/picks";
 import type { LandParcel } from "../lib/types";
-import { cashDownYearlyRor, monthly, pct, truncateCopy, usd } from "../lib/format";
 
 export function LandCard({ parcel }: { parcel: LandParcel }) {
   const cf = parcel.cashFlow ?? 0;
-  const cfPositive = cf >= 0;
-  const desc = truncateCopy(parcel.thesis, 240);
-  const flags = (parcel.flags ?? []).filter(Boolean);
-  const lotLabel =
+  const size =
     parcel.acres > 0
       ? `${parcel.acres.toFixed(2)} acres`
       : parcel.lotSqft
         ? `${parcel.lotSqft.toLocaleString()} sqft`
-        : null;
-  const purchase = parcel.offer ?? parcel.asking;
-  const yearlyRor = cashDownYearlyRor({ cashFlowMonthly: cf, purchasePrice: purchase });
-  const rorPositive = yearlyRor >= 0;
+        : "Lot";
 
   return (
-    <article className="overflow-hidden rounded-lg border border-[#e5e7eb] border-l-4 border-l-[#0d9488] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className="bg-[#0d9488] px-4 py-3 text-[13px] text-white sm:px-4.5">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="font-bold">{parcel.rank ? `Rank #${parcel.rank}` : "Lot"}</span>
-          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+    <article className="card overflow-hidden">
+      <div className="space-y-4 p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-3">
+          <span className="eyebrow inline-flex items-center gap-2">
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ backgroundColor: LAND_ACCENT }}
+              aria-hidden
+            />
             Land
           </span>
+          {parcel.rank ? <span className="eyebrow">#{parcel.rank}</span> : null}
         </div>
-        <div className="mt-2 grid grid-cols-2 gap-2 font-medium">
-          <span>
-            Cash Flow: <strong className={cfPositive ? "" : "text-red-100"}>{monthly(cf)}</strong>
-          </span>
-          <span className="text-right">
-            Yr ROR:{" "}
-            <strong className={rorPositive ? "" : "text-red-100"}>{pct(yearlyRor * 100, 1)}</strong>
-          </span>
-        </div>
-      </div>
 
-      <div className="space-y-3 bg-[#f0fdfa] px-4 py-3.5 sm:px-4.5">
         <div>
-          <p className="text-[13px] font-bold text-[#1e3a5f]">
+          <h3 className="text-lg font-semibold text-navy sm:text-xl">{size}</h3>
+          <p className="mt-0.5 text-sm text-taupe">
             {parcel.city}, FL {parcel.zip}
-            <span className="font-medium text-[#6b7280]"> · Address on request</span>
-          </p>
-          {desc ? (
-            <p className="mt-1 text-[13px] leading-relaxed text-[#6b7280] italic">{desc}</p>
-          ) : null}
-        </div>
-
-        {flags.length ? (
-          <p className="text-[11px] text-[#b45309]">
-            Imputed from peer data: {flags.join(", ")}
-          </p>
-        ) : null}
-
-        <div className="grid gap-1.5 text-[13px] text-[#374151] sm:grid-cols-2">
-          <p>
-            Asking: <strong>{usd(parcel.asking)}</strong>
-          </p>
-          <p className="sm:text-right">
-            $/acre: <strong>{usd(parcel.pricePerAcre)}</strong>
-          </p>
-          {lotLabel ? (
-            <p className="sm:col-span-2">
-              Lot size: <strong>{lotLabel}</strong>
-            </p>
-          ) : null}
-          <p>
-            Offer: <strong>{usd(parcel.offer ?? parcel.asking)}</strong>
-          </p>
-          <p className="sm:text-right">HOA: {monthly(parcel.hoaMonthly ?? 0)}</p>
-          <p>Taxes: {monthly(parcel.taxMonthly ?? 0)}</p>
-          <p className="sm:text-right">Insurance: {monthly(parcel.insuranceMonthly ?? 0)}</p>
-          <p>
-            Cash flow:{" "}
-            <strong className={cfPositive ? "text-[#16a34a]" : "text-[#dc2626]"}>
-              {monthly(cf)}
-            </strong>
-          </p>
-          <p className="sm:text-right">
-            Mortgage*: <strong>{monthly(parcel.mortgageMonthly ?? 0)}</strong>
-          </p>
-          <p className="sm:col-span-2">
-            Yearly ROR (100% cash down):{" "}
-            <strong className={rorPositive ? "text-[#16a34a]" : "text-[#dc2626]"}>
-              {pct(yearlyRor * 100, 1)}
-            </strong>
-            <span className="text-[#6b7280]">
-              {" "}
-              · leftover cash ÷ {usd(purchase)} with no mortgage
-            </span>
           </p>
         </div>
 
-        <div className="border-t border-black/5 pt-3 text-[13px] text-[#374151]">
-          <p className="text-[11px] italic text-[#6b7280]">
-            * Mortgage estimated at 7% fixed, 30 years, 50% down.
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Link
-            href={`/land/${parcel.id}`}
-            className="inline-flex min-h-11 flex-1 items-center justify-center bg-[#0d9488] px-3 py-2 text-sm font-semibold text-white hover:bg-[#0f766e]"
-          >
-            Full analysis &amp; models
-          </Link>
-          <div className="flex-1">
-            <GetMoreInfoButton dealId={parcel.id} dealType="land" />
+        <dl className="grid grid-cols-3 gap-3 rounded-xl bg-paper px-4 py-3">
+          <div>
+            <dt className="eyebrow">Asking</dt>
+            <dd className="mt-1 font-display text-base font-semibold tabular-nums text-navy sm:text-lg">
+              {usd(parcel.asking)}
+            </dd>
           </div>
+          <div>
+            <dt className="eyebrow">Per acre</dt>
+            <dd className="mt-1 font-display text-base font-semibold tabular-nums text-navy sm:text-lg">
+              {usd(parcel.pricePerAcre)}
+            </dd>
+          </div>
+          <div>
+            <dt className="eyebrow">Cash flow</dt>
+            <dd
+              className={`mt-1 font-display text-base font-semibold tabular-nums sm:text-lg ${
+                cf >= 0 ? "text-success" : "text-danger"
+              }`}
+            >
+              {monthly(cf)}
+            </dd>
+          </div>
+        </dl>
+
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Link href={`/land/${encodeURIComponent(parcel.id)}`} className="btn btn-secondary flex-1">
+            See the models
+          </Link>
+          <GetMoreInfoButton dealId={parcel.id} dealType="land" className="flex-1" />
         </div>
       </div>
     </article>

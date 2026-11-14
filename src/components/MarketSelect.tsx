@@ -9,7 +9,7 @@ export function MarketSelect() {
       <span className="sr-only">Market</span>
       <select
         defaultValue={DEFAULT_MARKET_ID}
-        className="display h-11 max-w-[9.5rem] appearance-none truncate border border-line bg-cream py-2 pl-3 pr-9 text-sm tracking-wide text-navy outline-none focus:border-blue sm:max-w-none sm:min-w-[11.5rem]"
+        className="h-10 max-w-[9.5rem] appearance-none truncate rounded-lg border border-line bg-white py-2 pl-3 pr-9 text-sm font-semibold text-navy outline-none focus:border-blue sm:max-w-none sm:min-w-[11.5rem]"
         aria-label="Market"
       >
         {MARKETS.map((m) => (

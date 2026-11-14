@@ -10,19 +10,19 @@ export default function DisclaimersPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <p className="display text-[11px] tracking-[0.28em] text-magenta">LEGAL</p>
+        <p className="eyebrow !text-magenta">LEGAL</p>
         <h1 className="display mt-1 text-2xl font-semibold sm:text-3xl">Disclaimers</h1>
         <p className="mt-2 text-sm text-taupe">
           Important notices for Sam&apos;s High ROI Picks and the REIP portal.
         </p>
       </div>
 
-      <div className="rounded-lg border border-[#e5e7eb] bg-white px-5 py-5 text-[14px] leading-relaxed text-[#374151] shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+      <div className="rounded-lg border border-line bg-white px-5 py-5 text-[14px] leading-relaxed text-ink/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
         <p>{DISCLAIMER_FULL}</p>
       </div>
 
-      <div className="space-y-3 text-[13px] leading-relaxed text-[#4b5563]">
-        <h2 className="text-base font-semibold text-[#1e3a5f]">What this means in plain terms</h2>
+      <div className="space-y-3 text-[13px] leading-relaxed text-ink/70">
+        <h2 className="text-base font-semibold text-navy">What this means in plain terms</h2>
         <ul className="list-disc space-y-2 pl-5">
           <li>
             Numbers you see (rent, taxes, HOA, insurance, cash flow, offers, mortgages, appreciation,
@@ -43,11 +43,11 @@ export default function DisclaimersPage() {
         </ul>
       </div>
 
-      <p className="text-[12px] text-[#6b7280]">
+      <p className="text-[12px] text-taupe">
         Mailing address: 19046 Bruce B Downs Blvd, #1376, Tampa, FL 33647.
       </p>
 
-      <Link href="/" className="inline-flex text-[13px] font-semibold text-[#1d4ed8] hover:underline">
+      <Link href="/" className="inline-flex text-[13px] font-semibold text-blue hover:underline">
         ← Back to deals
       </Link>
     </div>

@@ -24,7 +24,7 @@ export function RefreshListingsButton() {
           setBusy(false);
         }
       }}
-      className="ml-0.5 inline align-baseline text-[11px] leading-none text-[#6b7280] hover:text-[#374151] disabled:opacity-40"
+      className="ml-0.5 inline align-baseline text-[11px] leading-none text-taupe hover:text-ink/80 disabled:opacity-40"
     >
       {busy ? "…" : "."}
     </button>

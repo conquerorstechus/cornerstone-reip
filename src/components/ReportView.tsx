@@ -4,10 +4,10 @@ import { RecBadge, ScoreBar } from "./Ui";
 
 export function ReportView({ result }: { result: AnalysisResult }) {
   return (
-    <article className="bg-cream ring-1 ring-line">
+    <article className="bg-cream ring-1 ring-line rounded-xl">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line px-4 py-4 sm:px-6 sm:py-5">
         <div>
-          <p className="display text-[10px] tracking-[0.26em] text-magenta">ANALYSIS REPORT</p>
+          <p className="eyebrow !text-magenta">ANALYSIS REPORT</p>
           <h2 className="display mt-1 text-xl font-semibold tracking-wide break-words sm:text-2xl">{result.title}</h2>
           <p className="mt-1 text-sm text-taupe">{result.subtitle}</p>
         </div>
@@ -22,7 +22,7 @@ export function ReportView({ result }: { result: AnalysisResult }) {
       <dl className="grid grid-cols-2 gap-px bg-line sm:grid-cols-5">
         {result.metrics.map((m) => (
           <div key={m.label} className="bg-cream px-4 py-3">
-            <dt className="display text-[9px] tracking-[0.16em] text-taupe">{m.label}</dt>
+            <dt className="eyebrow">{m.label}</dt>
             <dd className="mt-1 text-sm font-semibold">{m.value}</dd>
             {m.hint ? <p className="mt-0.5 text-[11px] text-taupe">{m.hint}</p> : null}
           </div>
@@ -30,7 +30,7 @@ export function ReportView({ result }: { result: AnalysisResult }) {
       </dl>
       {result.cashFlow ? (
         <div className="border-t border-line px-4 py-5 sm:px-6">
-          <p className="display text-[10px] tracking-[0.22em] text-taupe">MONTHLY CASH FLOW</p>
+          <p className="eyebrow">MONTHLY CASH FLOW</p>
           <p className="mt-1 text-xs text-taupe">
             Cash flow is rent minus tax, HOA, and insurance. Mortgage is shown separately (7% /
             30-year / 50% down).

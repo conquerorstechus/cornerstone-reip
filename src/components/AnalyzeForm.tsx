@@ -63,7 +63,7 @@ export function AnalyzeForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="bg-cream ring-1 ring-line">
+    <form onSubmit={onSubmit} className="bg-cream ring-1 ring-line rounded-xl">
       <div className="grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
         {TYPES.map((t) => (
           <button
@@ -90,7 +90,7 @@ export function AnalyzeForm({
       </div>
       <div className="space-y-4 p-4 sm:p-6">
         <label className="block">
-          <span className="display text-[10px] tracking-[0.2em] text-taupe">
+          <span className="eyebrow">
             {type === "area" ? "MARKET / ZIP / CITY" : "ADDRESS OR NAME"}
           </span>
           <input
@@ -154,7 +154,7 @@ function Num({
 }) {
   return (
     <label className="block">
-      <span className="display text-[10px] tracking-[0.18em] text-taupe">{label}</span>
+      <span className="eyebrow">{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -13,7 +13,7 @@ export function OsmMap({
   const bbox = `${lng - d},${lat - d},${lng + d},${lat + d}`;
   const src = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${lat}%2C${lng}`;
   return (
-    <figure className="overflow-hidden ring-1 ring-line">
+    <figure className="card overflow-hidden">
       <iframe title={label ?? "Map"} src={src} className="h-52 w-full border-0 grayscale-[20%] sm:h-64" />
       {label ? (
         <figcaption className="bg-cream px-3 py-2 text-xs text-taupe">{label}</figcaption>

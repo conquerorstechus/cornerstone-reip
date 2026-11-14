@@ -138,10 +138,46 @@ function homeKindFor(item: SamListItem): "sfh" | "condo" | "townhouse" {
   return "sfh";
 }
 
+/**
+ * Stable identity for a listing. The feed withholds `url` and `fullAddress`, so fall back to
+ * the physical/pricing fingerprint. An empty seed would hash every listing to the same id.
+ */
+export function listingSeed(item: SamListItem): string {
+  const direct = (item.url || item.fullAddress || "").trim();
+  if (direct) return direct;
+  return [
+    item.category,
+    item.homeType,
+    item.city,
+    item.zip,
+    item.beds,
+    item.baths,
+    item.sqft,
+    item.price,
+    item.yearBuilt,
+    item.lotSqft,
+    item.monthlyRent,
+    item.monthlyTax,
+    item.monthlyHoa,
+  ]
+    .map((v) => String(v ?? "").trim().toLowerCase())
+    .join("|");
+}
+
+/** Guarantee unique ids even if two listings share a fingerprint (stable by feed order). */
+function withUniqueIds<T extends { id: string }>(rows: T[]): T[] {
+  const seen = new Map<string, number>();
+  return rows.map((row) => {
+    const n = seen.get(row.id) ?? 0;
+    seen.set(row.id, n + 1);
+    return n === 0 ? row : { ...row, id: `${row.id}-${n + 1}` };
+  });
+}
+
 export function mapSamItemToProperty(item: SamListItem): Property {
   const areaSlug = areaSlugForCity(item.city);
   const { lat, lng } = coordsForArea(areaSlug);
-  const seed = item.url || item.fullAddress;
+  const seed = listingSeed(item);
   const rank = num(item.rank, 0) || undefined;
   const address = streetAddress(item.fullAddress, item.city);
   const rawDesc = (item.descRaw || item.description || item.desc || "").trim();
@@ -192,7 +228,7 @@ export function mapSamItemToLand(item: SamListItem): LandParcel {
   const acres = lot > 0 ? lot / 43560 : 0.25;
   const asking = num(item.price);
   const pricePerAcre = acres > 0 ? Math.round(asking / acres) : asking;
-  const seed = item.url || item.fullAddress;
+  const seed = listingSeed(item);
   const address = streetAddress(item.fullAddress, item.city);
   const raw =
     (item.descRaw || item.description || item.desc || "").trim() ||
@@ -291,7 +327,7 @@ export const fetchSamList = cache(async (): Promise<SamListItem[]> => {
 });
 
 export function propertiesFromSamList(items: SamListItem[]): Property[] {
-  const homes = items.filter(isHomeItem).map(mapSamItemToProperty);
+  const homes = withUniqueIds(items.filter(isHomeItem).map(mapSamItemToProperty));
   const rankKind = (kind: "sfh" | "condo" | "townhouse") =>
     homes
       .filter((p) => (p.homeKind ?? "sfh") === kind)
@@ -302,9 +338,7 @@ export function propertiesFromSamList(items: SamListItem[]): Property[] {
 }
 
 export function landFromSamList(items: SamListItem[]): LandParcel[] {
-  return items
-    .filter(isLandItem)
-    .map(mapSamItemToLand)
+  return withUniqueIds(items.filter(isLandItem).map(mapSamItemToLand))
     .sort((a, b) => (b.cashFlow ?? 0) - (a.cashFlow ?? 0) || a.asking - b.asking)
     .map((l, i) => ({ ...l, rank: i + 1 }));
 }

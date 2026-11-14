@@ -10,14 +10,14 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <p className="display text-[11px] tracking-[0.28em] text-magenta">LEGAL</p>
+        <p className="eyebrow !text-magenta">LEGAL</p>
         <h1 className="display mt-1 text-2xl font-semibold sm:text-3xl">Privacy policy</h1>
         <p className="mt-2 text-sm text-taupe">Last updated October 12, 2026.</p>
       </div>
 
-      <div className="space-y-5 rounded-lg border border-[#e5e7eb] bg-white px-5 py-5 text-[14px] leading-relaxed text-[#374151] shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+      <div className="space-y-5 rounded-lg border border-line bg-white px-5 py-5 text-[14px] leading-relaxed text-ink/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">Who we are</h2>
+          <h2 className="text-base font-semibold text-navy">Who we are</h2>
           <p className="mt-2">
             REIP is operated by Cornerstone Digital Technologies for Sam Kasimalla, a Florida real
             estate agent with LPT Realty LLC. This policy covers the REIP website, including deal
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">What we collect</h2>
+          <h2 className="text-base font-semibold text-navy">What we collect</h2>
           <p className="mt-2">We collect only what you give us and what the site needs to run:</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Name, email, and, on some forms, phone number.</li>
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">How we use it</h2>
+          <h2 className="text-base font-semibold text-navy">How we use it</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Send the event confirmation, meeting link, and calendar invite you requested.</li>
             <li>Send the listing address or quote you asked for.</li>
@@ -62,13 +62,13 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">Emails and texts</h2>
+          <h2 className="text-base font-semibold text-navy">Emails and texts</h2>
           <p className="mt-2">
             Event registration is consent to receive emails about that session and related updates.
             Other forms on the site are consent to be contacted at the email or phone number you
             enter, including texts where a phone number is requested. Message and data rates may
             apply to texts. To opt out of marketing emails and texts, use the{" "}
-            <Link href="/opt-out" className="font-semibold text-[#1d4ed8] hover:underline">
+            <Link href="/opt-out" className="font-semibold text-blue hover:underline">
               opt-out form
             </Link>
             . That form emails us your request. Opting out does not cancel a confirmation we already
@@ -81,7 +81,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">Who helps us</h2>
+          <h2 className="text-base font-semibold text-navy">Who helps us</h2>
           <p className="mt-2">
             We use service providers to host the site, deliver email, send calendar invites, and
             route form submissions. They may process your information only to perform those
@@ -90,12 +90,12 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">How long we keep it</h2>
+          <h2 className="text-base font-semibold text-navy">How long we keep it</h2>
           <p className="mt-2">
             We keep contact and registration records while they are useful for the session, the
             business relationship, or a legal need, and then delete or de-identify them. You can
             ask us to correct or delete your information through the{" "}
-            <Link href="/opt-out" className="font-semibold text-[#1d4ed8] hover:underline">
+            <Link href="/opt-out" className="font-semibold text-blue hover:underline">
               opt-out form
             </Link>
             . We may keep a record of an opt-out so we do not contact you again.
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">Security and children</h2>
+          <h2 className="text-base font-semibold text-navy">Security and children</h2>
           <p className="mt-2">
             We use reasonable safeguards for a small business website. No method of transmission or
             storage is perfectly secure. This site is not directed to children under 13, and we do
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-[#1e3a5f]">Changes</h2>
+          <h2 className="text-base font-semibold text-navy">Changes</h2>
           <p className="mt-2">
             If we change this policy, we will post the new version on this page and update the date
             above. Continued use of the site after that date means the new version applies.
@@ -120,9 +120,9 @@ export default function PrivacyPage() {
         </section>
       </div>
 
-      <p className="text-[13px] text-[#6b7280]">
+      <p className="text-[13px] text-taupe">
         Estimates and licensing notices are on the{" "}
-        <Link href="/disclaimers" className="font-semibold text-[#1d4ed8] hover:underline">
+        <Link href="/disclaimers" className="font-semibold text-blue hover:underline">
           disclaimers
         </Link>{" "}
         page.

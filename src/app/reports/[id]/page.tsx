@@ -13,7 +13,7 @@ export default async function ReportDetailPage({
 
   return (
     <div className="mx-auto max-w-4xl space-y-4">
-      <p className="display text-[11px] tracking-[0.24em] text-taupe">
+      <p className="eyebrow">
         {new Date(run.createdAt).toLocaleString()}
       </p>
       {run.error ? <p className="text-sm text-danger">{run.error}</p> : null}

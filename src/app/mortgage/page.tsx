@@ -11,7 +11,7 @@ export default function MortgagePage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-5xl py-12 text-center text-sm text-[#6b7280]">
+        <div className="mx-auto max-w-5xl py-12 text-center text-sm text-taupe">
           Loading calculator…
         </div>
       }

@@ -4,19 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
-import {
-  Building2,
-  Calculator,
-  Calendar,
-  FileBarChart,
-  HardHat,
-  Home,
-  MapPinned,
-  Menu,
-  ScanSearch,
-  Store,
-  X,
-} from "lucide-react";
+import { Calculator, Calendar, Home, MapPinned, Menu, ScanSearch, X } from "lucide-react";
 import { MarketSelect } from "./MarketSelect";
 import { SiteDisclaimerFooter } from "./Disclaimer";
 
@@ -26,13 +14,6 @@ const NAV_MAIN: { href: string; label: string; short: string; icon: typeof Home 
   { href: "/mortgage", label: "Mortgage calc", short: "Loan", icon: Calculator },
   { href: "/areas", label: "Areas", short: "Areas", icon: MapPinned },
   { href: "/analyze", label: "Analyze", short: "Analyze", icon: ScanSearch },
-];
-
-const NAV_SOON: { href: string; label: string; icon: typeof Home }[] = [
-  { href: "/multifamily", label: "Multifamily", icon: FileBarChart },
-  { href: "/commercial", label: "Commercial", icon: Building2 },
-  { href: "/businesses", label: "Businesses for sale", icon: Store },
-  { href: "/contractors", label: "Contractors", icon: HardHat },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -60,7 +41,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-dvh">
-      <aside className="no-print sticky top-0 hidden h-dvh w-[248px] shrink-0 flex-col bg-navy text-cream lg:flex">
+      <aside className="no-print sticky top-0 hidden h-dvh w-[248px] shrink-0 flex-col border-r border-line bg-white lg:flex">
         <SidebarBrand />
         <NavLinks path={path} />
         <SidebarFooter />
@@ -70,25 +51,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <button
           type="button"
           aria-label="Close menu"
-          className="no-print fixed inset-0 z-40 bg-navy/55 lg:hidden"
+          className="no-print fixed inset-0 z-40 bg-navy/50 lg:hidden"
           onClick={() => setOpen(false)}
         />
       ) : null}
       <aside
         id={menuId}
-        className={`no-print fixed inset-y-0 left-0 z-50 flex w-[min(20rem,88vw)] flex-col bg-navy text-cream shadow-2xl transition-transform duration-200 lg:hidden ${
+        className={`no-print fixed inset-y-0 left-0 z-50 flex w-[min(20rem,88vw)] flex-col bg-white shadow-2xl transition-transform duration-200 lg:hidden ${
           open ? "translate-x-0" : "pointer-events-none -translate-x-full"
         }`}
         style={{ paddingTop: "env(safe-area-inset-top)" }}
         inert={!open}
       >
-        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-          <p className="display text-[11px] tracking-[0.28em] text-taupe-2">MENU</p>
+        <div className="flex items-center justify-between border-b border-line px-4 py-3">
+          <p className="eyebrow">Menu</p>
           <button
             type="button"
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            className="flex h-11 w-11 items-center justify-center text-cream"
+            className="flex h-11 w-11 items-center justify-center text-navy"
           >
             <X size={22} strokeWidth={1.75} />
           </button>
@@ -98,7 +79,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col pb-[calc(4.25rem+env(safe-area-inset-bottom))] lg:pb-0">
-        <header className="no-print sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-cream/95 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-md lg:static lg:px-8 lg:py-4 lg:pt-4 lg:backdrop-blur-none">
+        <header className="no-print sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-white/95 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-md lg:static lg:justify-end lg:px-8 lg:py-3 lg:pt-3 lg:backdrop-blur-none">
           <div className="flex min-w-0 items-center gap-2">
             <button
               type="button"
@@ -111,29 +92,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Menu size={22} strokeWidth={1.75} />
             </button>
             <Link href="/" className="min-w-0 lg:hidden">
-              <span className="display text-base font-semibold tracking-[0.14em] sm:hidden">REIP</span>
               <Image
                 src="/logo.png"
                 alt="Cornerstone Digital Technologies"
                 width={320}
                 height={64}
-                className="hidden h-8 w-auto max-w-[min(12rem,48vw)] sm:block"
+                className="h-8 w-auto max-w-[min(12rem,52vw)]"
                 priority
               />
             </Link>
-            <div className="hidden min-w-0 lg:block">
-              <p className="display text-[11px] tracking-[0.32em] text-taupe">
-                CORNERSTONE <span className="wordmark-n">N</span>
-                <span className="wordmark-e">E</span>
-                <span className="wordmark-stone"> DIGITAL</span>
-              </p>
-              <h1 className="display mt-0.5 text-lg font-semibold tracking-[0.12em]">
-                REIP
-                <span className="ml-3 text-sm font-medium tracking-normal text-taupe">
-                  Real Estate Intelligence Platform
-                </span>
-              </h1>
-            </div>
           </div>
           <MarketSelect />
         </header>
@@ -145,7 +112,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <nav
         aria-label="Primary"
-        className="no-print fixed inset-x-0 bottom-0 z-30 border-t border-line bg-cream/95 backdrop-blur-md lg:hidden"
+        className="no-print fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 backdrop-blur-md lg:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="grid grid-cols-5">
@@ -177,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
 function SidebarBrand() {
   return (
-    <Link href="/" className="border-b border-white/10 px-5 py-5">
+    <Link href="/" className="block px-5 pt-6 pb-4">
       <Image
         src="/logo.png"
         alt="Cornerstone Digital Technologies"
@@ -186,16 +153,14 @@ function SidebarBrand() {
         className="h-auto w-full"
         priority
       />
-      <p className="display mt-3 text-[11px] tracking-[0.28em] text-taupe-2">
-        REAL ESTATE INTELLIGENCE
-      </p>
+      <p className="eyebrow mt-3">Real Estate Intelligence</p>
     </Link>
   );
 }
 
 function NavLinks({ path, onNavigate }: { path: string; onNavigate?: () => void }) {
   return (
-    <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3">
+    <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
       {NAV_MAIN.map((item) => {
         const active =
           item.href === "/"
@@ -207,30 +172,14 @@ function NavLinks({ path, onNavigate }: { path: string; onNavigate?: () => void 
             key={item.href}
             href={item.href}
             onClick={onNavigate}
-            className={`flex min-h-11 items-center gap-3 rounded-md px-3 py-2.5 text-sm tracking-wide ${
-              active
-                ? "bg-white/10 text-cream"
-                : "text-taupe-2 hover:bg-white/5 hover:text-cream"
+            aria-current={active ? "page" : undefined}
+            className={`flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold ${
+              active ? "bg-navy text-white" : "text-taupe hover:bg-paper hover:text-navy"
             }`}
           >
-            <Icon size={16} className={active ? "text-magenta" : "text-taupe"} strokeWidth={1.75} />
+            <Icon size={17} className={active ? "text-magenta" : ""} strokeWidth={1.9} />
             {item.label}
           </Link>
-        );
-      })}
-      <p className="display mt-4 px-3 pb-1 text-[9px] tracking-[0.2em] text-taupe/45">COMING SOON</p>
-      {NAV_SOON.map((item) => {
-        const Icon = item.icon;
-        return (
-          <span
-            key={item.href}
-            className="flex min-h-11 cursor-not-allowed items-center gap-3 rounded-md px-3 py-2.5 text-sm tracking-wide text-taupe/45"
-            aria-disabled="true"
-          >
-            <Icon size={16} className="text-taupe/40" strokeWidth={1.75} />
-            <span className="flex-1">{item.label}</span>
-            <span className="display text-[9px] tracking-[0.16em] text-taupe/50">SOON</span>
-          </span>
         );
       })}
     </nav>
@@ -239,13 +188,8 @@ function NavLinks({ path, onNavigate }: { path: string; onNavigate?: () => void 
 
 function SidebarFooter() {
   return (
-    <div className="border-t border-white/10 px-5 py-4 text-[11px] leading-relaxed text-taupe">
-      <p className="display tracking-[0.18em] text-taupe-2">REIP</p>
-      <p className="mt-1">Cornerstone Digital Technologies</p>
-      <Link
-        href="/disclaimers"
-        className="mt-3 inline-block text-[10px] tracking-wide text-taupe-2 underline hover:text-cream"
-      >
+    <div className="px-5 py-4">
+      <Link href="/disclaimers" className="text-xs text-taupe underline-offset-2 hover:text-navy hover:underline">
         Disclaimers
       </Link>
     </div>

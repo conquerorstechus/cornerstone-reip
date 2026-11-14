@@ -88,7 +88,7 @@ export function EventRegistration({
 
   if (!session) {
     return (
-      <p className="text-sm text-[#4b5563]">No upcoming sessions in the next month. Check back soon.</p>
+      <p className="text-sm text-ink/70">No upcoming sessions in the next month. Check back soon.</p>
     );
   }
 
@@ -96,10 +96,10 @@ export function EventRegistration({
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <article>
         <div className="overflow-hidden rounded-3xl bg-[linear-gradient(145deg,#5b21b6_0%,#db2777_55%,#fb7185_100%)] px-6 py-8 text-white shadow-[0_12px_40px_rgba(91,33,182,0.25)] sm:px-8 sm:py-10">
-          <div className="inline-flex flex-col items-center rounded-2xl bg-white px-4 py-2 text-[#111827]">
-            <span className="text-[11px] font-bold tracking-[0.16em] text-[#db2777]">{session.weekdayShort}</span>
+          <div className="inline-flex flex-col items-center rounded-2xl bg-white px-4 py-2 text-navy">
+            <span className="text-[11px] font-bold tracking-[0.16em] text-magenta-dark">{session.weekdayShort}</span>
             <span className="text-2xl font-bold leading-none">{session.dayNum}</span>
-            <span className="text-[11px] font-semibold tracking-wide text-[#6b7280]">{session.monthShort}</span>
+            <span className="text-[11px] font-semibold tracking-wide text-taupe">{session.monthShort}</span>
           </div>
           <h1 className="mt-6 max-w-xl text-2xl font-semibold leading-tight tracking-tight sm:mt-8 sm:text-4xl">{session.title}</h1>
           <p className="mt-4 max-w-lg text-base leading-relaxed text-white/90">
@@ -107,7 +107,7 @@ export function EventRegistration({
           </p>
         </div>
 
-        <div className="mt-6 max-w-xl space-y-4 text-[15px] leading-relaxed text-[#374151]">
+        <div className="mt-6 max-w-xl space-y-4 text-[15px] leading-relaxed text-ink/80">
           {EVENT_DESCRIPTION.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
@@ -117,47 +117,47 @@ export function EventRegistration({
               href={PRESENTER_INTRO_URL}
               target="_blank"
               rel="noreferrer"
-              className="font-semibold text-[#1d4ed8] underline"
+              className="font-semibold text-blue underline"
             >
               {PRESENTER_INTRO_LABEL}
             </a>
           </p>
-          <p className="text-[12px] leading-relaxed text-[#6b7280]">Disclaimer: {EVENT_DISCLAIMER}</p>
+          <p className="text-[12px] leading-relaxed text-taupe">Disclaimer: {EVENT_DISCLAIMER}</p>
         </div>
 
         <div className="mt-6 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#111827] text-sm font-semibold text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-navy text-sm font-semibold text-white">
             SK
           </div>
           <div>
-            <p className="text-sm font-semibold text-[#111827]">Hosted by {session.host}</p>
-            <p className="text-sm text-[#6b7280]">REIP · Greater Tampa</p>
+            <p className="text-sm font-semibold text-navy">Hosted by {session.host}</p>
+            <p className="text-sm text-taupe">REIP · Greater Tampa</p>
           </div>
         </div>
 
-        <dl className="mt-6 space-y-3 text-sm text-[#374151]">
+        <dl className="mt-6 space-y-3 text-sm text-ink/80">
           <div>
-            <dt className="text-xs font-semibold tracking-wide text-[#6b7280] uppercase">When</dt>
-            <dd className="mt-0.5 font-medium text-[#111827]">{session.whenLabel}</dd>
+            <dt className="text-xs font-semibold tracking-wide text-taupe uppercase">When</dt>
+            <dd className="mt-0.5 font-medium text-navy">{session.whenLabel}</dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold tracking-wide text-[#6b7280] uppercase">Where</dt>
+            <dt className="text-xs font-semibold tracking-wide text-taupe uppercase">Where</dt>
             <dd className="mt-0.5">Online. The link is in your confirmation email and calendar invite.</dd>
           </div>
         </dl>
       </article>
 
       <form onSubmit={onSubmit} className="rounded-2xl bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.08)] ring-1 ring-black/5 sm:p-6">
-        <h2 className="text-lg font-semibold text-[#111827]">Register</h2>
-        <p className="mt-1 text-sm text-[#6b7280]">Choose a Monday, then we’ll email the meeting link and a calendar invite.</p>
+        <h2 className="text-lg font-semibold text-navy">Register</h2>
+        <p className="mt-1 text-sm text-taupe">Choose a Monday, then we’ll email the meeting link and a calendar invite.</p>
 
         <label className="mt-5 block">
-          <span className="mb-1.5 block text-sm font-medium text-[#111827]">Session</span>
+          <span className="mb-1.5 block text-sm font-medium text-navy">Session</span>
           <select
             name="event"
             value={session.id}
             onChange={(e) => setSelectedId(e.target.value)}
-            className="w-full rounded-xl border border-[#e5e7eb] bg-white px-3 py-3 text-[15px] outline-none focus:border-[#111827]"
+            className="w-full rounded-xl border border-line bg-white px-3 py-3 text-[15px] outline-none focus:border-navy"
           >
             {upcoming.map((item) => (
               <option key={item.id} value={item.id}>
@@ -168,17 +168,17 @@ export function EventRegistration({
         </label>
 
         <label className="mt-4 block">
-          <span className="mb-1.5 block text-sm font-medium text-[#111827]">Name</span>
+          <span className="mb-1.5 block text-sm font-medium text-navy">Name</span>
           <input
             name="name"
             required
             autoComplete="name"
             placeholder="Your name"
-            className="w-full rounded-xl border border-[#e5e7eb] px-3 py-3 text-[15px] outline-none focus:border-[#111827]"
+            className="w-full rounded-xl border border-line px-3 py-3 text-[15px] outline-none focus:border-navy"
           />
         </label>
         <label className="mt-3 block">
-          <span className="mb-1.5 block text-sm font-medium text-[#111827]">Email</span>
+          <span className="mb-1.5 block text-sm font-medium text-navy">Email</span>
           <input
             name="email"
             required
@@ -186,11 +186,11 @@ export function EventRegistration({
             autoComplete="email"
             inputMode="email"
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-[#e5e7eb] px-3 py-3 text-[15px] outline-none focus:border-[#111827]"
+            className="w-full rounded-xl border border-line px-3 py-3 text-[15px] outline-none focus:border-navy"
           />
         </label>
         <label className="mt-3 block">
-          <span className="mb-1.5 block text-sm font-medium text-[#111827]">
+          <span className="mb-1.5 block text-sm font-medium text-navy">
             What is {challenge.a} + {challenge.b}?
           </span>
           <input
@@ -199,30 +199,30 @@ export function EventRegistration({
             inputMode="numeric"
             autoComplete="off"
             placeholder="Answer"
-            className="w-full rounded-xl border border-[#e5e7eb] px-3 py-3 text-[15px] outline-none focus:border-[#111827]"
+            className="w-full rounded-xl border border-line px-3 py-3 text-[15px] outline-none focus:border-navy"
           />
         </label>
 
-        <label className="mt-4 flex items-start gap-2 text-[11px] leading-relaxed text-[#6b7280]">
-          <input name="emailConsent" type="checkbox" required className="mt-0.5 accent-[#111827]" />
+        <label className="mt-4 flex items-start gap-2 text-[11px] leading-relaxed text-taupe">
+          <input name="emailConsent" type="checkbox" required className="mt-0.5 accent-navy" />
           <span>
             I agree to receive emails about this session and related updates. I can{" "}
-            <Link href="/opt-out" className="font-medium text-[#374151] underline">
+            <Link href="/opt-out" className="font-medium text-ink/80 underline">
               opt out
             </Link>{" "}
             at any time.{" "}
-            <Link href="/privacy" className="font-medium text-[#374151] underline">
+            <Link href="/privacy" className="font-medium text-ink/80 underline">
               Privacy policy
             </Link>
           </span>
         </label>
 
-        {state === "error" && error ? <p className="mt-3 text-sm text-[#b91c1c]">{error}</p> : null}
+        {state === "error" && error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
 
         <button
           type="submit"
           disabled={state === "sending"}
-          className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-[#111827] text-[15px] font-semibold text-white hover:bg-black disabled:opacity-60"
+          className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-navy text-[15px] font-semibold text-white hover:bg-black disabled:opacity-60"
         >
           {state === "sending" ? "Registering…" : "Register"}
         </button>

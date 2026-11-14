@@ -6,9 +6,9 @@ import { SubscribeBanner } from "./SubscribeForm";
 /** Compact disclaimer with link to the full legal page. */
 export function DisclaimerNote({ className = "" }: { className?: string }) {
   return (
-    <p className={`text-[11px] leading-relaxed text-[#6b7280] ${className}`}>
+    <p className={`text-xs leading-relaxed text-taupe ${className}`}>
       {DISCLAIMER_SHORT}{" "}
-      <Link href={DISCLAIMER_PATH} className="font-semibold text-[#1d4ed8] hover:underline">
+      <Link href={DISCLAIMER_PATH} className="font-semibold text-blue hover:underline">
         Full disclaimers
       </Link>
     </p>
@@ -18,28 +18,18 @@ export function DisclaimerNote({ className = "" }: { className?: string }) {
 /** Site-wide footer block. */
 export function SiteDisclaimerFooter() {
   return (
-    <footer className="no-print mt-auto border-t border-line bg-cream/80 px-4 py-5 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl space-y-5">
-        <SubscribeBanner
-          page="footer"
-          title="Subscribe for the next list"
-          body="Name, email, and phone. New picks come to you — you don’t have to remember to come back."
-        />
+    <footer className="no-print mt-auto border-t border-line bg-white px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <SubscribeBanner page="footer" />
         <div className="space-y-2">
-        <p className="display text-[10px] tracking-[0.2em] text-taupe">DISCLAIMERS</p>
-        <DisclaimerNote />
-        <p className="text-[11px] text-[#6b7280]">
-          Licensed solicitation by Sam Kasimalla, FL Real Estate Agent, LPT Realty LLC · Equal Housing
-          Opportunity
-          <RefreshListingsButton /> ·{" "}
-          <Link href={DISCLAIMER_PATH} className="font-semibold text-[#1d4ed8] hover:underline">
-            Read full disclaimers
-          </Link>
-          {" · "}
-          <Link href="/privacy" className="font-semibold text-[#1d4ed8] hover:underline">
-            Privacy policy
-          </Link>
-        </p>
+          <DisclaimerNote />
+          <p className="text-xs text-taupe">
+            Sam Kasimalla, FL Real Estate Agent, LPT Realty LLC · Equal Housing Opportunity
+            <RefreshListingsButton /> ·{" "}
+            <Link href="/privacy" className="font-semibold text-blue hover:underline">
+              Privacy
+            </Link>
+          </p>
         </div>
       </div>
     </footer>

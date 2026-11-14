@@ -48,7 +48,7 @@ export default async function MultifamilyDetailPage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="display text-[11px] tracking-[0.28em] text-magenta">MULTIFAMILY</p>
+          <p className="eyebrow !text-magenta">MULTIFAMILY</p>
           <h2 className="display mt-1 text-2xl font-semibold break-words sm:text-3xl">{m.name}</h2>
           <p className="text-taupe">
             {m.address}, {m.city} FL {m.zip}
@@ -68,7 +68,7 @@ export default async function MultifamilyDetailPage({
       </div>
       <p className="max-w-3xl text-sm leading-relaxed">{m.thesis}</p>
 
-      <dl className="grid grid-cols-2 gap-px bg-line ring-1 ring-line sm:grid-cols-5">
+      <dl className="grid grid-cols-2 gap-px bg-line ring-1 ring-line rounded-xl overflow-hidden sm:grid-cols-5">
         {[
           ["Ask", usd(m.asking)],
           ["Offer", usd(m.offer)],
@@ -86,7 +86,7 @@ export default async function MultifamilyDetailPage({
           ["Expense ratio", pct((m.expenses / m.egi) * 100)],
         ].map(([k, v]) => (
           <div key={k} className="bg-cream px-4 py-3">
-            <dt className="display text-[9px] tracking-[0.16em] text-taupe">{k}</dt>
+            <dt className="eyebrow">{k}</dt>
             <dd className="mt-1 text-sm font-semibold">{v}</dd>
           </div>
         ))}
@@ -95,7 +95,7 @@ export default async function MultifamilyDetailPage({
       <section>
         <SectionTitle kicker="UNIT MIX" title="In-place rents" />
         <TableScroll>
-        <table className="w-full min-w-[28rem] bg-cream text-sm ring-1 ring-line">
+        <table className="w-full min-w-[28rem] bg-cream text-sm ring-1 ring-line rounded-xl">
           <thead>
             <tr className="display text-left text-[10px] tracking-[0.16em] text-taupe">
               <th className="px-4 py-2">Type</th>
@@ -118,7 +118,7 @@ export default async function MultifamilyDetailPage({
         </TableScroll>
       </section>
 
-      <div className="bg-cream p-5 ring-1 ring-line">
+      <div className="bg-cream p-5 ring-1 ring-line rounded-xl">
         <h3 className="display text-sm font-semibold tracking-[0.08em]">Risks</h3>
         <ul className="mt-3 space-y-2 text-sm">
           {m.risks.map((r) => (

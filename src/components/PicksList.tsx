@@ -15,41 +15,38 @@ export function PicksList({
   const meta = PICKS_META[kind];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <div className={`mb-3 flex overflow-hidden rounded-lg ${meta.soft}`}>
-          <div className="w-1.5 shrink-0" style={{ backgroundColor: meta.accent }} />
-          <h2
-            className="px-4 py-3 text-xl font-extrabold tracking-tight sm:text-2xl"
-            style={{ color: meta.accent }}
-          >
-            {meta.title}
-          </h2>
-        </div>
-        <p className="text-[13px] text-[#6b7280]">
-          {deals.length} deals · {dateLabel}
-        </p>
-        <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[#374151]">{meta.blurb}</p>
-      </div>
-
-      <div className="rounded-lg border border-[#bfdbfe] bg-[#eff6ff] px-4 py-3.5 text-[13px] leading-relaxed text-[#1e3a5f]">
-        Want the address now? Tap <strong>Send me the address</strong> on any deal — we email and
-        text it to you right away. Or call/text <strong>908-922-1063</strong>.
-      </div>
-
-      <div className="space-y-5">
+    <section className="space-y-4">
+      <ListHeader title={meta.title} count={deals.length} unit="deals" sub={dateLabel} />
+      <div className="space-y-4">
         {deals.map((d) => (
           <DealCard key={d.id} deal={d} />
         ))}
       </div>
+      {!deals.length ? <p className="text-sm text-taupe">No deals in this category this week.</p> : null}
+      <p className="text-xs text-taupe">
+        Mortgage modeled at 7%, 30 years, 50% down. Street address is sent when you ask for it.
+      </p>
+    </section>
+  );
+}
 
-      {!deals.length ? (
-        <p className="text-sm text-[#6b7280]">No deals in this category this week.</p>
-      ) : null}
-
-      <p className="text-xs text-[#6b7280]">
-        Mortgage estimated at 7% fixed, 30 years, 50% down unless you change the slider on a deal
-        page. Street addresses are sent only after you leave email and phone.
+export function ListHeader({
+  title,
+  count,
+  unit,
+  sub,
+}: {
+  title: string;
+  count: number;
+  unit: string;
+  sub?: string;
+}) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+      <h2 className="text-2xl font-semibold text-navy">{title}</h2>
+      <p className="text-sm text-taupe">
+        {count} {unit}
+        {sub ? ` · ${sub}` : ""}
       </p>
     </div>
   );

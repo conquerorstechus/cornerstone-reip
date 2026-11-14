@@ -91,7 +91,7 @@ export function MortgageQuoteButton({
   const dialog =
     open && mounted
       ? createPortal(
-          <div className="fixed inset-0 z-[100] flex items-end justify-center bg-[#0f172a]/50 sm:items-center sm:p-4">
+          <div className="fixed inset-0 z-[100] flex items-end justify-center bg-navy/50 sm:items-center sm:p-4">
             <button
               type="button"
               aria-label="Close form"
@@ -102,37 +102,37 @@ export function MortgageQuoteButton({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="relative z-[101] max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-lg ring-1 ring-[#e5e7eb] sm:rounded-xl sm:p-6"
+              className="relative z-[101] max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-lg ring-1 ring-line sm:rounded-xl sm:p-6"
             >
               {state === "sent" ? (
                 <div>
-                  <p className="text-[10px] font-semibold tracking-[0.2em] text-[#2563eb] uppercase">
+                  <p className="eyebrow !text-blue">
                     Sent
                   </p>
-                  <h2 id={titleId} className="mt-1 text-lg font-bold text-[#1e3a5f]">
+                  <h2 id={titleId} className="mt-1 text-lg font-bold text-navy">
                     Quote request received
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
+                  <p className="mt-2 text-sm leading-relaxed text-taupe">
                     {LOAN_OFFICER.name} at {LOAN_OFFICER.company} will follow up at your email and
                     phone with a more accurate quote for this scenario.
                   </p>
                   <button
                     type="button"
                     onClick={close}
-                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-[#2563eb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d4ed8]"
+                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-blue px-4 py-2 text-sm font-semibold text-white hover:bg-blue"
                   >
                     Close
                   </button>
                 </div>
               ) : (
                 <form onSubmit={onSubmit}>
-                  <p className="text-[10px] font-semibold tracking-[0.2em] text-[#2563eb] uppercase">
+                  <p className="eyebrow !text-blue">
                     Accurate quote
                   </p>
-                  <h2 id={titleId} className="mt-1 text-lg font-bold text-[#1e3a5f]">
+                  <h2 id={titleId} className="mt-1 text-lg font-bold text-navy">
                     Where should we reach you?
                   </h2>
-                  <p className="mt-1 text-sm leading-relaxed text-[#6b7280]">
+                  <p className="mt-1 text-sm leading-relaxed text-taupe">
                     Share your email and phone. We’ll include your calculator numbers (
                     {Math.round(scenario.price).toLocaleString("en-US", {
                       style: "currency",
@@ -144,8 +144,8 @@ export function MortgageQuoteButton({
                   </p>
 
                   <label className="mt-5 block">
-                    <span className="text-[11px] font-semibold tracking-wide text-[#6b7280] uppercase">
-                      Email <span className="text-[#f97316]">*</span>
+                    <span className="text-[11px] font-semibold tracking-wide text-taupe uppercase">
+                      Email <span className="text-magenta">*</span>
                     </span>
                     <input
                       name="leadEmail"
@@ -154,13 +154,13 @@ export function MortgageQuoteButton({
                       autoComplete="email"
                       inputMode="email"
                       placeholder="you@example.com"
-                      className="mt-1 w-full rounded-md border border-[#e5e7eb] px-3 py-2.5 text-[15px] outline-none focus:border-[#2563eb]"
+                      className="mt-1 w-full rounded-md border border-line px-3 py-2.5 text-[15px] outline-none focus:border-blue"
                     />
                   </label>
 
                   <label className="mt-4 block">
-                    <span className="text-[11px] font-semibold tracking-wide text-[#6b7280] uppercase">
-                      Phone <span className="text-[#f97316]">*</span>
+                    <span className="text-[11px] font-semibold tracking-wide text-taupe uppercase">
+                      Phone <span className="text-magenta">*</span>
                     </span>
                     <input
                       name="leadPhone"
@@ -169,23 +169,23 @@ export function MortgageQuoteButton({
                       autoComplete="tel"
                       inputMode="tel"
                       placeholder="(813) 555-0100"
-                      className="mt-1 w-full rounded-md border border-[#e5e7eb] px-3 py-2.5 text-[15px] outline-none focus:border-[#2563eb]"
+                      className="mt-1 w-full rounded-md border border-line px-3 py-2.5 text-[15px] outline-none focus:border-blue"
                     />
                   </label>
 
                   <label className="mt-4 block">
-                    <span className="text-[11px] font-semibold tracking-wide text-[#6b7280] uppercase">
-                      Name <span className="font-normal normal-case text-[#94a3b8]">(optional)</span>
+                    <span className="text-[11px] font-semibold tracking-wide text-taupe uppercase">
+                      Name <span className="font-normal normal-case text-taupe-2">(optional)</span>
                     </span>
                     <input
                       name="leadName"
                       autoComplete="name"
-                      className="mt-1 w-full rounded-md border border-[#e5e7eb] px-3 py-2.5 text-[15px] outline-none focus:border-[#2563eb]"
+                      className="mt-1 w-full rounded-md border border-line px-3 py-2.5 text-[15px] outline-none focus:border-blue"
                     />
                   </label>
 
                   {state === "error" ? (
-                    <p className="mt-3 text-xs text-[#dc2626]">
+                    <p className="mt-3 text-xs text-danger">
                       Couldn’t send. Check email and phone, then try again.
                     </p>
                   ) : null}
@@ -194,7 +194,7 @@ export function MortgageQuoteButton({
                     <button
                       type="submit"
                       disabled={state === "sending"}
-                      className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-[#2563eb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d4ed8] disabled:opacity-60"
+                      className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-blue px-4 py-2 text-sm font-semibold text-white hover:bg-blue disabled:opacity-60"
                     >
                       {state === "sending" ? "Sending…" : "Request quote"}
                     </button>
@@ -202,7 +202,7 @@ export function MortgageQuoteButton({
                       type="button"
                       onClick={close}
                       disabled={state === "sending"}
-                      className="inline-flex min-h-11 w-full items-center justify-center px-4 py-2 text-sm font-semibold text-[#6b7280] hover:text-[#1e3a5f] disabled:opacity-60"
+                      className="inline-flex min-h-11 w-full items-center justify-center px-4 py-2 text-sm font-semibold text-taupe hover:text-navy disabled:opacity-60"
                     >
                       Cancel
                     </button>
@@ -218,7 +218,7 @@ export function MortgageQuoteButton({
   return (
     <>
       {state === "sent" && !open ? (
-        <p className="rounded-lg border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-3 text-center text-sm font-semibold text-[#15803d]">
+        <p className="rounded-lg border border-success/30 bg-success/10 px-4 py-3 text-center text-sm font-semibold text-success">
           Sent — {LOAN_OFFICER.name} will follow up shortly.
         </p>
       ) : (
@@ -228,7 +228,7 @@ export function MortgageQuoteButton({
             setOpen(true);
             if (state === "error") setState("idle");
           }}
-          className="flex min-h-12 w-full items-center justify-center rounded-lg bg-[#f97316] px-4 text-[15px] font-bold text-white hover:bg-[#ea580c]"
+          className="flex min-h-12 w-full items-center justify-center rounded-lg bg-magenta px-4 text-[15px] font-bold text-white hover:bg-magenta-dark"
         >
           {label}
         </button>

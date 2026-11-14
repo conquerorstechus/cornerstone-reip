@@ -20,7 +20,7 @@ export default async function AnalyzePage({
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <div>
-        <p className="display text-[11px] tracking-[0.28em] text-magenta">CHECK A DEAL</p>
+        <p className="eyebrow !text-magenta">CHECK A DEAL</p>
         <h2 className="display mt-1 text-2xl font-semibold sm:text-3xl">Analyze an address</h2>
         <p className="mt-2 text-sm text-taupe">
           See suggested offer, estimated rent, and monthly cash flow. Mortgage is modeled at 50%
@@ -32,11 +32,11 @@ export default async function AnalyzePage({
       <section>
         <h3 className="display mb-3 text-xl font-semibold">Your analyses</h3>
         {runs.length === 0 ? (
-          <p className="bg-cream px-5 py-8 text-sm text-taupe ring-1 ring-line">
+          <p className="bg-cream px-5 py-8 text-sm text-taupe ring-1 ring-line rounded-xl">
             No saved analyses yet. Run one above and it will show up here.
           </p>
         ) : (
-          <ul className="divide-y divide-stone bg-cream ring-1 ring-line">
+          <ul className="divide-y divide-stone bg-cream ring-1 ring-line rounded-xl">
             {runs.map((r) => (
               <li key={r.id}>
                 <Link

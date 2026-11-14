@@ -7,10 +7,12 @@ export function GetMoreInfoButton({
   dealId,
   dealType = "property",
   label = "Send me the address",
+  className = "",
 }: {
   dealId: string;
   dealType?: "property" | "land";
   label?: string;
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -90,12 +92,12 @@ export function GetMoreInfoButton({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="relative z-[101] max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-cream p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-lg ring-1 ring-line sm:rounded-xl sm:p-6"
+              className="relative z-[101] max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-cream p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl sm:rounded-2xl sm:p-6"
             >
               {state === "sent" ? (
                 <div>
-                  <p className="display text-[10px] tracking-[0.24em] text-magenta">SENT</p>
-                  <h2 id={titleId} className="display mt-1 text-lg font-semibold tracking-wide">
+                  <p className="eyebrow text-magenta">SENT</p>
+                  <h2 id={titleId} className="mt-1 text-xl font-semibold text-navy">
                     Address is on the way
                   </h2>
                   <p className="mt-2 text-sm text-taupe">
@@ -105,15 +107,15 @@ export function GetMoreInfoButton({
                   <button
                     type="button"
                     onClick={close}
-                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark"
+                    className="btn btn-primary mt-5 w-full"
                   >
                     Close
                   </button>
                 </div>
               ) : (
                 <form onSubmit={onSubmit}>
-                  <p className="display text-[10px] tracking-[0.24em] text-magenta">GET THE ADDRESS</p>
-                  <h2 id={titleId} className="display mt-1 text-lg font-semibold tracking-wide">
+                  <p className="eyebrow text-magenta">GET THE ADDRESS</p>
+                  <h2 id={titleId} className="mt-1 text-xl font-semibold text-navy">
                     Where should we send it?
                   </h2>
                   <p className="mt-1 text-sm text-taupe">
@@ -124,7 +126,7 @@ export function GetMoreInfoButton({
                   </p>
 
                   <label className="mt-5 block">
-                    <span className="display text-[10px] tracking-[0.2em] text-taupe">
+                    <span className="eyebrow">
                       EMAIL <span className="text-magenta">*</span>
                     </span>
                     <input
@@ -134,12 +136,12 @@ export function GetMoreInfoButton({
                       autoComplete="email"
                       inputMode="email"
                       placeholder="you@example.com"
-                      className="mt-1 w-full border-0 border-b border-line bg-transparent py-2 outline-none focus:border-blue"
+                      className="mt-1 w-full rounded-lg border border-line bg-paper px-3 py-2.5 outline-none focus:border-blue focus:bg-white"
                     />
                   </label>
 
                   <label className="mt-4 block">
-                    <span className="display text-[10px] tracking-[0.2em] text-taupe">
+                    <span className="eyebrow">
                       PHONE <span className="text-magenta">*</span>
                     </span>
                     <input
@@ -149,18 +151,18 @@ export function GetMoreInfoButton({
                       autoComplete="tel"
                       inputMode="tel"
                       placeholder="(813) 555-0100"
-                      className="mt-1 w-full border-0 border-b border-line bg-transparent py-2 outline-none focus:border-blue"
+                      className="mt-1 w-full rounded-lg border border-line bg-paper px-3 py-2.5 outline-none focus:border-blue focus:bg-white"
                     />
                   </label>
 
                   <label className="mt-4 block">
-                    <span className="display text-[10px] tracking-[0.2em] text-taupe">
+                    <span className="eyebrow">
                       NAME <span className="text-taupe/60">(optional)</span>
                     </span>
                     <input
                       name="leadName"
                       autoComplete="name"
-                      className="mt-1 w-full border-0 border-b border-line bg-transparent py-2 outline-none focus:border-blue"
+                      className="mt-1 w-full rounded-lg border border-line bg-paper px-3 py-2.5 outline-none focus:border-blue focus:bg-white"
                     />
                   </label>
 
@@ -174,7 +176,7 @@ export function GetMoreInfoButton({
                     <button
                       type="submit"
                       disabled={state === "sending"}
-                      className="inline-flex min-h-12 w-full items-center justify-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark disabled:opacity-60"
+                      className="btn btn-primary w-full disabled:opacity-60"
                     >
                       {state === "sending" ? "Sending now…" : "Send me the address now"}
                     </button>
@@ -182,7 +184,7 @@ export function GetMoreInfoButton({
                       type="button"
                       onClick={close}
                       disabled={state === "sending"}
-                      className="inline-flex min-h-11 w-full items-center justify-center px-4 py-2 text-sm font-semibold tracking-wide text-taupe hover:text-ink disabled:opacity-60"
+                      className="btn w-full text-taupe hover:text-ink disabled:opacity-60"
                     >
                       Cancel
                     </button>
@@ -206,7 +208,7 @@ export function GetMoreInfoButton({
             setOpen(true);
             if (state === "error") setState("idle");
           }}
-          className="inline-flex min-h-11 w-full items-center justify-center bg-magenta px-4 py-2 text-sm font-semibold tracking-wide text-white hover:bg-magenta-dark sm:w-auto"
+          className={`btn btn-primary ${className}`}
         >
           {label}
         </button>
